@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#12171e">
+  <meta name="description" content="An interactive guide to data compression, from ZIP archives to MP3 audio.">
+  <title>Compression Lab · DA3021</title>
+  <link rel="stylesheet" href="styles.css">
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="shell header-row">
+      <a href="#overview" class="brand"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span> Compression Lab</a>
+      <nav aria-label="Modules">
+        <a href="#overview" data-nav="overview">Overview</a>
+        <a href="#zip" data-nav="zip">ZIP</a>
+        <a href="#mp3" data-nav="mp3">MP3</a>
+      </nav>
+      <span class="course-tag">DA3021 <span> / </span> IIT GUWAHATI</span>
+    </div>
+  </header>
+
+  <main id="main" class="shell" tabindex="-1">
+    <div id="overview" data-page>
+      <section class="hero overview-hero" aria-labelledby="overview-title">
+        <div>
+          <p class="eyebrow"><span class="signal-dot"></span> AN INTERACTIVE FIELD GUIDE</p>
+          <h1 id="overview-title" tabindex="-1">What fits in<br> <em>fewer bits?</em></h1>
+          <p class="hero-copy">From the files you share to the songs you stream, compression decides how much data has to travel. Explore what gets packed more efficiently and what can be left out.</p>
+          <a class="button primary" href="#zip">Explore ZIP <span aria-hidden="true">↗</span></a>
+        </div>
+        <figure class="hero-figure">
+          <div class="figure-head"><span><span class="signal-dot"></span> THE PATTERN TEST</span><span>FIG. 01</span></div>
+          <div class="byte-comparison">
+            <div><div class="byte-grid" id="hero-order" aria-hidden="true"></div><p>REPEATED</p></div>
+            <div class="comparison-arrow" aria-hidden="true">⇄</div>
+            <div><div class="byte-grid" id="hero-shuffle" aria-hidden="true"></div><p>SHUFFLED</p></div>
+          </div>
+          <figcaption>Same values and same counts. Change their order and you change what ZIP can find.</figcaption>
+        </figure>
+      </section>
+
+      <section class="overview-context">
+        <div><p class="eyebrow">01 / WHY IT MATTERS</p><h2>Every byte has to go somewhere.</h2></div>
+        <div><p>Smaller files need less storage, transfer faster on slow connections and use less mobile data. The trade-off depends on what you’re sending.</p><p>A backup needs to give you the exact files back. A song can use fewer bytes if the differences in the decoded sound are small enough for the listener.</p></div>
+      </section>
+      <section class="module-grid" aria-label="Course modules">
+        <a class="module-card" href="#zip">
+          <span class="eyebrow">MODULE 01 <span class="module-arrow" aria-hidden="true">↗</span></span>
+          <span class="module-title">ZIP</span>
+          <span class="module-description">Find repeated patterns. Recover every byte. See what happens when you ZIP a ZIP.</span>
+          <span class="tag">LOSSLESS</span>
+        </a>
+        <a class="module-card" href="#mp3">
+          <span class="eyebrow">MODULE 02 <span class="module-arrow" aria-hidden="true">↗</span></span>
+          <span class="module-title">MP3</span>
+          <span class="module-description">Follow the trade-off between audio detail, bitrate and the size of a recording.</span>
+          <span class="tag muted-tag">PLANNED MODULE</span>
+        </a>
+      </section>
+    </div>
+
+    <div id="zip" data-page hidden>
+      <section class="hero zip-hero" aria-labelledby="zip-title">
+        <div>
+          <p class="eyebrow"><span class="signal-dot"></span> MODULE 01 / LOSSLESS COMPRESSION</p>
+          <h1 id="zip-title" tabindex="-1">The shape<br> of <em>redundancy.</em></h1>
+          <p class="hero-copy">How can a file take up less space and still give back every byte? Start with a repeat, then test where the savings run out.</p>
+        </div>
+        <aside class="chapter-index" aria-label="On this page">
+          <p class="eyebrow">IN THIS MODULE</p>
+          <a href="#zip-theory"><span>00</span> How ZIP works <span aria-hidden="true">↓</span></a>
+          <a href="#zip-nesting"><span>01</span> How much can we ZIP? <span aria-hidden="true">↓</span></a>
+          <a href="#zip-structure"><span>02</span> Which data compresses best? <span aria-hidden="true">↓</span></a>
+        </aside>
+      </section>
+
+      <section class="lesson" id="zip-theory" aria-labelledby="theory-title">
+        <p class="eyebrow">00 / THE MECHANISM</p>
+        <h2 id="theory-title">Write a repeat as a reference.</h2>
+        <p class="section-intro">ZIP is an archive format. This lab uses <strong>DEFLATE</strong> inside it. DEFLATE can encode a repeated sequence as a length and a distance back into data it has already read, then encode the resulting symbols with short bit codes.</p>
+
+        <div class="lab-panel theory-panel">
+          <div class="panel-top"><span class="panel-title">A small model of DEFLATE</span><span class="tag">ILLUSTRATION</span></div>
+          <div class="theory-controls">
+            <label for="theory-sample">Input sequence</label>
+            <select id="theory-sample"><option value="repeat">BANANABANANA</option><option value="run">AAAAAAAABBBB</option><option value="frequent">ABACADAEFABC</option><option value="unique">ABCDEFGHIJKL</option></select>
+          </div>
+          <div class="legend"><span><i class="legend-source"></i> Match starts here</span><span><i class="legend-current"></i> Bytes being encoded</span></div>
+          <div class="token-strip" id="theory-bytes" aria-hidden="true"></div>
+          <p class="step-message" id="theory-message" aria-live="polite"></p>
+          <div class="theory-actions">
+            <button class="button secondary" id="theory-prev" type="button">← Back</button>
+            <button class="button primary" id="theory-next" type="button">Next symbol →</button>
+            <span class="mono" id="theory-count"></span>
+          </div>
+          <div class="model-details">
+            <div><p class="eyebrow">1 / FIND MATCHES</p><p id="theory-tokens" class="token-output"></p><p class="small">A reference such as ⟨3, 2⟩ means “copy three bytes, starting two bytes back.” The decoder can use bytes it has just copied.</p></div>
+            <div><p class="eyebrow">2 / CODE THE SYMBOLS</p><div id="theory-codes" class="code-list"></div><p class="small">These illustrative Huffman codes use the frequencies of this input’s model tokens. Real DEFLATE codes lengths and distances separately and may also use fixed codes or store a block as-is.</p></div>
+          </div>
+        </div>
+        <p class="takeaway"><strong>3 / Wrap it in an archive.</strong> ZIP adds records for the filename, entry sizes, a CRC-32 checksum and the directory. Those bytes count toward the total, even for very short files.</p>
+      </section>
+
+      <section class="lesson" id="zip-nesting" aria-labelledby="nesting-title">
+        <p class="eyebrow">01 / EXPERIMENT</p>
+        <h2 id="nesting-title">How much can we ZIP?</h2>
+        <p class="section-intro">Make a ZIP, then put that entire archive inside a fresh ZIP. Predict how many passes will shrink the file. The experiment stops when a pass first saves no bytes, or after eight passes.</p>
+        <div class="lab-panel">
+          <div class="panel-top"><span class="panel-title">Repeated ZIP</span><span class="tag live-tag"><span class="signal-dot"></span> MEASURED IN YOUR BROWSER</span></div>
+          <div class="experiment-controls">
+            <label for="nest-sample">Starting data</label>
+            <select id="nest-sample"><option value="repeat">Repeated block</option><option value="shuffled">Same bytes, shuffled</option><option value="noise">Random bytes</option><option value="zeros">All zeros</option></select>
+            <button type="button" class="button primary" id="nest-run">Run experiment <span aria-hidden="true">→</span></button>
+          </div>
+          <div id="nest-results" aria-busy="false">
+            <p id="nest-summary" class="result-summary" aria-live="polite"></p>
+            <div id="nest-chart"></div>
+            <div class="result-actions"><p id="nest-check" class="small"></p><button type="button" id="nest-download" class="button secondary" hidden>Download final ZIP ↓</button></div>
+          </div>
+        </div>
+        <p class="takeaway"><strong>Why savings run out.</strong> The first pass often removes much of the repetition DEFLATE can find. A second pass may still find patterns in the encoded bytes or archive records. Once the savings are smaller than the cost of wrapping the data again, the archive grows. The stopping point applies to this input and compressor.</p>
+      </section>
+
+      <section class="lesson" id="zip-structure" aria-labelledby="structure-title">
+        <p class="eyebrow">02 / EXPERIMENT</p>
+        <h2 id="structure-title">Which data compresses best?</h2>
+        <p class="section-intro">Compare four inputs of exactly <strong>256 KiB</strong>. The repeated and shuffled inputs contain identical counts of every byte value. Only their arrangement changes.</p>
+        <div class="lab-panel">
+          <div class="panel-top"><span class="panel-title">Structure versus noise</span><span class="tag live-tag"><span class="signal-dot"></span> MEASURED IN YOUR BROWSER</span></div>
+          <div class="experiment-controls structure-controls">
+            <button type="button" class="button secondary" id="structure-run">Try a new random sample ↻</button>
+            <span class="small" id="structure-size"></span>
+          </div>
+          <div id="structure-results" aria-busy="false">
+            <p id="structure-summary" class="result-summary" aria-live="polite"></p>
+            <div id="structure-chart"></div>
+          </div>
+        </div>
+        <p class="takeaway"><strong>Order is information.</strong> Shuffling keeps the byte frequencies while breaking long repeated sequences. The shuffled file may still save space if some byte values are more frequent than others. Random bytes generally offer little to exploit, and archive overhead can make the ZIP slightly larger.</p>
+        <p class="method-note">Both experiments use one fixed-name entry per archive. Displayed sizes include ZIP headers and are measured from real archives using your browser’s DEFLATE implementation. No files leave this page.</p>
+        <p class="sources">Further reading: <a href="https://www.rfc-editor.org/rfc/rfc1951.html">DEFLATE specification</a> · <a href="https://support.pkware.com/pkzip/appnote">ZIP format specification</a> · <a href="https://www.youtube.com/shorts/ZYjPNsY5FhQ">Repeated ZIP inspiration</a></p>
+      </section>
+    </div>
+
+    <section id="mp3" data-page class="hero planned-page" hidden aria-labelledby="mp3-title">
+      <div>
+        <p class="eyebrow"><span class="signal-dot"></span> MODULE 02 / PLANNED</p>
+        <h1 id="mp3-title" tabindex="-1">MP3 <em>&amp; sound.</em></h1>
+        <p class="hero-copy">How does an encoder decide which details to keep? This module will explore bitrate, repeated encoding and what listeners can still distinguish.</p>
+        <a class="button secondary" href="#zip">Back to ZIP →</a>
+      </div>
+    </section>
+    <noscript><p class="takeaway">Enable JavaScript to open the modules and run the ZIP experiments.</p></noscript>
+  </main>
+
+  <footer class="shell site-footer"><span>COMPRESSION LAB</span><span>DA3021 / MULTIMODAL DATA PROCESSING AND LEARNING</span><a href="https://github.com/Deb044/DataCompression">GitHub ↗</a></footer>
+</body>
+</html>
