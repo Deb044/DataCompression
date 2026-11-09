@@ -196,7 +196,7 @@ function runStructure(seed, samples) {
       const saving = (input.length - size) / input.length;
       return {
         key, label: sampleLabels[key], size,
-        note: saving > 0 ? `${percent(saving)} saved` : saving < 0 ? `${percent(-saving)} larger` : 'No change',
+        note: saving > 0 ? `${percent.format(saving)} saved` : saving < 0 ? `${percent.format(-saving)} larger` : 'No change',
         highlight: key === 'shuffled' ? 'focus-row' : '',
       };
     }));
