@@ -29,6 +29,46 @@ function drawOverview() {
   }
 }
 
+function setUpHuffman() {
+  const sample = byId('huffman-sample');
+  const messages = { skewed: 'AAABAACAAABAAAAD', balanced: 'ABCDABCDABCDABCD' };
+
+  function drawCodebook() {
+    const message = messages[sample.value];
+    const codes = makeHuffmanCodes(Array.from(message, symbol => ({ symbol })));
+    const bySymbol = new Map(codes.map(({ symbol, bits }) => [symbol, bits]));
+    const byCode = new Map(codes.map(({ symbol, bits }) => [bits, symbol]));
+    const words = Array.from(message, symbol => bySymbol.get(symbol));
+    const encoded = words.join('');
+    let prefix = '';
+    let decoded = '';
+    for (const bit of encoded) {
+      prefix += bit;
+      if (byCode.has(prefix)) {
+        decoded += byCode.get(prefix);
+        prefix = '';
+      }
+    }
+
+    byId('huffman-input').textContent = message;
+    byId('huffman-rows').replaceChildren(...[...codes].sort((a, b) => a.symbol.localeCompare(b.symbol)).map(({ symbol, count, bits }, index) => {
+      const row = document.createElement('tr');
+      const label = document.createElement('th');
+      label.scope = 'row';
+      label.textContent = symbol;
+      row.append(label);
+      for (const value of [count, index.toString(2).padStart(2, '0'), bits]) row.insertCell().textContent = value;
+      return row;
+    }));
+    byId('huffman-summary').textContent = `Fixed-length: ${message.length * 2} bits. Huffman: ${encoded.length} bits.`;
+    byId('huffman-stream').textContent = words.join(' ');
+    byId('huffman-decoded').textContent = `Decoded from the unspaced bit stream: ${decoded}`;
+  }
+
+  sample.addEventListener('change', drawCodebook);
+  drawCodebook();
+}
+
 function setUpTheory() {
   const sample = byId('theory-sample');
   const prev = byId('theory-prev');
@@ -193,6 +233,7 @@ function showPage(focusHeading = false) {
 }
 
 drawOverview();
+setUpHuffman();
 setUpTheory();
 document.querySelector('.skip').addEventListener('click', event => {
   event.preventDefault();

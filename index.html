@@ -68,20 +68,52 @@
         <div>
           <p class="eyebrow"><span class="signal-dot"></span> MODULE 01 / LOSSLESS COMPRESSION</p>
           <h1 id="zip-title" tabindex="-1">The shape<br> of <em>redundancy.</em></h1>
-          <p class="hero-copy">How can a file take up less space and still give back every byte? Start with a repeat, then test where the savings run out.</p>
+          <p class="hero-copy">How can a file take up less space and still give back every byte? Start with bits and codes, then see what ZIP does with them.</p>
         </div>
         <aside class="chapter-index" aria-label="On this page">
           <p class="eyebrow">IN THIS MODULE</p>
-          <a href="#zip-theory"><span>00</span> How ZIP works <span aria-hidden="true">↓</span></a>
+          <a href="#zip-fundamentals"><span>00</span> Compression basics <span aria-hidden="true">↓</span></a>
+          <a href="#zip-theory"><span>→</span> How ZIP works <span aria-hidden="true">↓</span></a>
           <a href="#zip-nesting"><span>01</span> How much can we ZIP? <span aria-hidden="true">↓</span></a>
           <a href="#zip-structure"><span>02</span> Which data compresses best? <span aria-hidden="true">↓</span></a>
         </aside>
       </section>
 
+      <section class="lesson" id="zip-fundamentals" aria-labelledby="fundamentals-title">
+        <p class="eyebrow">00 / COMPRESSION BASICS</p>
+        <h2 id="fundamentals-title">Start with a bit.</h2>
+        <p class="section-intro">A bit is a <strong>0</strong> or a <strong>1</strong>. Eight bits make a byte. The letter <strong>A</strong>, for instance, uses the byte <code>01000001</code> in ASCII. A file is a sequence of bytes. Its format tells an app how to interpret them.</p>
+        <div class="model-details foundations-notes">
+          <div><h3>What are we trying to save?</h3><p class="small">A shorter description can use fewer bits. Imagine ten A’s in a row. If the reader knows the rules, “write A ten times” may take less space than writing ten separate A’s. The rule and the count also need to be represented.</p></div>
+          <div><h3>What has to survive?</h3><p class="small">In lossless compression, the decoder must recover every original byte in order. Regularities give the encoder opportunities to save bits. When there are few useful patterns, the instructions and metadata can cost more than they save.</p></div>
+        </div>
+
+        <h3 class="foundation-heading">Give common symbols shorter codes.</h3>
+        <p class="section-intro">Suppose both sides know that a message contains only A, B, C and D. A fixed-length code uses two bits per symbol. If A appears far more often, a variable-length code can give A a shorter code and spend more bits on rare symbols. <strong>Huffman coding</strong> builds those codes by repeatedly joining the two least frequent nodes, starting with one node per symbol.</p>
+        <div class="lab-panel">
+          <div class="panel-top"><span class="panel-title">Build a Huffman code</span><span class="tag">BIT COUNT DEMO</span></div>
+          <div class="theory-controls">
+            <label for="huffman-sample">Symbol frequencies</label>
+            <select id="huffman-sample"><option value="skewed">A appears most often</option><option value="balanced">All four appear equally often</option></select>
+          </div>
+          <p class="small">Input message</p>
+          <p id="huffman-input" class="huffman-bits"></p>
+          <table class="codebook" aria-label="Fixed-length and Huffman codes">
+            <thead><tr><th scope="col">Symbol</th><th scope="col">Count</th><th scope="col">Fixed code</th><th scope="col">Huffman code</th></tr></thead>
+            <tbody id="huffman-rows"></tbody>
+          </table>
+          <p class="result-summary" id="huffman-summary" aria-live="polite"></p>
+          <p class="small">Huffman bits, with spaces added to show the code boundaries</p>
+          <p id="huffman-stream" class="huffman-bits"></p>
+          <p class="small" id="huffman-decoded"></p>
+        </div>
+        <p class="takeaway"><strong>How does the decoder know where to stop?</strong> No Huffman code is the beginning of another code. Read bits until a complete code matches, write its symbol and start again. The demo counts message bits only. A file format may also need to store the codebook and other metadata.</p>
+      </section>
+
       <section class="lesson" id="zip-theory" aria-labelledby="theory-title">
-        <p class="eyebrow">00 / THE MECHANISM</p>
+        <p class="eyebrow">FROM CODES TO ARCHIVES</p>
         <h2 id="theory-title">Write a repeat as a reference.</h2>
-        <p class="section-intro">ZIP is an archive format. This lab uses <strong>DEFLATE</strong> inside it. DEFLATE can encode a repeated sequence as a length and a distance back into data it has already read, then encode the resulting symbols with short bit codes.</p>
+        <p class="section-intro">A <strong>ZIP archive</strong> packages files and records how to read them back. The compressor used in this lab is <strong>DEFLATE</strong>. It combines <strong>LZ77</strong>, which can turn a repeat into a copy instruction, with Huffman coding, which encodes the resulting symbols as bits.</p>
 
         <div class="lab-panel theory-panel">
           <div class="panel-top"><span class="panel-title">A small model of DEFLATE</span><span class="tag">ILLUSTRATION</span></div>

@@ -14,7 +14,7 @@
 *, *::before, *::after { box-sizing: border-box; }
 [hidden] { display: none !important; }
 body { margin: 0; background: var(--bg); color: var(--text); font: 1rem/1.65 var(--sans); }
-p, h1, h2, figure { margin: 0; }
+p, h1, h2, h3, figure { margin: 0; }
 a { color: inherit; text-underline-offset: .24em; }
 button, select { font: inherit; }
 button, select, a { -webkit-tap-highlight-color: transparent; }
@@ -103,6 +103,14 @@ select { max-width: 100%; min-height: 42px; border: 1px solid var(--line); borde
 .theory-actions, .result-actions { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem; }
 .mono { color: var(--muted); font: .8rem var(--mono); }
 .model-details { display: grid; grid-template-columns: 1fr 1fr; gap: 1.3rem; padding-top: 1rem; margin-top: 1.1rem; border-top: 1px solid var(--line); }
+.foundations-notes { margin: 1.2rem 0 1.7rem; }
+.foundations-notes h3 { margin-bottom: .3rem; font-size: 1.05rem; }
+.foundation-heading { margin-bottom: .4rem; font-size: clamp(1.2rem, 3vw, 1.55rem); }
+.codebook { width: 100%; max-width: 34rem; border-collapse: collapse; text-align: left; font: .82rem/1.5 var(--mono); }
+.codebook th, .codebook td { padding: .35rem .32rem; border-bottom: 1px solid var(--line); }
+.codebook thead { color: var(--muted); }
+.codebook td:last-child { color: var(--teal); }
+.huffman-bits { margin: .15rem 0 .7rem; color: var(--teal); font: .86rem/1.6 var(--mono); overflow-wrap: anywhere; }
 .token-output, .code-list { min-height: 2.35rem; margin: .4rem 0; font: .85rem/1.7 var(--mono); overflow-wrap: anywhere; }
 .token-output { color: var(--teal); }
 .code-list { display: flex; gap: .35rem; flex-wrap: wrap; align-items: center; }
