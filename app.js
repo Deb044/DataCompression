@@ -1,249 +1,134 @@
-import { makeZip, measureNestedZip, supportsZipLab } from './zip.js';
-import { DEFAULT_SEED, SAMPLE_SIZE, findTokens, makeHuffmanCodes, makeSamples, randomGenerator, shuffle } from './samples.js';
+import { makeHuffmanCodes, makeSamples } from './samples.js';
+import { makeZip, supportsZipLab } from './zip.js';
+import { quantize, signalPath, syntheticSignal } from './signal.js';
+import { papers } from './literature.js';
 
 const byId = id => document.getElementById(id);
-const number = new Intl.NumberFormat('en');
-const percent = new Intl.NumberFormat('en', { style: 'percent', minimumFractionDigits: 2, maximumFractionDigits: 2 });
-const bytes = size => `${number.format(size)} B`;
-const maxPasses = 8;
-const canRun = supportsZipLab();
-const initialSamples = makeSamples();
-const sampleLabels = {
-  zeros: 'All zeros',
-  repeat: 'Repeated block',
-  shuffled: 'Same bytes, shuffled',
-  noise: 'Random bytes',
-};
+const format = new Intl.NumberFormat('en', { maximumFractionDigits: 2 });
+const svgNS = 'http://www.w3.org/2000/svg';
 
-function drawOverview() {
-  const palette = ['#ff9666', '#e56f50', '#a54e48', '#8ed2c8', '#519a9a', '#526a8c', '#e4c794', '#324359'];
-  const motif = [0, 0, 1, 2, 3, 4, 5, 7, 0, 1, 2, 7, 3, 3, 4, 6];
-  const ordered = Array.from({ length: 64 }, (_, i) => motif[i % motif.length]);
-  const mixed = shuffle([...ordered], randomGenerator(42));
-  for (const [id, values] of [['hero-order', ordered], ['hero-shuffle', mixed]]) {
-    byId(id).replaceChildren(...values.map(value => {
-      const cell = document.createElement('span');
-      cell.style.setProperty('--cell', palette[value]);
-      return cell;
-    }));
-  }
+function svgElement(tag, attributes) {
+  const element = document.createElementNS(svgNS, tag);
+  for (const [key, value] of Object.entries(attributes)) element.setAttribute(key, value);
+  return element;
 }
-
+function drawSignals(target, original, reconstruction, width = 1000, height = 260) {
+  target.replaceChildren();
+  const margin = { left: 42, right: 14, top: 16, bottom: 30 };
+  for (const value of [-1, -0.5, 0, 0.5, 1]) {
+    const y = margin.top + (1 - value) / 2 * (height - margin.top - margin.bottom);
+    target.append(svgElement('line', { x1: margin.left, x2: width - margin.right, y1: y, y2: y, class: 'grid' }));
+    const label = svgElement('text', { x: margin.left - 9, y: y + 4, 'text-anchor': 'end' });
+    label.textContent = value; target.append(label);
+  }
+  for (const [values, className] of [[original, 'original'], [reconstruction, 'reconstructed']]) target.append(svgElement('path', { d: signalPath(values, width, height, margin), class: className }));
+  const label = svgElement('text', { x: width / 2, y: height - 3, 'text-anchor': 'middle' });
+  label.textContent = 'Sample position (illustrative signal)'; target.append(label);
+}
+function setUpBudget() {
+  function update() {
+    const channels = Number(byId('budget-channels').value);
+    const minutes = Number(byId('budget-minutes').value);
+    const bits = Number(byId('budget-bits').value);
+    byId('budget-channels-value').textContent = channels;
+    byId('budget-minutes-value').textContent = `${minutes} min`;
+    byId('budget-size').textContent = `${format.format(channels * minutes * 60 * 250 * bits / 8e6)} MB`;
+    byId('budget-formula').textContent = `${channels} channels × ${minutes * 60} seconds × 250 samples/s × ${bits} bits ÷ 8`;
+  }
+  for (const id of ['budget-channels', 'budget-minutes', 'budget-bits']) byId(id).addEventListener('input', update);
+  update();
+}
 function setUpHuffman() {
-  const sample = byId('huffman-sample');
   const messages = { skewed: 'AAABAACAAABAAAAD', balanced: 'ABCDABCDABCDABCD' };
-
-  function drawCodebook() {
-    const message = messages[sample.value];
+  function update() {
+    const message = messages[byId('huffman-sample').value];
     const codes = makeHuffmanCodes(Array.from(message, symbol => ({ symbol })));
-    const bySymbol = new Map(codes.map(({ symbol, bits }) => [symbol, bits]));
-    const byCode = new Map(codes.map(({ symbol, bits }) => [bits, symbol]));
-    const words = Array.from(message, symbol => bySymbol.get(symbol));
-    const encoded = words.join('');
-    let prefix = '';
-    let decoded = '';
-    for (const bit of encoded) {
-      prefix += bit;
-      if (byCode.has(prefix)) {
-        decoded += byCode.get(prefix);
-        prefix = '';
-      }
-    }
-
-    byId('huffman-input').textContent = message;
-    byId('huffman-rows').replaceChildren(...[...codes].sort((a, b) => a.symbol.localeCompare(b.symbol)).map(({ symbol, count, bits }, index) => {
+    let length = 0;
+    byId('huffman-rows').replaceChildren(...codes.sort((a, b) => a.symbol.localeCompare(b.symbol)).map(({ symbol, count, bits }, index) => {
+      length += count * bits.length;
       const row = document.createElement('tr');
-      const label = document.createElement('th');
-      label.scope = 'row';
-      label.textContent = symbol;
-      row.append(label);
-      for (const value of [count, index.toString(2).padStart(2, '0'), bits]) row.insertCell().textContent = value;
+      for (const [i, value] of [symbol, count, index.toString(2).padStart(2, '0'), bits].entries()) {
+        const cell = document.createElement(i ? 'td' : 'th');
+        if (!i) cell.scope = 'row';
+        cell.textContent = value; row.append(cell);
+      }
       return row;
     }));
-    byId('huffman-summary').textContent = `Fixed-length: ${message.length * 2} bits. Huffman: ${encoded.length} bits.`;
-    byId('huffman-stream').textContent = words.join(' ');
-    byId('huffman-decoded').textContent = `Decoded from the unspaced bit stream: ${decoded}`;
+    byId('huffman-input').textContent = message;
+    byId('huffman-summary').textContent = `Fixed: ${message.length * 2} bits. Huffman: ${length} bits.`;
   }
-
-  sample.addEventListener('change', drawCodebook);
-  drawCodebook();
+  byId('huffman-sample').addEventListener('change', update); update();
 }
-
-function setUpTheory() {
-  const sample = byId('theory-sample');
-  const prev = byId('theory-prev');
-  const next = byId('theory-next');
-  let step = 0;
-  let tokens;
-
-  function drawStep() {
-    const input = sample.selectedOptions[0].textContent;
-    tokens = findTokens(input);
-    const { start, length, distance, symbol } = tokens[step];
-    const last = step === tokens.length - 1;
-    byId('theory-bytes').replaceChildren(...Array.from(input, (value, index) => {
-      const tile = document.createElement('span');
-      tile.textContent = value;
-      if (index >= start && index < start + length) tile.className = 'current';
-      if (distance && index >= start - distance && index < Math.min(start, start - distance + length)) {
-        tile.className = 'source';
-      }
-      return tile;
-    }));
-    byId('theory-message').textContent = distance
-      ? `“${input.slice(start, start + length)}” can be reconstructed by copying ${length} bytes from ${distance} bytes back.`
-      : `Write “${symbol}” as a literal. There’s no match of at least three bytes starting here.`;
-    byId('theory-tokens').textContent = tokens.slice(0, step + 1).map(token => token.symbol).join('  ·  ');
-    byId('theory-count').textContent = `${step + 1} / ${tokens.length} symbols`;
-    byId('theory-codes').replaceChildren(...makeHuffmanCodes(tokens).map(({ symbol, bits, count }) => {
-      const code = document.createElement('span');
-      code.textContent = `${symbol} → ${bits} (×${count})`;
-      return code;
-    }));
-    prev.disabled = step === 0;
-    next.textContent = last ? 'Start over ↻' : 'Next symbol →';
+function setUpQuantization() {
+  const original = syntheticSignal(320);
+  function update() {
+    const bits = Number(byId('quant-bits').value);
+    const reconstruction = original.map(value => quantize(value, bits, byId('quant-method').value));
+    const mse = original.reduce((sum, value, i) => sum + (value - reconstruction[i]) ** 2, 0) / original.length;
+    byId('quant-bits-value').textContent = `${bits} bits · ${2 ** bits} levels`;
+    byId('quant-error').textContent = `Computed RMSE: ${Math.sqrt(mse).toFixed(5)} in normalized amplitude units.`;
+    drawSignals(byId('quant-chart'), original, reconstruction);
   }
-
-  sample.addEventListener('change', () => { step = 0; drawStep(); });
-  prev.addEventListener('click', () => { step--; drawStep(); });
-  next.addEventListener('click', () => {
-    step = (step + 1) % tokens.length;
-    drawStep();
-  });
-  drawStep();
+  byId('quant-bits').addEventListener('input', update);
+  byId('quant-method').addEventListener('change', update); update();
+  drawSignals(byId('hero-signal'), original, original.map(value => quantize(value, 4)), 520, 255);
 }
-
-// Labels come only from the fixed sample names and pass numbers above.
-function drawChart(target, rows, label, baseline) {
-  const largest = Math.max(baseline, ...rows.map(row => row.size));
-  target.innerHTML = `<table class="chart" aria-label="${label}">
-    <thead><tr><th scope="col">${label}</th><th scope="col">Size (linear)</th><th scope="col">Bytes</th></tr></thead>
-    <tbody>${rows.map(row => `<tr class="${row.highlight ?? ''}">
-      <th scope="row">${row.label}</th>
-      <td><div class="bar-track" aria-hidden="true"><div class="bar" style="width:${100 * row.size / largest}%"></div></div></td>
-      <td>${bytes(row.size)}${row.note ? `<span class="delta">${row.note}</span>` : ''}</td>
-    </tr>`).join('')}</tbody></table>`;
+export function makeTable(headers, rows) {
+  const wrapper = document.createElement('div'); wrapper.className = 'table-scroll';
+  const table = document.createElement('table');
+  const head = table.createTHead().insertRow();
+  for (const label of headers) { const cell = document.createElement('th'); cell.scope = 'col'; cell.textContent = label; head.append(cell); }
+  const body = table.createTBody();
+  for (const row of rows) { const element = body.insertRow(); for (const value of row) element.insertCell().textContent = value; }
+  wrapper.append(table); return wrapper;
 }
-
-function sizeChange(previous, current) {
-  if (current === previous) return 'No change';
-  const sign = current > previous ? '+' : '−';
-  return `${sign}${bytes(Math.abs(current - previous))}`;
-}
-
-async function runExperiment(prefix, work) {
-  const results = byId(`${prefix}-results`);
-  const summary = byId(`${prefix}-summary`);
-  const button = byId(`${prefix}-run`);
-  const chart = byId(`${prefix}-chart`);
-  button.disabled = true;
-  chart.replaceChildren();
-  if (!canRun) {
-    summary.textContent = 'This browser can’t run raw DEFLATE. Open the lab in an up-to-date browser to measure ZIP sizes.';
-    return;
-  }
-  summary.textContent = 'Measuring ZIP archives…';
-  results.setAttribute('aria-busy', 'true');
+async function runZipDemo() {
+  const button = byId('zip-run'); const target = byId('zip-output');
+  if (!supportsZipLab()) { target.textContent = 'Raw DEFLATE streams are unavailable in this browser. The EEG experiments run separately in Python.'; return; }
+  button.disabled = true; target.textContent = 'Measuring the actual ZIP archives…';
   try {
-    await work(summary, chart);
-  } catch (error) {
-    console.error(error);
-    summary.textContent = 'The experiment could not finish. Try running it again.';
-  } finally {
-    results.setAttribute('aria-busy', 'false');
-    button.disabled = false;
-  }
+    const samples = makeSamples(); const rows = [];
+    for (const [key, label] of [['repeat', 'Repeated block'], ['shuffled', 'Same bytes, shuffled'], ['noise', 'Random bytes']]) {
+      const size = (await makeZip(samples[key])).length;
+      rows.push([label, `${format.format(size)} B`, `${format.format(100 * size / samples[key].length)}%`]);
+    }
+    target.replaceChildren(makeTable(['Input', 'ZIP bytes', '% of input'], rows));
+  } catch (error) { target.textContent = `The demonstration could not finish: ${error.message}`; }
+  finally { button.disabled = false; }
 }
-
-function runNesting() {
-  const sample = byId('nest-sample');
-  const download = byId('nest-download');
-  const check = byId('nest-check');
-  download.hidden = true;
-  check.textContent = '';
-  sample.disabled = true;
-  return runExperiment('nest', async (summary, chart) => {
-    const input = initialSamples[sample.value];
-    const { archive, sizes, stopped } = await measureNestedZip(input, maxPasses);
-    const last = sizes.length - 1;
-    const smallest = Math.min(...sizes);
-    summary.textContent = stopped
-      ? `Pass ${last} was the first with no further savings. Smallest measured size: ${bytes(smallest)}.`
-      : `All ${maxPasses} passes saved bytes. Smallest measured size: ${bytes(smallest)}.`;
-    drawChart(chart, sizes.map((size, pass) => ({
-      label: pass ? `Pass ${pass}` : 'Original', size,
-      highlight: stopped && pass === last ? 'focus-row' : size === smallest ? 'best-row' : '',
-      note: pass ? sizeChange(sizes[pass - 1], size) : '',
-    })), 'ZIP pass', input.length);
-    check.textContent = `Unpacked all ${last} ${last === 1 ? 'layer' : 'layers'} and matched every original byte. Changes are relative to the previous row.`;
-    download.onclick = () => {
-      const url = URL.createObjectURL(new Blob([archive], { type: 'application/zip' }));
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `zip-lab-pass-${last}.zip`;
-      link.click();
-      setTimeout(() => URL.revokeObjectURL(url), 1000);
-    };
-    download.hidden = false;
-  }).finally(() => { sample.disabled = !canRun; });
-}
-
-function runStructure(seed, samples) {
-  byId('structure-size').textContent = `256 KiB each · seed ${seed}`;
-  return runExperiment('structure', async (summary, chart) => {
-    const rows = await Promise.all(Object.entries(samples).map(async ([key, input]) => {
-      const size = (await makeZip(input)).length;
-      const saving = (input.length - size) / input.length;
-      return {
-        key, label: sampleLabels[key], size,
-        note: saving > 0 ? `${percent.format(saving)} saved` : saving < 0 ? `${percent.format(-saving)} larger` : 'No change',
-        highlight: key === 'shuffled' ? 'focus-row' : '',
-      };
+function setUpLiterature() {
+  function update() {
+    const selected = byId('paper-filter').value;
+    byId('paper-list').replaceChildren(...papers.filter(paper => selected === 'all' || paper.family === selected).map(paper => {
+      const article = document.createElement('article'); article.className = 'paper';
+      // Curated local content only; no user input is interpolated.
+      article.innerHTML = `<div><span class="year">${paper.year}</span><p class="small">${paper.status}</p></div><div><h3><a href="${paper.url}">${paper.title}</a></h3><p>${paper.authors}</p><p class="evidence">${paper.finding}</p></div><div class="paper-lesson"><strong>WHAT IT MEANS FOR US</strong><p>${paper.lesson}</p></div>`;
+      return article;
     }));
-    const repeat = rows.find(row => row.key === 'repeat');
-    const mixed = rows.find(row => row.key === 'shuffled');
-    summary.textContent = `Same byte counts, different order: ${bytes(repeat.size)} repeated versus ${bytes(mixed.size)} shuffled.`;
-    drawChart(chart, [{ label: 'Original (each)', size: SAMPLE_SIZE }, ...rows], 'Input', SAMPLE_SIZE);
-  });
+  }
+  byId('paper-filter').addEventListener('change', update); update();
+  fetch('content/references.json').then(response => { if (!response.ok) throw new Error('Reference list could not load.'); return response.json(); }).then(references => {
+    byId('reference-list').replaceChildren(...references.map((reference, i) => {
+      const item = document.createElement('div');
+      const title = document.createElement('strong'); title.textContent = `[${i + 1}] ${reference.title}`;
+      const detail = document.createElement('p'); detail.textContent = `${reference.authors}. ${reference.venue}. ${reference.note}`;
+      const link = document.createElement('a'); link.href = reference.url; link.textContent = 'Open source';
+      item.append(title, detail, link); return item;
+    }));
+  }).catch(error => { byId('reference-list').textContent = `${error.message} The complete list is also in the review PDF.`; });
 }
-
-let startedZip = false;
+const pages = ['overview', 'techniques', 'eeg', 'literature', 'experiments'];
 let activePage;
-function showPage(focusHeading = false) {
-  const fragment = location.hash.slice(1);
-  const page = fragment === 'mp3' ? 'mp3' : fragment === 'zip' || fragment.startsWith('zip-') ? 'zip' : 'overview';
-  const changed = page !== activePage;
-  activePage = page;
-  for (const panel of document.querySelectorAll('[data-page]')) panel.hidden = panel.id !== page;
-  for (const link of document.querySelectorAll('[data-nav]')) {
-    if (link.dataset.nav === page) link.setAttribute('aria-current', 'page');
-    else link.removeAttribute('aria-current');
-  }
-  document.title = page === 'overview' ? 'Compression Lab · DA3021' : `${page.toUpperCase()} · Compression Lab`;
-  if (fragment.startsWith('zip-')) byId(fragment)?.scrollIntoView();
-  else if (changed) {
-    window.scrollTo(0, 0);
-    if (focusHeading) byId(`${page}-title`).focus({ preventScroll: true });
-  }
-  if (page === 'zip' && !startedZip) {
-    startedZip = true;
-    runNesting();
-    runStructure(DEFAULT_SEED, initialSamples);
-  }
+function showPage(focus = false) {
+  const requested = location.hash.slice(1);
+  const page = pages.includes(requested) ? requested : 'overview';
+  const changed = page !== activePage; activePage = page;
+  for (const element of document.querySelectorAll('[data-page]')) element.hidden = element.id !== page;
+  for (const link of document.querySelectorAll('[data-nav]')) { if (link.dataset.nav === page) link.setAttribute('aria-current', 'page'); else link.removeAttribute('aria-current'); }
+  document.title = page === 'overview' ? 'EEG Compresion' : `${page[0].toUpperCase() + page.slice(1)} · EEG Compresion`;
+  if (changed) { window.scrollTo(0, 0); if (focus) byId(`${page}-title`).focus({ preventScroll: true }); }
 }
-
-drawOverview();
-setUpHuffman();
-setUpTheory();
-document.querySelector('.skip').addEventListener('click', event => {
-  event.preventDefault();
-  byId('main').focus();
-});
-byId('nest-run').addEventListener('click', runNesting);
-byId('nest-sample').addEventListener('change', runNesting);
-byId('structure-run').addEventListener('click', () => {
-  const [seed] = crypto.getRandomValues(new Uint32Array(1));
-  runStructure(seed, makeSamples(seed));
-});
-window.addEventListener('hashchange', () => showPage(true));
-showPage();
+setUpBudget(); setUpHuffman(); setUpQuantization(); setUpLiterature();
+byId('zip-run').addEventListener('click', runZipDemo);
+document.querySelector('.skip').addEventListener('click', event => { event.preventDefault(); byId('main').focus(); });
+window.addEventListener('hashchange', () => showPage(true)); showPage();

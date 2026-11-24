@@ -1,0 +1,100 @@
+[
+  {
+    "authors": "N. Memon, X. Kong and J. Cinkler",
+    "title": "Context-based lossless and near-lossless compression of EEG signals",
+    "venue": "IEEE Transactions on Information Technology in Biomedicine 3(3), 231-238 (1999)",
+    "url": "https://doi.org/10.1109/4233.788586",
+    "note": "Indexed abstract; full text not audited."
+  },
+  {
+    "authors": "G. Higgins, B. McGinley, E. Jones and M. Glavin",
+    "title": "An evaluation of the effects of wavelet coefficient quantisation in transform based EEG compression",
+    "venue": "Computers in Biology and Medicine 43(6), 661-669 (2013)",
+    "url": "https://doi.org/10.1016/j.compbiomed.2013.02.011",
+    "note": "Indexed abstract; lawful manuscript at PMC4754580, intermittently inaccessible."
+  },
+  {
+    "authors": "S. Zhang, K. Ma, Y. Yin, B. Ren and M. Liu",
+    "title": "A Personalized Compression Method for Steady-State Visual Evoked Potential EEG Signals",
+    "venue": "Information 13(4), 186 (2022)",
+    "url": "https://doi.org/10.3390/info13040186",
+    "note": "Open full text."
+  },
+  {
+    "authors": "T. Strypsteen and A. Bertrand",
+    "title": "Neural Source Coding for Bandwidth-Efficient Brain-Computer Interfacing with Wireless Neuro-Sensor Networks",
+    "venue": "ICASSP (2023)",
+    "url": "https://homes.esat.kuleuven.be/~abertran/reports/Strypsteen_ICASSP2023.pdf",
+    "note": "Open author manuscript."
+  },
+  {
+    "authors": "X. Wang, J. Zhang and X. Wu",
+    "title": "A feature enhanced EEG compression model using asymmetric encoding-decoding network",
+    "venue": "Journal of Neural Engineering 21(3) (2024)",
+    "url": "https://doi.org/10.1088/1741-2552/ad48ba",
+    "note": "PubMed abstract, PMID 38718785; full-text methods not audited."
+  },
+  {
+    "authors": "F. S. Carzaniga, G. Hoppeler, M. Hersche, K. A. Schindler and A. Rahimi",
+    "title": "The Case for Cleaner Biosignals: High-fidelity Neural Compressor Enables Transfer from Cleaner iEEG to Noisier EEG",
+    "venue": "ICLR (2025)",
+    "url": "https://proceedings.iclr.cc/paper_files/paper/2025/file/28c9ce39a89c03f0bdd9725907d5abbc-Paper-Conference.pdf",
+    "note": "Open conference paper; EEG/iEEG BrainCodec, distinct from an fMRI codec of the same name."
+  },
+  {
+    "authors": "A. Kastrati, L. Lanzendoerfer, R. Rigoni, J. Staib Matilla and R. Wattenhofer",
+    "title": "Adapting Neural Audio Codecs to EEG",
+    "venue": "arXiv:2511.23142 (2025)",
+    "url": "https://arxiv.org/abs/2511.23142",
+    "note": "Preprint; abstract assessed. Archival peer-review status not verified."
+  },
+  {
+    "authors": "C. Xie",
+    "title": "Adaptive Data Compression and Reconstruction for Memory-Bounded EEG Continual Learning",
+    "venue": "arXiv:2605.03085 (2026)",
+    "url": "https://arxiv.org/abs/2605.03085",
+    "note": "Preprint; full text available. Findings are provisional."
+  },
+  {
+    "authors": "Y. Zhang, S. Q. Xie, H. Wang, C. Shi and Z.-Q. Zhang",
+    "title": "Bayesian-based Classification Confidence Estimation for Enhancing SSVEP Detection",
+    "venue": "IEEE Transactions on Instrumentation and Measurement 72, 6503612 (2023)",
+    "url": "https://eprints.whiterose.ac.uk/id/eprint/199879/",
+    "note": "Open accepted manuscript; DOI 10.1109/TIM.2023.3284952. Adjacent confidence study."
+  },
+  {
+    "authors": "A. Damoah and T. Liang",
+    "title": "Optimizing Multichannel EEG Data: An Investigation of Current EEG Data Compression Methods",
+    "venue": "Author-posted manuscript listing KDD Undergraduate Consortium (2024)",
+    "url": "https://faculty.cs.gwu.edu/xiaodongqu/papers/KDD_2024_Compression_Andrews.pdf",
+    "note": "Contextual review only. The manuscript has a placeholder DOI; archival publication status not verified."
+  },
+  {
+    "authors": "Y. Wang, X. Chen, X. Gao and S. Gao",
+    "title": "A Benchmark Dataset for SSVEP-Based Brain-Computer Interfaces",
+    "venue": "IEEE Transactions on Neural Systems and Rehabilitation Engineering 25(10), 1746-1752 (2017)",
+    "url": "https://doi.org/10.1109/TNSRE.2016.2627556",
+    "note": "Dataset information: https://bci.med.tsinghua.edu.cn/download.html. Published online in 2016; journal issue 2017."
+  },
+  {
+    "authors": "G. Schalk",
+    "title": "EEG Motor Movement/Imagery Dataset, version 1.0.0",
+    "venue": "PhysioNet (2009)",
+    "url": "https://physionet.org/content/eegmmidb/1.0.0/",
+    "note": "Official dataset documentation. Dataset DOI 10.13026/C28G6P."
+  },
+  {
+    "authors": "P. Deutsch",
+    "title": "DEFLATE Compressed Data Format Specification version 1.3",
+    "venue": "RFC 1951 (1996)",
+    "url": "https://www.rfc-editor.org/rfc/rfc1951",
+    "note": "Public format specification; explains LZ77 and Huffman coding."
+  },
+  {
+    "authors": "ITU-T",
+    "title": "G.711: Pulse code modulation (PCM) of voice frequencies",
+    "venue": "Recommendation G.711 (11/1988)",
+    "url": "https://www.itu.int/rec/T-REC-G.711-198811-I/en",
+    "note": "Voice-coding context only; a custom EEG compander is not automatically G.711 compliant."
+  }
+]
