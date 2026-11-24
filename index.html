@@ -270,43 +270,94 @@
             </p>
           </div>
         </section>
-        <section class="lesson split">
+        <section class="lesson" id="zip-compression">
           <div>
             <span class="pill">Lossless</span>
             <h2>ZIP &amp; DEFLATE</h2>
             <p class="prose">
-              ZIP is an archive format. One common method inside it, DEFLATE,
-              combines LZ77 repetition matching with Huffman coding. It works on
-              bytes, with no understanding of EEG.
+              Think of a ZIP file as a package: it holds files together with
+              information such as their names and sizes. The compression method
+              inside the package does the work of making their contents smaller.
+              ZIP supports several methods; here we use a common one called
+              <strong>DEFLATE</strong>.
             </p>
             <p class="prose">
-              A repeated sequence can be described by a length and a backward
-              distance. Random-looking data offers fewer useful matches. Headers
-              can even make a file larger.
+              The idea is to describe repeated data more economically, without
+              throwing anything away. DEFLATE brings together two ideas:
+            </p>
+          </div>
+          <div class="split">
+            <div>
+              <ol class="process-list">
+                <li>
+                  <strong
+                    >1. Replace repetition with copy instructions
+                    (LZ77).</strong
+                  >
+                  <span
+                    >Instead of writing a sequence again, record how far back to
+                    look and how many bytes to copy. New bytes are written
+                    directly; repeated sequences can use these references.</span
+                  >
+                </li>
+                <li>
+                  <strong
+                    >2. Encode the instructions compactly (Huffman
+                    coding).</strong
+                  >
+                  <span
+                    >The Huffman idea from above applies to the remaining
+                    symbols: common symbols can receive shorter bit codes.
+                    DEFLATE supports predefined or data-dependent codebooks, and
+                    can also store blocks without compression.</span
+                  >
+                </li>
+              </ol>
+              <div class="note">
+                <strong>A small example:</strong> to reconstruct
+                <code>HELLOHELLOHELLO</code>, write <code>HELLO</code>, then “go
+                back 5 bytes and copy 5 bytes”, then repeat that instruction.
+                The decoder gets all 15 letters back exactly. These are teaching
+                instructions, not actual ZIP syntax; such a tiny file may grow
+                once the instructions and file headers are included.
+              </div>
+            </div>
+            <div class="lab-panel">
+              <h3>Try it: does the order of bytes matter?</h3>
+              <p class="small">
+                Compare a repeated block with a shuffled copy. Both contain
+                exactly the same counts of each byte, but shuffling breaks up
+                the repeated sequences. Predict which will be smaller, then
+                measure. Random bytes provide another contrast.
+              </p>
+              <button id="zip-run" class="button secondary">
+                Measure ZIP sizes
+              </button>
+              <div id="zip-output" aria-live="polite">
+                <p class="empty-state">
+                  Run the browser demonstration to see measured sizes.
+                </p>
+              </div>
+              <p class="small">
+                256 KiB inputs, seed 321. Actual ZIP sizes include headers. This
+                foundation demonstration is separate from the EEG experiments.
+              </p>
+            </div>
+          </div>
+          <div class="prose">
+            <h3>Why can't we keep zipping forever?</h3>
+            <p>
+              After compression, fewer useful patterns usually remain for the
+              same method to exploit. Zipping an existing ZIP often saves little
+              or makes it larger, because another package adds overhead.
+              Likewise, noise and already-compressed files can offer little
+              saving. Lossless means exact recovery, not a guarantee of a
+              smaller file.
             </p>
             <p class="source-note">
               <a href="https://www.rfc-editor.org/rfc/rfc1951"
                 >Source: DEFLATE specification</a
               >
-            </p>
-          </div>
-          <div class="lab-panel">
-            <h3>Same byte counts, different order.</h3>
-            <p class="small">
-              The repeated and shuffled files have identical byte frequencies.
-              This isolates order from symbol counts.
-            </p>
-            <button id="zip-run" class="button secondary">
-              Measure ZIP sizes
-            </button>
-            <div id="zip-output" aria-live="polite">
-              <p class="empty-state">
-                Run the browser demonstration to see measured sizes.
-              </p>
-            </div>
-            <p class="small">
-              256 KiB inputs, seed 321. Actual ZIP sizes include headers. This
-              foundation demonstration is separate from the EEG experiments.
             </p>
           </div>
         </section>
@@ -317,15 +368,47 @@
           </div>
           <div class="prose">
             <p>
-              MP3 is designed for human hearing. It uses a frequency-selective
-              representation and a psychoacoustic model to guide how precisely
-              audio components are coded. Quantization makes the process lossy;
-              lossless entropy coding is also used inside the format.
+              Digital sound is a sequence of measurements of a sound wave,
+              called samples. MP3 aims to store that sound using fewer bits
+              while keeping it perceptually similar. It is
+              <strong>lossy</strong>: playback does not reproduce every original
+              sample exactly.
             </p>
+            <h3>From a waveform to a smaller file</h3>
+            <ol class="process-list">
+              <li>
+                <strong>1. Examine short stretches of sound.</strong>
+                <span
+                  >Filters and transforms represent their frequency content:
+                  roughly, how much low- and high-pitched sound is
+                  present.</span
+                >
+              </li>
+              <li>
+                <strong>2. Decide where precision matters most.</strong>
+                <span
+                  >A model of hearing estimates what a listener may notice. For
+                  example, a loud sound can mask a quieter nearby frequency. The
+                  encoder can use coarser quantization there: rounding values to
+                  fewer possible levels. This introduces error.</span
+                >
+              </li>
+              <li>
+                <strong>3. Pack the resulting values efficiently.</strong>
+                <span
+                  >Huffman coding saves more bits without further loss. The
+                  decoder unpacks the values and reconstructs an approximate
+                  waveform. It cannot undo the earlier rounding.</span
+                >
+              </li>
+            </ol>
+            <h3>What does the bitrate control?</h3>
             <p>
-              At a lower bitrate, less information can be retained. Audibility
-              depends on the sound and encoding settings. Re-encoding decoded
-              audio cannot recover information already discarded.
+              Bitrate is the number of encoded bits per second of audio. A lower
+              bitrate gives the encoder a smaller budget, usually requiring
+              coarser approximations. Errors may become audible, depending on
+              the sound and settings. Re-encoding decoded audio may add loss;
+              raising the bitrate afterwards cannot restore discarded detail.
             </p>
             <div class="note">
               <strong>The EEG connection:</strong> “hard to hear” is not an EEG
