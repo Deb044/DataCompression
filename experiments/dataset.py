@@ -81,9 +81,16 @@ def subject_trials(subject, config, cache=DEFAULT_CACHE):
         if len(members) != 1 or Path(members[0]).name != members[0] or not members[0].lower().endswith('.mat'):
             raise ValueError('Unexpected archive member layout')
         mat_path = cache / members[0]
-        if not mat_path.exists():
+        extraction_path = cache / f'{members[0]}.extraction.json'
+        archive_digest = sha256(archive_path)
+        extraction = json.loads(extraction_path.read_text()) if extraction_path.exists() else {}
+        cache_valid = (mat_path.exists() and extraction.get('archive_sha256') == archive_digest
+                       and extraction.get('mat_sha256') == sha256(mat_path))
+        if not cache_valid:
             print(f'Extracting S{subject}', flush=True)
             archive.extract(path=cache, targets=members)
+            extraction_path.write_text(json.dumps({'archive_sha256': archive_digest,
+                                                   'mat_sha256': sha256(mat_path)}))
     data = loadmat(mat_path, variable_names=['data'])['data']
     if data.shape != (64, 1500, 40, 6) or data.dtype != np.float64:
         raise ValueError(f'Unexpected S{subject} data shape or representation')

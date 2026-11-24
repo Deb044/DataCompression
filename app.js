@@ -2,6 +2,8 @@ import { makeHuffmanCodes, makeSamples } from './samples.js';
 import { makeZip, supportsZipLab } from './zip.js';
 import { quantize, signalPath, syntheticSignal } from './signal.js';
 import { papers } from './literature.js';
+import { makeTable } from './table.js';
+import { loadExperimentResults } from './experiment-view.js';
 
 const byId = id => document.getElementById(id);
 const format = new Intl.NumberFormat('en', { maximumFractionDigits: 2 });
@@ -73,15 +75,6 @@ function setUpQuantization() {
   byId('quant-method').addEventListener('change', update); update();
   drawSignals(byId('hero-signal'), original, original.map(value => quantize(value, 4)), 520, 255);
 }
-export function makeTable(headers, rows) {
-  const wrapper = document.createElement('div'); wrapper.className = 'table-scroll';
-  const table = document.createElement('table');
-  const head = table.createTHead().insertRow();
-  for (const label of headers) { const cell = document.createElement('th'); cell.scope = 'col'; cell.textContent = label; head.append(cell); }
-  const body = table.createTBody();
-  for (const row of rows) { const element = body.insertRow(); for (const value of row) element.insertCell().textContent = value; }
-  wrapper.append(table); return wrapper;
-}
 async function runZipDemo() {
   const button = byId('zip-run'); const target = byId('zip-output');
   if (!supportsZipLab()) { target.textContent = 'Raw DEFLATE streams are unavailable in this browser. The EEG experiments run separately in Python.'; return; }
@@ -129,6 +122,7 @@ function showPage(focus = false) {
   if (changed) { window.scrollTo(0, 0); if (focus) byId(`${page}-title`).focus({ preventScroll: true }); }
 }
 setUpBudget(); setUpHuffman(); setUpQuantization(); setUpLiterature();
+loadExperimentResults();
 byId('zip-run').addEventListener('click', runZipDemo);
 document.querySelector('.skip').addEventListener('click', event => { event.preventDefault(); byId('main').focus(); });
 window.addEventListener('hashchange', () => showPage(true)); showPage();

@@ -27,7 +27,8 @@ def render_figures(summary, examples, output):
             ax.plot(x, y, 'o-', color=COLORS[method], label=method)
             for row, xx, yy in zip(selected, x, y):
                 if row['bits'] in [2, 4, 8]:
-                    ax.annotate(str(row['bits']) + 'b', (xx, yy), xytext=(3, 6), textcoords='offset points', fontsize=8)
+                    offset = (3, 8) if method == 'uniform' else (3, -15)
+                    ax.annotate(str(row['bits']) + 'b', (xx, yy), xytext=offset, textcoords='offset points', fontsize=8)
             ax.set_xlabel('Actual ZIP bytes / second / channel')
             ax.grid(alpha=0.2)
     axes[0].axhline(baseline['accuracy'], color=COLORS['float32'], linestyle='--', label='Original decision accuracy')
