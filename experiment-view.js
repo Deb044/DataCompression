@@ -220,6 +220,11 @@ function renderPrecision(summary) {
   notes.className = "small";
   notes.textContent = `Lossless float32 + ZIP: ${fixed(baseline.archive_bytes_per_second_channel, 2)} B/s/channel, with byte-for-byte recovery. The uncompressed float32 payload is 1,000 B/s/channel. Each trial is archived separately; totals sum independent archives. The four-class chance level is 25%. No clinical safety is implied.`;
   target.append(notes);
+  const companderNote = document.createElement("p");
+  companderNote.className = "small";
+  companderNote.textContent =
+    "EEG μ-law variant: companding follows per-channel min–max normalization. Its fine-resolution region is therefore around the range midpoint, which need not equal the mean-centered signal's zero. These results do not establish how a zero-centered, symmetrically scaled compander would behave.";
+  target.append(companderNote);
   const details = document.createElement("details");
   details.innerHTML = "<summary>All measured evaluation conditions</summary>";
   details.append(

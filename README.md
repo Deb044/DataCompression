@@ -52,6 +52,8 @@ Measure payload bytes before ZIP, complete archive bytes, NRMSE, true-label accu
 
 NRMSE is `||x - reconstructed_x|| / ||x - per_channel_mean(x)||`, pooling channels and samples. Constant signals have undefined NRMSE. The continuous μ-law baseline is not a bit-exact G.711 implementation. Equal bit depths do not imply equal ZIP sizes.
 
+In this EEG variant, μ-law follows min–max normalization to [−1, 1], so its fine-resolution region is centered on the channel's range midpoint, not necessarily zero in the mean-centered recording. The results apply to this declared variant. Symmetric scaling around physical zero would be a separate controlled comparison, not a conclusion from this run.
+
 ### Experiment 2: which predictions change?
 
 Compute the original normalized score gap `(best - runner_up) / (best + runner_up + 1e-12)`. Development-participant tertiles define low/middle/high groups; the thresholds are frozen before evaluating S3–S8. Evaluation group sizes need not be equal.
