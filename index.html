@@ -890,6 +890,16 @@
           </p>
         </section>
         <div class="reading-section literature-story">
+          <p class="source-note">
+            A guide to the background:
+            <a href="https://doi.org/10.1109/ATC.2015.7388309"
+              >Dao, Li and Do's 2015 survey,
+              <cite>Lossy Compression Techniques for EEG Signals</cite></a
+            >, connects the practical need for smaller recordings to the
+            question of acceptable distortion. We build on that framing below,
+            then follow the story into more recent work.
+          </p>
+          <h2>The recording keeps growing.</h2>
           <p>
             Imagine recording EEG for hours. Every electrode contributes a
             stream of samples, and every sample needs a place in memory or a
@@ -897,6 +907,41 @@
             whether we can store the same recording more efficiently. The less
             obvious question is whether we need every recorded detail for the
             analysis we have in mind.
+          </p>
+          <p>
+            Consider an illustrative recording with 64 channels, 256 samples per
+            second per channel and 16 bits per sample. That is 262,144 bits
+            every second, or about 2.83 GB over 24 hours, before file headers
+            and other metadata. Double the number of electrodes or the recording
+            duration and the payload doubles too. These are calculated example
+            sizes, not measurements from our dataset.
+          </p>
+          <p>
+            As Dao and colleagues explain, long-term monitoring makes storage
+            and transmission practical concerns. In a wearable system, the
+            question also includes battery energy and processing cost: a smaller
+            transmission is useful, but the device must spend computation to
+            create it. A compressor therefore has to fit the device and the
+            application, as well as reduce the file size.
+          </p>
+          <h2>Why EEG is harder than a repeating pattern</h2>
+          <p>
+            EEG has structure, but it is not a fixed template repeated over and
+            over. Rhythms change with time, channels share some activity while
+            retaining local differences, and brief events can interrupt the
+            background signal. The survey highlights these irregular, transient
+            events as a difficulty. A description that works well for one
+            segment, channel or participant need not work equally well for
+            another.
+          </p>
+          <p>
+            This creates a tension: repetition across time and channels is an
+            opportunity to save bits, yet an unusual event may be exactly what
+            an analysis needs. A small coefficient or short-lived change cannot
+            be declared unimportant just because it contributes little to the
+            average signal energy. Unlike MP3's hearing-based objective, EEG
+            compression needs a preservation criterion tied to the intended
+            measurement or task.
           </p>
           <h2>First, keep every value. Then, allow a little error.</h2>
           <p>
@@ -920,6 +965,75 @@
             EEG compression. Our simple sample-domain quantizer belongs to the
             same broad discussion about precision, but it is not a reproduction
             of their wavelet method.
+          </p>
+          <p>
+            The 2015 survey helps organize the classical approaches. Wavelets
+            describe activity at different time scales; filter banks split the
+            signal into bands; predictors use past or related samples to
+            estimate what comes next; and dictionary methods describe segments
+            using a collection of reusable patterns. Each tries to expose
+            structure that is harder to exploit in the raw samples. Their
+            published compression ratios are not a fair leaderboard: datasets,
+            recording precision and allowed distortion differ.
+          </p>
+          <figure class="article-figure">
+            <img
+              src="assets/eeg-codec-pipeline.svg"
+              width="960"
+              height="350"
+              loading="lazy"
+              alt="A transform-based EEG compressor changes representation, reduces precision, then packs bits; decoding reverses the coding but cannot recover discarded precision"
+            />
+            <figcaption>
+              An original teaching diagram inspired by the survey's three-stage
+              explanation. DFT, DCT and wavelets are transforms, not quantizers.
+              Loss enters through discarding or approximating values; the final
+              entropy coder need not introduce further loss. Our experiments
+              quantize samples directly and do not implement a wavelet codec.
+            </figcaption>
+          </figure>
+          <h2>Smaller by how much? Different by how much?</h2>
+          <p>
+            Two quantities recur in the survey.
+            <strong>Compression ratio (CR)</strong> is original bytes divided by
+            compressed bytes. For example, 1,000 bytes reduced to 250 bytes
+            gives CR = 4:1: the result occupies 25% of the original size, a 75%
+            saving. A larger CR means a smaller representation relative to that
+            baseline. Always check what is counted: packed samples alone, or a
+            complete file with the metadata needed to decode it?
+          </p>
+          <p>
+            <strong>Percentage root-mean-square difference (PRD)</strong> asks
+            how large the reconstruction error is relative to the original
+            signal. The survey defines it as follows, with <var>x</var> the
+            original samples and <var>x̂</var> the reconstructed samples:
+          </p>
+          <div class="note">
+            <strong>PRD = 100 × √[Σ(x − x̂)² / Σx²]</strong><br />
+            Square each sample's error, add those errors, normalize by the
+            original signal's squared values, then take the square root and
+            express it as a percentage. Zero means exact reconstruction; smaller
+            is closer under this measure. It is undefined when the denominator
+            is zero.
+          </div>
+          <p>
+            The denominator matters. A large constant offset increases Σx²
+            without necessarily making useful brain activity easier to preserve.
+            Some studies therefore use a mean-removed denominator, and those
+            values should not be compared blindly. Our reported NRMSE uses
+            deviations from each channel's mean in the denominator and is a
+            fraction, not a percentage. Multiplying it by 100 gives a
+            mean-normalized error percentage, which is not automatically the
+            same as the survey's PRD.
+          </p>
+          <p>
+            The survey discusses a 10% PRD criterion used in earlier work, but
+            that is not a universal clinical safety threshold. Its discussion
+            also describes studies testing seizure detection after
+            reconstruction: the task outcome adds evidence that a waveform error
+            alone cannot provide. Here we use an SSVEP target-recognition task.
+            Preserving that decision does not establish suitability for seizure
+            detection or clinical interpretation.
           </p>
           <figure class="article-figure">
             <img
@@ -1056,6 +1170,17 @@
               study was assessed at abstract level. The two preprints are
               labelled above. The detailed review and search log retain access
               notes and inclusion rules.
+            </p>
+            <p>
+              The background and metric explanations were subsequently expanded
+              using the supplied full text of Dao, Li and Do (2015), especially
+              Sections I–II and IV. This is an additional contextual survey,
+              separate from the eight core studies. The downloadable PDF and
+              original search log describe the initial review; see the
+              <a href="research/dao2015_reading_notes.md"
+                >supplementary reading notes</a
+              >
+              for this website addition and its interpretation limits.
             </p>
             <div class="inline-links">
               <a href="output/pdf/eeg_compression_review_and_experiments.pdf"

@@ -96,5 +96,12 @@
     "venue": "Recommendation G.711 (11/1988)",
     "url": "https://www.itu.int/rec/T-REC-G.711-198811-I/en",
     "note": "Voice-coding context only; a custom EEG compander is not automatically G.711 compliant."
+  },
+  {
+    "authors": "P. T. Dao, X. J. Li and H. N. Do",
+    "title": "Lossy Compression Techniques for EEG Signals",
+    "venue": "2015 International Conference on Advanced Technologies for Communications (ATC), 154-159",
+    "url": "https://doi.org/10.1109/ATC.2015.7388309",
+    "note": "Supplied six-page full text read; metadata verified against the AUT institutional repository. Added as a contextual survey after the initial review PDF. See supplementary reading notes."
   }
 ]

@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="350" viewBox="0 0 960 350" role="img" aria-labelledby="title desc">
+  <title id="title">Where does information leave an EEG compressor?</title>
+  <desc id="desc">A conceptual transform-based encoder represents samples with coefficients, quantizes or discards values, then entropy-codes them. A decoder unpacks and reconstructs an approximate signal. Discarded precision cannot be recovered.</desc>
+  <rect width="960" height="350" rx="14" fill="#172430"/>
+  <g font-family="system-ui,sans-serif" text-anchor="middle" fill="#edf3f6">
+    <text x="480" y="38" font-size="22">Where does information leave?</text>
+    <g fill="#101923" stroke="#344854">
+      <rect x="25" y="75" width="270" height="125" rx="10"/>
+      <rect x="345" y="75" width="270" height="125" rx="10" stroke="#ffac8f"/>
+      <rect x="665" y="75" width="270" height="125" rx="10"/>
+    </g>
+    <text x="160" y="108" font-size="18">1. Change representation</text>
+    <text x="160" y="142" font-size="16" fill="#86dbce">Samples → coefficients</text>
+    <text x="160" y="175" font-size="14" fill="#b1c0ca">Expose structure across time / scale</text>
+    <text x="480" y="108" font-size="18">2. Reduce precision</text>
+    <text x="480" y="142" font-size="16" fill="#ffac8f">Round or discard values</text>
+    <text x="480" y="175" font-size="14" fill="#b1c0ca">This is where loss is introduced</text>
+    <text x="800" y="108" font-size="18">3. Pack the bits</text>
+    <text x="800" y="142" font-size="16" fill="#86dbce">Entropy coding</text>
+    <text x="800" y="175" font-size="14" fill="#b1c0ca">Save bits without further loss</text>
+    <g stroke="#86dbce" stroke-width="2" fill="none">
+      <path d="M302 136h33m-8-5 8 5-8 5M622 136h33m-8-5 8 5-8 5"/>
+      <path d="M800 210v26H160v25m-5-8 5 8 5-8"/>
+    </g>
+    <text x="480" y="281" font-size="17">Decode: unpack → recover approximate coefficients → reconstruct samples</text>
+    <text x="480" y="317" font-size="15" fill="#b1c0ca">Reversing the pipeline cannot restore precision discarded at step 2.</text>
+  </g>
+</svg>
