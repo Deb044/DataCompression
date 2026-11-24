@@ -12,6 +12,65 @@
   --mono: ui-monospace, Consolas, monospace;
   --sans: system-ui, -apple-system, "Segoe UI", sans-serif;
 }
+.reading-section {
+  max-width: 800px;
+  margin-inline: auto;
+}
+.reading-section p {
+  color: var(--muted);
+  margin-bottom: 22px;
+  font-size: 1.07rem;
+  line-height: 1.85;
+}
+.reading-section a {
+  color: var(--teal);
+}
+.literature-story h2 {
+  margin-top: 48px;
+  font-size: clamp(1.7rem, 3vw, 2.4rem);
+}
+.article-figure {
+  margin: 36px -40px;
+}
+.article-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+}
+.article-figure figcaption {
+  margin-top: 14px;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.65;
+}
+.halftone-comparison {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+.halftone-comparison canvas {
+  width: 100%;
+  height: auto;
+  display: block;
+  image-rendering: pixelated;
+  border-radius: 6px;
+}
+.halftone-comparison figcaption {
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+@media (max-width: 760px) {
+  .article-figure {
+    margin-inline: 0;
+  }
+}
+@media (max-width: 600px) {
+  .halftone-comparison {
+    grid-template-columns: 1fr;
+  }
+}
 .image-lab {
   margin-top: 28px;
 }

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="310" viewBox="0 0 960 310" role="img" aria-labelledby="title desc">
+  <title id="title">One compressed signal, two different questions</title><desc id="desc">A conceptual EEG waveform passes through encoding and reconstruction. Waveform similarity and decision preservation are evaluated separately.</desc>
+  <rect width="960" height="310" rx="14" fill="#172430"/>
+  <g font-family="system-ui,sans-serif" fill="#edf3f6" text-anchor="middle">
+    <text x="480" y="36" font-size="20">What should survive the journey?</text>
+    <g stroke="#344854" fill="#101923"><rect x="30" y="82" width="220" height="140" rx="8"/><rect x="315" y="82" width="220" height="140" rx="8"/><rect x="600" y="65" width="330" height="76" rx="8"/><rect x="600" y="163" width="330" height="76" rx="8"/></g>
+    <text x="140" y="112" font-size="17">Recorded EEG</text>
+    <path d="M45 170h12l10-23 13 45 13-61 14 48 15-23 14 16 13-24 14 37 15-51 13 45 14-14 12 5h14" stroke="#86dbce" stroke-width="2" fill="none"/>
+    <text x="425" y="120" font-size="17">Encode / reconstruct</text><text x="425" y="157" font-size="22" fill="#86dbce" font-family="monospace">0110 1011</text><text x="425" y="193" font-size="14" fill="#b1c0ca">Fewer stored bits</text>
+    <text x="765" y="96" font-size="17">Is the waveform close?</text><text x="765" y="121" font-size="14" fill="#b1c0ca">Reconstruction error</text>
+    <text x="765" y="193" font-size="17">Does the decision survive?</text><text x="765" y="219" font-size="14" fill="#b1c0ca">Accuracy and individual prediction changes</text>
+    <g stroke="#ffac8f" stroke-width="2" fill="none"><path d="M255 151h48m-8-5 8 5-8 5M540 151h26V103h24m-8-5 8 5-8 5M566 151v50h24m-8-5 8 5-8 5"/></g>
+    <text x="480" y="282" font-size="14" fill="#b1c0ca">Conceptual illustration. Similarity and usefulness require separate tests.</text>
+  </g>
+</svg>

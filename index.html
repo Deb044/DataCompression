@@ -90,6 +90,51 @@
             </p>
           </div>
         </section>
+        <section class="lesson reading-section">
+          <h2>More data. More modalities. More to move.</h2>
+          <p>
+            Modern computing increasingly learns from data rather than relying
+            only on rules written by hand. Large language models learn from
+            large collections of text. Multimodal models bring images, audio and
+            other observations into the same system. A robot has to connect what
+            its cameras and sensors observe with language, motion and actions.
+            Data is both the material these systems learn from and the stream
+            they must handle while operating.
+          </p>
+          <p>
+            As we record for longer, add sensors and increase resolution, the
+            storage and communication burden grows. Combining modalities
+            multiplies the streams: a single robot interaction may contain
+            several camera views, a spoken instruction and a sequence of sensor
+            readings. Keeping and moving all of this can become a bottleneck,
+            especially on a wireless link or a small device.
+          </p>
+          <p>
+            This is why compression matters beyond saving space on a hard drive.
+            A smaller representation can reduce transfer time and make limited
+            storage go further. But compression itself costs computation, and
+            discarding the wrong information can make a downstream system less
+            useful. The challenge is to reduce the data while retaining what the
+            application needs.
+          </p>
+          <p>
+            For example,
+            <a href="https://arxiv.org/abs/2303.03378">PaLM-E</a> combines
+            language, vision and sensor-state inputs, while
+            <a href="https://robotics-transformer2.github.io/">RT-2</a> learns
+            from vision-language data and robot trajectories. These are examples
+            of the motivation for handling multimodal data efficiently, not
+            claims that our EEG compressor improves those systems. Here we study
+            compression of recorded inputs, rather than compression of model
+            weights.
+          </p>
+          <p>
+            EEG gives us a small, concrete version of this broader problem. Many
+            channels are sampled continuously, yet the information needed for
+            one decision may be only a small part of the recording. How do we
+            decide what is safe to leave out?
+          </p>
+        </section>
         <section class="lesson">
           <div class="section-heading">
             <div>
@@ -175,9 +220,11 @@
             A small toolkit<br />for <em>fewer bits.</em>
           </h1>
           <p class="intro">
-            Some methods remove redundancy. Others reduce precision or discard
-            information. Understanding that distinction comes before compressing
-            EEG.
+            These are some important data compression techniques across
+            different modalities: general-purpose files, audio, images and
+            sampled signals. Some remove redundancy without losing information;
+            others trade precision or detail for fewer bits. We will use these
+            ideas as the foundation for our EEG experiments.
           </p>
         </section>
         <section class="lesson split">
@@ -393,6 +440,92 @@
               here.
             </p>
           </div>
+        </section>
+        <section class="lesson" id="threshold-dither">
+          <h2>Thresholding &amp; dithering</h2>
+          <div class="prose wide">
+            <p>
+              Suppose an image can use only black and white.
+              <strong>Thresholding</strong> compares each grayscale value with a
+              cutoff: darker values become black and brighter values become
+              white. It is simple, but a smooth gradient turns into a sharp
+              boundary, and subtle shading disappears.
+            </p>
+            <p>
+              <strong>Dithering</strong> uses patterns of black and white pixels
+              to suggest intermediate shades. In Floyd–Steinberg error
+              diffusion, we quantize one pixel, calculate its rounding error,
+              then distribute it to unprocessed neighbours: 7/16 to the right,
+              and 3/16, 5/16 and 1/16 to the lower-left, lower and lower-right
+              pixels. The dots retain a sense of shading when viewed together;
+              they do not recover the original grayscale samples.
+            </p>
+            <p>
+              Both outputs below use one bit per pixel once packed, compared
+              with eight bits for the grayscale input. That is a lossy reduction
+              in representation size. An image format must still store
+              dimensions and other metadata, and lossless coding may save more.
+              Dithering adds texture, which can affect compressibility: the two
+              one-bit images need not produce equally sized ZIP files.
+            </p>
+          </div>
+          <div class="lab-panel">
+            <div class="controls">
+              <label for="halftone-threshold"
+                >Black/white cutoff
+                <output id="halftone-value">128</output></label
+              ><input
+                id="halftone-threshold"
+                type="range"
+                min="1"
+                max="254"
+                value="128"
+              />
+            </div>
+            <div class="halftone-comparison">
+              <figure>
+                <canvas
+                  id="halftone-original"
+                  role="img"
+                  aria-label="Original eight-bit grayscale gradient and circle"
+                ></canvas>
+                <figcaption>8-bit grayscale</figcaption>
+              </figure>
+              <figure>
+                <canvas
+                  id="halftone-binary"
+                  role="img"
+                  aria-label="One-bit thresholded image"
+                ></canvas>
+                <figcaption>Thresholding / 1 bit per pixel</figcaption>
+              </figure>
+              <figure>
+                <canvas
+                  id="halftone-dithered"
+                  role="img"
+                  aria-label="One-bit Floyd–Steinberg dithered image"
+                ></canvas>
+                <figcaption>Floyd–Steinberg / 1 bit per pixel</figcaption>
+              </figure>
+            </div>
+            <p id="halftone-sizes" class="result-callout" aria-live="polite">
+              Measuring the pixel representations…
+            </p>
+            <p class="small">
+              Synthetic 128 × 128 grayscale example. Display canvases use
+              browser RGBA buffers; the reported one-bit sizes come from
+              actually packing the binary pixel arrays. Pixel payload sizes
+              exclude dimensions and palette; the measured ZIP sizes include
+              archive headers but still assume that image interpretation is
+              agreed separately. These archives are a byte-coding demonstration,
+              not standalone PNG files.
+            </p>
+          </div>
+          <p class="source-note">
+            Course connection: the image lectures introduce Floyd–Steinberg
+            dithering. The default cutoff of 128 gives the usual midpoint binary
+            quantizer; moving the control explores a different cutoff.
+          </p>
         </section>
         <section class="lesson">
           <div class="section-heading">
@@ -663,116 +796,200 @@
 
       <article id="literature" data-page hidden>
         <section class="page-intro">
-          <p class="eyebrow">A RAPID STRUCTURED REVIEW</p>
+          <p class="eyebrow">READING THE EEG COMPRESSION LITERATURE</p>
           <h1 id="literature-title" tabindex="-1">
-            From exact values<br />to <em>useful decisions.</em>
+            What should a smaller<br />recording <em>remember?</em>
           </h1>
           <p class="intro">
-            EEG compression has a long history. Our aim is to understand the
-            methods, compare what their evaluations establish, and make a small
-            controlled attempt of our own.
-          </p>
-          <div class="inline-links">
-            <a href="output/pdf/eeg_compression_review_and_experiments.pdf"
-              >Review &amp; initial protocol (PDF)</a
-            ><a href="research/search_log.json">Search log (JSON)</a>
-          </div>
-          <p class="source-note">
-            Search cutoff: 24 November 2026. Eight core studies; two are
-            preprints. Representative coverage, not an exhaustive systematic
-            review or meta-analysis.
+            A compressed brain recording is useful only if we can still do
+            something useful with it. The literature gradually turns that simple
+            thought into several different questions.
           </p>
         </section>
-        <section class="lesson">
-          <div class="section-heading">
-            <div>
-              <p class="eyebrow">THE EVIDENCE MAP</p>
-              <h2>Different methods.<br />Different promises.</h2>
-            </div>
-            <div class="controls">
-              <label for="paper-filter">Show</label
-              ><select id="paper-filter">
-                <option value="all">All core studies</option>
-                <option value="classical">Classical &amp; transform</option>
-                <option value="task">Task-aware &amp; personalized</option>
-                <option value="neural">Neural &amp; adaptive</option>
-              </select>
-            </div>
-          </div>
-          <div id="paper-list" class="paper-list"></div>
-          <p class="small">
-            Source-reported findings, not reproduced benchmarks. Abstract-level
-            assessment and preprint status are marked. Differences in data,
-            precision baselines and decoder training prevent a fair ranking of
-            headline compression ratios.
+        <div class="reading-section literature-story">
+          <p>
+            Imagine recording EEG for hours. Every electrode contributes a
+            stream of samples, and every sample needs a place in memory or a
+            packet on a communication link. The obvious first question is
+            whether we can store the same recording more efficiently. The less
+            obvious question is whether we need every recorded detail for the
+            analysis we have in mind.
           </p>
-        </section>
-        <section class="lesson split">
-          <div>
-            <p class="eyebrow">OUR SYNTHESIS</p>
-            <h2>What can a small<br />experiment clarify?</h2>
-          </div>
-          <div class="gap-list">
-            <div>
-              <h3>Count real bytes.</h3>
-              <p>
-                Separate lower-precision savings from ZIP savings. Include
-                scales, dimensions, bit packing and archive overhead.
-              </p>
-            </div>
-            <div>
-              <h3>Look beyond average accuracy.</h3>
-              <p>
-                Some correct answers can become wrong while other wrong answers
-                become correct. Keep the trial-level transitions.
-              </p>
-            </div>
-            <div>
-              <h3>Test the confidence assumption.</h3>
-              <p>
-                Score separation is already used for SSVEP confidence. Whether
-                it predicts damage from our quantizer is an empirical question.
-              </p>
-              <a href="https://eprints.whiterose.ac.uk/id/eprint/199879/"
-                >Related confidence study, Zhang et al. (2023)</a
-              >
-            </div>
-            <div>
-              <h3>Keep claims within the evidence.</h3>
-              <p>
-                Task-aware compression and multi-task evaluation already exist.
-                Our experiments test a simple baseline; they do not establish
-                clinical safety or superiority over neural codecs.
-              </p>
-            </div>
-          </div>
-        </section>
-        <section class="lesson">
-          <h2>A review that shows its limits.</h2>
-          <div class="prose wide">
-            <p>
-              We searched for EEG waveform compression, quantization, task-aware
-              coding, confidence and bit allocation, then verified selected
-              sources through publication records or author manuscripts. Some
-              sources were only assessed through indexed abstracts. The search
-              log records inclusion rules and access limits; it does not invent
-              a screened-record count.
-            </p>
-            <p>
-              The open questions above are our synthesis of the selected
-              evidence and our setup. We do not claim that nobody has studied
-              them. A null result is useful if the comparison is controlled and
-              the interpretation is honest.
-            </p>
-          </div>
+          <h2>First, keep every value. Then, allow a little error.</h2>
+          <p>
+            This is not a new problem. Back in 1999,
+            <a href="https://doi.org/10.1109/4233.788586"
+              >Memon, Kong and Cinkler</a
+            >
+            compared general-purpose and predictive lossless EEG coding, then
+            explored near-lossless coding with bounds on the introduced error.
+            It is a useful starting point: exact recovery gives a clear promise,
+            while controlled loss opens up a different trade-off.
+          </p>
+          <p>
+            Transforms provide another way to find structure. Rather than coding
+            the time samples directly, we can describe them using coefficients
+            and spend fewer bits on some of those coefficients.
+            <a href="https://doi.org/10.1016/j.compbiomed.2013.02.011"
+              >Higgins and colleagues (2013)</a
+            >
+            studied coefficient quantization and thresholding in wavelet-based
+            EEG compression. Our simple sample-domain quantizer belongs to the
+            same broad discussion about precision, but it is not a reproduction
+            of their wavelet method.
+          </p>
+          <figure class="article-figure">
+            <img
+              src="assets/preservation.svg"
+              width="960"
+              height="310"
+              alt="Conceptual diagram separating waveform fidelity from decision preservation"
+            />
+            <figcaption>
+              Two questions about the same reconstructed recording. A small
+              error and an unchanged decision are different kinds of evidence.
+              This is a conceptual diagram, not measured EEG.
+            </figcaption>
+          </figure>
+          <h2>A close waveform is only part of the story.</h2>
+          <p>
+            If a recording is going to drive a particular decision, it makes
+            sense to test that decision after decompression. In an SSVEP task,
+            for instance, we want to identify the flickering target a
+            participant attended to.
+            <a href="https://www.mdpi.com/2078-2489/13/4/186"
+              >Zhang and colleagues (2022)</a
+            >
+            explicitly evaluated recognition after personalized SSVEP
+            compression, combining a transform, learned reconstruction and
+            nonuniform quantization. So asking how compression affects
+            recognition is established work, rather than a novelty claim for
+            this project.
+          </p>
+          <p>
+            There is another subtle choice: should the recognition system adapt
+            to the compressor?
+            <a
+              href="https://homes.esat.kuleuven.be/~abertran/reports/Strypsteen_ICASSP2023.pdf"
+              >Strypsteen and Bertrand (2023)</a
+            >
+            jointly learned source coding and inference for a motor-execution
+            task in an emulated wireless EEG network. That allows the inference
+            model to learn with the representation it will receive. We ask a
+            narrower question: what happens when we compress a recording but
+            keep the existing decoder fixed?
+          </p>
+          <h2>Learning what to store</h2>
+          <p>
+            Neural compressors try to learn compact representations from data.
+            <a href="https://doi.org/10.1088/1741-2552/ad48ba"
+              >Wang, Zhang and Wu (2024)</a
+            >
+            used a lightweight encoder with a richer reconstruction network,
+            evaluating ERP and motor-imagery recordings. The asymmetry is
+            practical: the device collecting the signal may have less compute
+            available than the system reconstructing it.
+          </p>
+          <p>
+            The training data matters too. The
+            <a
+              href="https://proceedings.iclr.cc/paper_files/paper/2025/file/28c9ce39a89c03f0bdd9725907d5abbc-Paper-Conference.pdf"
+              >EEG/iEEG BrainCodec paper by Carzaniga and colleagues (2025)</a
+            >
+            explored transfer from cleaner intracranial recordings to scalp EEG,
+            with reconstruction, downstream-task and expert evaluations. It is a
+            reminder that a good result on one signal source does not
+            automatically give us a safe setting for another.
+          </p>
+          <p>
+            Audio offers an interesting connection to our course.
+            <a href="https://arxiv.org/abs/2511.23142"
+              >Kastrati and colleagues' 2025 preprint</a
+            >
+            adapts neural audio codecs to EEG by addressing differences in
+            sampling, framing and channels. This is more careful than simply
+            saving EEG as ordinary MP3. Meanwhile,
+            <a href="https://arxiv.org/abs/2605.03085"
+              >Xie's ADaCoRe preprint (2026)</a
+            >
+            combines compression with protected timepoints and confidence-based
+            selection of replay examples for continual learning. Both are recent
+            directions; we treat their findings as provisional.
+          </p>
+          <figure class="article-figure">
+            <a href="results/example.png"
+              ><img
+                src="results/example.png"
+                width="1800"
+                height="1000"
+                loading="lazy"
+                alt="Our measured original and two-bit reconstructed Oz waveform, with their FFT spectra"
+            /></a>
+            <figcaption>
+              A concrete example from our own run: S03, block 1, target 9 Hz,
+              uniform 2-bit reconstruction. The example was chosen by trial
+              order before the results, not for a striking effect. The waveform
+              changes substantially while the target decision remains 9 Hz. This
+              illustrates our experiment, not a result reproduced from the
+              papers above.
+            </figcaption>
+          </figure>
+          <h2>Where our small experiment fits</h2>
+          <p>
+            Reading these papers changes the question from “Can EEG be
+            compressed?” to “What did a particular compressor preserve, and how
+            was that checked?” Headline compression ratios alone cannot answer
+            this: datasets, input precision, metadata and decoder training
+            differ. We therefore count actual archive bytes and examine both
+            reconstruction error and individual prediction changes.
+          </p>
+          <p>
+            We also investigate a simple clue: the gap between the original
+            decoder's strongest and second-strongest scores.
+            <a href="https://eprints.whiterose.ac.uk/id/eprint/199879/"
+              >SSVEP confidence research by Zhang and colleagues (2023)</a
+            >
+            already uses separation among recognition scores to assess
+            reliability. But reliability and tolerance to our quantizer are not
+            the same thing. Our second experiment tests whether a small original
+            gap is associated with later prediction changes, using a shuffled
+            control and simple signal statistics for comparison.
+          </p>
+          <p>
+            This is a controlled exploration, not a claim to have invented
+            task-aware EEG compression. A useful outcome can be a pattern that
+            holds in our small cohort, a pattern that fails, or a limitation
+            that becomes visible only when we inspect individual trials. The
+            <a href="#experiments">Experiments tab</a> shows what we actually
+            measured, together with the settings and participant-level results.
+          </p>
           <details>
-            <summary>Complete reference list and access notes</summary>
+            <summary>About this review and its sources</summary>
+            <p>
+              Search cutoff: 24 November 2026. This is a rapid structured review
+              of eight representative core studies, not an exhaustive systematic
+              review or a ranking of methods. Some older studies and Wang et al.
+              were assessed through indexed abstracts; the audio-adaptation
+              study was assessed at abstract level. The two preprints are
+              labelled above. The detailed review and search log retain access
+              notes and inclusion rules.
+            </p>
+            <div class="inline-links">
+              <a href="output/pdf/eeg_compression_review_and_experiments.pdf"
+                >Detailed review &amp; initial protocol (PDF)</a
+              ><a href="research/search_log.json">Search log</a>
+            </div>
+          </details>
+          <details>
+            <summary>References and access notes</summary>
             <div id="reference-list" class="reference-list"></div>
           </details>
-        </section>
+        </div>
         <div class="chapter-end">
-          <p>Turn the questions into measurements.</p>
-          <a class="button primary" href="#experiments">Open the experiments</a>
+          <p>Now follow the recording through our own pipeline.</p>
+          <a class="button primary" href="#experiments"
+            >Explore the measured results</a
+          >
         </div>
       </article>
 

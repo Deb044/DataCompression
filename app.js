@@ -1,10 +1,10 @@
 import { makeHuffmanCodes, makeSamples } from "./samples.js";
 import { makeZip, supportsZipLab } from "./zip.js";
 import { quantize, signalPath, syntheticSignal } from "./signal.js";
-import { papers } from "./literature.js";
 import { makeTable } from "./table.js";
 import { loadExperimentResults } from "./experiment-view.js";
 import { setUpImageCompression } from "./image-demo.js";
+import { setUpHalftone } from "./halftone.js";
 
 const byId = (id) => document.getElementById(id);
 const format = new Intl.NumberFormat("en", { maximumFractionDigits: 2 });
@@ -177,22 +177,6 @@ async function runZipDemo() {
   }
 }
 function setUpLiterature() {
-  function update() {
-    const selected = byId("paper-filter").value;
-    byId("paper-list").replaceChildren(
-      ...papers
-        .filter((paper) => selected === "all" || paper.family === selected)
-        .map((paper) => {
-          const article = document.createElement("article");
-          article.className = "paper";
-          // Curated local content only; no user input is interpolated.
-          article.innerHTML = `<div><span class="year">${paper.year}</span><p class="small">${paper.status}</p></div><div><h3><a href="${paper.url}">${paper.title}</a></h3><p>${paper.authors}</p><p class="evidence">${paper.finding}</p></div><div class="paper-lesson"><strong>WHAT IT MEANS FOR US</strong><p>${paper.lesson}</p></div>`;
-          return article;
-        }),
-    );
-  }
-  byId("paper-filter").addEventListener("change", update);
-  update();
   fetch("content/references.json")
     .then((response) => {
       if (!response.ok) throw new Error("Reference list could not load.");
@@ -246,6 +230,7 @@ setUpHuffman();
 setUpQuantization();
 setUpLiterature();
 setUpImageCompression();
+setUpHalftone();
 loadExperimentResults();
 byId("zip-run").addEventListener("click", runZipDemo);
 document.querySelector(".skip").addEventListener("click", (event) => {
