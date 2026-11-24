@@ -1,0 +1,59 @@
+{
+  "cutoff_date": "2026-11-24",
+  "review_type": "Rapid structured review with a documented search strategy; not an exhaustive systematic review",
+  "scope": "Compression of recorded EEG waveforms, with emphasis on quantization, reconstructed-signal quality and preservation of downstream decisions. Confidence estimation is an adjacent method, not a compressor.",
+  "search_method": "General web discovery followed by primary publisher, conference, institutional-repository and official-dataset pages. Backward reference checking from the SSVEP, neural source coding and confidence papers. No complete bibliographic-database exports, independent second screener or deduplicated candidate census.",
+  "queries_executed": [
+    "EEG compression classification confidence adaptive quantization margin task aware",
+    "EEG compression task aware rate distortion classification motor imagery SSVEP",
+    "EEG compression adaptive bit allocation confidence classification margin",
+    "\"EEG\" \"compression\" \"confidence\" quantization margin",
+    "\"EEG\" \"compression\" \"decision boundary\"",
+    "\"EEG\" \"compression\" \"bit allocation\" adaptive",
+    "\"compression\" \"classification margin\" quantization adaptive bit allocation",
+    "\"EEG\" \"margin\" \"quantization\" compression signal",
+    "\"EEG\" \"compression\" \"confidence-based\"",
+    "\"EEG\" \"compression\" \"margin-based\"",
+    "\"SSVEP\" \"compression\" \"confidence\"",
+    "\"Bayesian-based Classification Confidence Estimation\" SSVEP",
+    "\"EEG\" \"compression\" \"uncertainty\" adaptive quantization",
+    "\"EEG\" \"compression\" \"prediction margin\"",
+    "\"EEG\" \"compression\" \"score gap\"",
+    "\"EEG\" \"compression\" \"trial-wise\" quantization",
+    "EEG compression review lossless lossy classification systematic review quantization 2024 2025",
+    "\"EEG\" \"compression\" \"Higgins\" 2013 quantization",
+    "\"Lossless and near-lossless compression of EEG signals\" Cinkler Memon Kong",
+    "\"BrainCodec\" \"ICLR\" 2025 EEG",
+    "site.pubmed.ncbi.nlm.nih.gov/23047884 \"Abstract\"",
+    "site.pubmed.ncbi.nlm.nih.gov \"An evaluation of the effects of wavelet coefficient quantisation\""
+  ],
+  "inclusion": [
+    "Direct EEG waveform compression or quantization with reconstruction or downstream-task evaluation",
+    "Representative classical, transform, task-aware and neural approaches",
+    "Primary publication or verifiable author manuscript; clearly labelled preprints permitted for recent context",
+    "Adjacent confidence paper retained to motivate, rather than establish, the compression hypothesis"
+  ],
+  "exclusion": [
+    "Classifier weight pruning or model quantization without compression of the recorded EEG input",
+    "fMRI-only, image-only, ECG-only or EMG-only compression",
+    "Compression as a cognitive metaphor or a signal-complexity marker without waveform coding",
+    "Unverified project-repository performance claims and promotional material",
+    "Studies inaccessible beyond a snippet were not used for detailed numerical conclusions"
+  ],
+  "counts": {
+    "core_research_papers_synthesized": 8,
+    "adjacent_confidence_papers": 1,
+    "contextual_review_manuscripts": 1,
+    "dataset_and_format_references": 4,
+    "total_references_in_report": 14,
+    "screened_candidate_total": null,
+    "note": "These are counts of the selected bibliography, not PRISMA screening counts. No exhaustive screened-record total is claimed."
+  },
+  "access_limitations": [
+    "PubMed/PMC sometimes returned bot checks. Memon 1999 and Higgins 2013 were summarized from complete indexed abstracts, without claiming a full-text methods audit.",
+    "Wang 2024 was assessed using its PubMed abstract; full-text implementation details were not audited.",
+    "Full text was available for the selected SSVEP, neural source coding, BrainCodec, confidence and ADaCoRe papers, but this is a focused reading rather than a line-by-line replication audit.",
+    "Kastrati 2025 was assessed at abstract level and labelled as an arXiv preprint; workshop commentary does not establish archival peer-review status.",
+    "The Damoah-Liang author manuscript contains a placeholder DOI. It is contextual material, not a verified archival publication or a source of numerical benchmarks."
+  ]
+}
