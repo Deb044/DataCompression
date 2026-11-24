@@ -1131,34 +1131,57 @@
               papers above.
             </figcaption>
           </figure>
-          <h2>Where our small experiment fits</h2>
+          <h2>From the literature to two experiments</h2>
           <p>
-            Reading these papers changes the question from “Can EEG be
-            compressed?” to “What did a particular compressor preserve, and how
-            was that checked?” Headline compression ratios alone cannot answer
-            this: datasets, input precision, metadata and decoder training
-            differ. We therefore count actual archive bytes and examine both
-            reconstruction error and individual prediction changes.
+            The literature leaves us with two connected lessons. A smaller EEG
+            file should be judged by what it preserves for an intended use, and
+            an average result can hide differences between individual
+            recordings. We turn those lessons into two manageable questions,
+            using public SSVEP recordings: can we still identify which
+            flickering target a participant attended to after reducing the
+            signal's precision?
           </p>
+          <h3>Experiment 1: How many bits are enough?</h3>
           <p>
-            We also investigate a simple clue: the gap between the original
-            decoder's strongest and second-strongest scores.
+            First, we make the trade-off visible. We reduce the number of bits
+            used to represent each sample, compare uniform and μ-law
+            quantization, and pack the results into real ZIP archives. After
+            reconstruction, we measure three things together: file size,
+            waveform error and target-recognition performance. The same
+            FFT-based decoder is used at every precision, so it does not learn
+            to compensate for the compression. This lets us ask whether a signal
+            can change numerically while still supporting the same decision, and
+            where further storage savings begin to disrupt that decision.
+          </p>
+          <h3>Experiment 2: Which trials fail first?</h3>
+          <p>
+            The first experiment describes the overall trade-off. The second
+            asks whether some individual trials are more vulnerable than others.
+            Before compression, the decoder assigns a score to each candidate
+            target. A small gap between the strongest and second-strongest
+            scores means the choice is close; it is plausible that a small
+            signal change could then change the winner.
             <a href="https://eprints.whiterose.ac.uk/id/eprint/199879/"
               >SSVEP confidence research by Zhang and colleagues (2023)</a
             >
             already uses separation among recognition scores to assess
-            reliability. But reliability and tolerance to our quantizer are not
-            the same thing. Our second experiment tests whether a small original
-            gap is associated with later prediction changes, using a shuffled
-            control and simple signal statistics for comparison.
+            reliability. We test the narrower hypothesis that a small original
+            gap is associated with prediction changes under compression, with
+            uniform 2-bit quantization as our primary test. Shuffled controls
+            and simple signal statistics help us assess whether the gap offers
+            useful information in this dataset. A changed prediction can be a
+            correction as well as an error, so we examine those separately.
           </p>
           <p>
-            This is a controlled exploration, not a claim to have invented
-            task-aware EEG compression. A useful outcome can be a pattern that
-            holds in our small cohort, a pattern that fails, or a limitation
-            that becomes visible only when we inspect individual trials. The
-            <a href="#experiments">Experiments tab</a> shows what we actually
-            measured, together with the settings and participant-level results.
+            Together, the experiments move from
+            <em>how much precision can we remove?</em> to
+            <em>which decisions are most sensitive to that removal?</em> This is
+            a small controlled exploration of established ideas, with settings
+            chosen on development participants and checked on separate
+            evaluation participants. It does not establish a universal safe
+            bitrate or clinical suitability. The next tab follows this pipeline
+            through the measurements, including the cases where an unchanged
+            average accuracy hides individual prediction changes.
           </p>
           <details>
             <summary>References and access notes</summary>
@@ -1166,7 +1189,7 @@
           </details>
         </div>
         <div class="chapter-end">
-          <p>Now follow the recording through our own pipeline.</p>
+          <p>First measure the trade-off. Then examine individual trials.</p>
           <a class="button primary" href="#experiments"
             >Explore the measured results</a
           >
