@@ -292,6 +292,108 @@
             </p>
           </div>
         </section>
+        <section class="lesson" id="image-compression">
+          <p class="eyebrow">THE IMAGE MODALITY</p>
+          <h2>Image compression</h2>
+          <div class="story-steps">
+            <div>
+              <span class="pill">Lossless</span>
+              <h3>PNG: preserve pixel values.</h3>
+              <p>
+                PNG applies reversible scanline filters, then DEFLATE
+                compression. It preserves the encoded image samples exactly and
+                supports transparency. Repeated structure can help it compress;
+                unstructured noise is harder.
+              </p>
+            </div>
+            <div>
+              <span class="pill coral-pill">Usually lossy</span>
+              <h3>JPEG: reduce spatial detail.</h3>
+              <p>
+                The common DCT-based JPEG pipeline transforms small image
+                blocks, quantizes their coefficients, then entropy-codes them.
+                Coarser quantization can reduce storage while introducing block
+                boundaries, ringing or lost texture. Color subsampling can also
+                discard detail.
+              </p>
+            </div>
+            <div>
+              <span class="step-label">The course connection</span>
+              <h3>Transform, quantize, encode.</h3>
+              <p>
+                Spatial frequency describes how pixel values change across an
+                image. JPEG's DCT is related to Fourier analysis, but is not the
+                DFT. As with EEG, a small numerical error and preservation of
+                useful information are different goals.
+              </p>
+            </div>
+          </div>
+          <p class="source-note">
+            Sources:
+            <a href="https://www.w3.org/TR/png-3/">W3C PNG specification</a> and
+            <a href="https://jpeg.org/jpeg/">JPEG committee overview</a>. JPEG
+            also has other coding modes; this explanation concerns the common
+            lossy DCT pipeline.
+          </p>
+          <div class="lab-panel image-lab">
+            <h3>See what JPEG leaves behind.</h3>
+            <div class="controls">
+              <label for="image-pattern">Synthetic image</label
+              ><select id="image-pattern">
+                <option value="structured">
+                  Gradient, edges &amp; fine lines
+                </option>
+                <option value="noise">Seeded color noise</option>
+              </select>
+              <label for="image-quality"
+                >JPEG encoder quality
+                <output id="image-quality-value">80 / 100</output></label
+              ><input
+                type="range"
+                id="image-quality"
+                min="1"
+                max="100"
+                value="80"
+              />
+            </div>
+            <div class="image-comparison">
+              <figure>
+                <img
+                  id="image-original"
+                  width="256"
+                  height="256"
+                  alt="Original synthetic image stored as PNG"
+                />
+                <figcaption>Original / lossless PNG</figcaption>
+              </figure>
+              <figure>
+                <img
+                  id="image-decoded"
+                  width="256"
+                  height="256"
+                  alt="Decoded JPEG of the same synthetic image"
+                />
+                <figcaption>JPEG reconstruction</figcaption>
+              </figure>
+            </div>
+            <p
+              id="image-measurements"
+              class="result-callout"
+              aria-live="polite"
+            >
+              Preparing the browser measurement…
+            </p>
+            <p class="small">
+              Real browser encoding of the same opaque 256 × 256 image; complete
+              PNG/JPEG file sizes include headers. RGB RMSE compares decoded
+              JPEG samples with the source canvas on a 0–255 scale. Encoder
+              quality is a setting, not a percentage of retained detail. Results
+              depend on the browser; PNG is not guaranteed to be larger.
+              Previews are enlarged to expose artifacts. No EEG data is used
+              here.
+            </p>
+          </div>
+        </section>
         <section class="lesson">
           <div class="section-heading">
             <div>

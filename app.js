@@ -4,6 +4,7 @@ import { quantize, signalPath, syntheticSignal } from "./signal.js";
 import { papers } from "./literature.js";
 import { makeTable } from "./table.js";
 import { loadExperimentResults } from "./experiment-view.js";
+import { setUpImageCompression } from "./image-demo.js";
 
 const byId = (id) => document.getElementById(id);
 const format = new Intl.NumberFormat("en", { maximumFractionDigits: 2 });
@@ -244,6 +245,7 @@ setUpBudget();
 setUpHuffman();
 setUpQuantization();
 setUpLiterature();
+setUpImageCompression();
 loadExperimentResults();
 byId("zip-run").addEventListener("click", runZipDemo);
 document.querySelector(".skip").addEventListener("click", (event) => {

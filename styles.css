@@ -12,6 +12,32 @@
   --mono: ui-monospace, Consolas, monospace;
   --sans: system-ui, -apple-system, "Segoe UI", sans-serif;
 }
+.image-lab {
+  margin-top: 28px;
+}
+.image-comparison {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+.image-comparison img {
+  display: block;
+  width: 100%;
+  height: auto;
+  image-rendering: pixelated;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+.image-comparison figcaption {
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+@media (max-width: 600px) {
+  .image-comparison {
+    grid-template-columns: 1fr;
+  }
+}
 *,
 *::before,
 *::after {
