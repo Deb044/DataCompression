@@ -213,6 +213,65 @@ nav a[aria-current] {
   color: var(--muted);
   white-space: nowrap;
 }
+.page-intro.contents-intro {
+  padding-bottom: 36px;
+}
+.module-index {
+  padding-bottom: 72px;
+}
+.module-index > h2 {
+  font: 700 0.85rem/1.55 var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+.module-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  overflow: hidden;
+}
+.module-list li + li {
+  border-top: 1px solid var(--line);
+}
+.module-link {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: 22px;
+  padding: 24px;
+  color: var(--text);
+  text-decoration: none;
+}
+.module-link:hover {
+  background: var(--panel2);
+}
+.module-link:focus-visible {
+  outline-offset: -4px;
+}
+.module-number {
+  color: var(--teal);
+  font: 0.95rem/1.6 var(--mono);
+  padding-top: 2px;
+}
+.module-link h3 {
+  margin-bottom: 5px;
+}
+.module-link p {
+  color: var(--muted);
+  line-height: 1.65;
+  margin: 0;
+}
+@media (max-width: 600px) {
+  .module-link {
+    grid-template-columns: 28px minmax(0, 1fr);
+    gap: 14px;
+    padding: 20px 16px;
+  }
+}
 .hero {
   display: grid;
   grid-template-columns: 1.05fr 1fr;

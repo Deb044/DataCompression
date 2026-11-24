@@ -203,11 +203,18 @@ function setUpLiterature() {
         `${error.message} The complete list is also in the review PDF.`;
     });
 }
-const pages = ["overview", "techniques", "eeg", "literature", "experiments"];
+const pages = [
+  "contents",
+  "overview",
+  "techniques",
+  "eeg",
+  "literature",
+  "experiments",
+];
 let activePage;
 function showPage(focus = false) {
   const requested = location.hash.slice(1);
-  const page = pages.includes(requested) ? requested : "overview";
+  const page = pages.includes(requested) ? requested : "contents";
   const changed = page !== activePage;
   activePage = page;
   for (const element of document.querySelectorAll("[data-page]"))
@@ -217,7 +224,7 @@ function showPage(focus = false) {
     else link.removeAttribute("aria-current");
   }
   document.title =
-    page === "overview"
+    page === "contents"
       ? "EEG Compresion"
       : `${page[0].toUpperCase() + page.slice(1)} · EEG Compresion`;
   if (changed) {

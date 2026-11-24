@@ -16,13 +16,14 @@
     <a class="skip" href="#main">Skip to content</a>
     <header class="site-header">
       <div class="shell header-row">
-        <a href="#overview" class="brand"
+        <a href="#contents" class="brand"
           ><svg viewBox="0 0 36 24" width="30" height="24" aria-hidden="true">
             <path d="M1 13h7l3-7 5 15 5-19 4 11h10" /></svg
           >EEG Compresion</a
         >
         <nav aria-label="Chapters">
-          <a href="#overview" data-nav="overview">Overview</a
+          <a href="#contents" data-nav="contents">Contents</a
+          ><a href="#overview" data-nav="overview">Overview</a
           ><a href="#techniques" data-nav="techniques">Techniques</a
           ><a href="#eeg" data-nav="eeg">EEG</a
           ><a href="#literature" data-nav="literature">Literature</a
@@ -32,7 +33,84 @@
       </div>
     </header>
     <main id="main" class="shell" tabindex="-1">
-      <article id="overview" data-page>
+      <article id="contents" data-page>
+        <section class="page-intro contents-intro">
+          <p class="eyebrow">EEG COMPRESION · DA3021</p>
+          <h1 id="contents-title" tabindex="-1">Contents</h1>
+          <p class="intro">
+            From the basics of smaller files to the question of what a
+            compressed brain recording should preserve. Follow the five modules
+            in order, or jump to a topic below.
+          </p>
+        </section>
+        <section class="module-index" aria-labelledby="modules-title">
+          <h2 id="modules-title" class="eyebrow">Modules</h2>
+          <ol class="module-list">
+            <li>
+              <a href="#overview" class="module-link">
+                <span class="module-number">01</span>
+                <div>
+                  <h3>Overview: why compression matters</h3>
+                  <p>
+                    Growing data, limited storage and bandwidth, and the
+                    question of what must survive compression.
+                  </p>
+                </div>
+              </a>
+            </li>
+            <li>
+              <a href="#techniques" class="module-link">
+                <span class="module-number">02</span>
+                <div>
+                  <h3>Techniques across modalities</h3>
+                  <p>
+                    Huffman coding, ZIP and DEFLATE, MP3, image compression, and
+                    uniform and μ-law quantization, with interactive
+                    demonstrations.
+                  </p>
+                </div>
+              </a>
+            </li>
+            <li>
+              <a href="#eeg" class="module-link">
+                <span class="module-number">03</span>
+                <div>
+                  <h3>EEG: capturing the brain's electrical activity</h3>
+                  <p>
+                    Electrodes, sampled waveforms, frequency bands and
+                    artifacts: meet the signal we want to compress.
+                  </p>
+                </div>
+              </a>
+            </li>
+            <li>
+              <a href="#literature" class="module-link">
+                <span class="module-number">04</span>
+                <div>
+                  <h3>Literature: what should a smaller recording remember?</h3>
+                  <p>
+                    Why EEG compression is difficult, how it is measured, and
+                    how earlier work leads to our two experiments.
+                  </p>
+                </div>
+              </a>
+            </li>
+            <li>
+              <a href="#experiments" class="module-link">
+                <span class="module-number">05</span>
+                <div>
+                  <h3>Experiments: how many bits does a decision need?</h3>
+                  <p>
+                    Measure the storage–precision trade-off, then examine which
+                    trials are most vulnerable to prediction changes.
+                  </p>
+                </div>
+              </a>
+            </li>
+          </ol>
+        </section>
+      </article>
+      <article id="overview" data-page hidden>
         <section class="hero">
           <div>
             <p class="eyebrow">MULTIMODAL DATA PROCESSING &amp; LEARNING</p>

@@ -10,7 +10,7 @@ Serve the repository as static files:
 python -m http.server 8000
 ```
 
-Open http://localhost:8000. The site has no framework, external scripts, package installation or build step. Its five chapters are Overview, Techniques, EEG, Literature and Experiments. Browser demonstrations are clearly marked as synthetic or illustrative; the EEG results are loaded from recorded Python exports.
+Open http://localhost:8000. The site has no framework, external scripts, package installation or build step. The default Contents page links to five numbered modules: Overview, Techniques, EEG, Literature and Experiments. The site title and Contents navigation link return to this index; existing module links still work directly. Browser demonstrations are clearly marked as synthetic or illustrative; the EEG results are loaded from recorded Python exports.
 
 The hosted site is publicly visible to anyone with its URL. The public repository contains the site and result exports; it does not contain the original participant files.
 
@@ -90,7 +90,7 @@ The static page reads these files. Its selectors inspect saved results; it does 
 | ---------------------------------------------------------- | ------------------------------------------------------------------------------- |
 | `index.html`, `styles.css`                                 | Lesson content and responsive layout                                            |
 | `app.js`, `signal.js`, `samples.js`, `zip.js`              | Navigation and clearly labelled foundation demonstrations                       |
-| `content/references.json`                 | Verified references; the literature narrative is in index.html                                |
+| `content/references.json`                                  | Verified references; the literature narrative is in index.html                  |
 | `experiment-view.js`, `table.js`                           | Render saved experiment exports and interactive recorded examples               |
 | `experiments/dataset.py`                                   | Verified downloads, cache and trial extraction                                  |
 | `experiments/codec.py`                                     | Bit packing, self-contained payload and ZIP reconstruction                      |
