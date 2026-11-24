@@ -3,7 +3,7 @@
 import unittest
 import numpy as np
 
-from .analysis import roc_auc, summarize_rows
+from .analysis import gap_analysis, roc_auc, summarize_rows
 from .codec import HEADER, encode_payload, decode_payload, make_archive, read_archive, pack_codes, unpack_codes
 from .decoder import decode, distortion
 
@@ -73,6 +73,27 @@ class AnalysisTests(unittest.TestCase):
         self.assertEqual(result['flip_rate'], 0)
         self.assertIsNone(result['correct_to_wrong_rate'])
         self.assertEqual(result['transitions']['wrong_to_wrong'], 1)
+
+    def test_shuffled_control_preserves_participant_confounding(self):
+        # All flips happen in one participant. A global shuffle would wrongly
+        # erase that confound and create a misleading 0.5-AUC comparison.
+        rows, originals = [], []
+        for subject, flipped, gap in [(1, False, 0.9), (2, True, 0.1)]:
+            for block in range(6):
+                identity = f'{subject}-{block}'
+                rows.append({'id': identity, 'subject': subject, 'target_hz': 9,
+                             'method': 'uniform', 'bits': 2, 'gap': gap,
+                             'flipped': flipped, 'original_correct': True,
+                             'correct': not flipped, 'archive_bytes': 100,
+                             'payload_bytes': 90, 'raw_float32_bytes': 300, 'nrmse': 0.1})
+                originals.append({'id': identity, 'subject': subject,
+                                  'range_over_rms': 1, 'spectral_concentration': 0.5})
+        config = {'evaluation_subjects': [1, 2], 'bit_depths': [2],
+                  'primary_method': 'uniform', 'seed': 321, 'permutations': 10}
+        result = gap_analysis(rows, originals, [0.3, 0.6], config)[0]
+        self.assertEqual(result['predictor_auc']['low_gap'], 1)
+        self.assertEqual(result['shuffled_auc_mean'], 1)
+        self.assertEqual(result['permutation_p_one_sided'], 1)
 
 
 if __name__ == '__main__':

@@ -1,65 +1,773 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#101923">
-  <meta name="description" content="EEG compression: interactive foundations, a literature review and controlled experiments.">
-  <title>EEG Compresion</title>
-  <link rel="stylesheet" href="styles.css">
-  <script type="module" src="app.js"></script>
-</head>
-<body>
-  <a class="skip" href="#main">Skip to content</a>
-  <header class="site-header"><div class="shell header-row">
-    <a href="#overview" class="brand"><svg viewBox="0 0 36 24" width="30" height="24" aria-hidden="true"><path d="M1 13h7l3-7 5 15 5-19 4 11h10"/></svg>EEG Compresion</a>
-    <nav aria-label="Chapters"><a href="#overview" data-nav="overview">Overview</a><a href="#techniques" data-nav="techniques">Techniques</a><a href="#eeg" data-nav="eeg">EEG</a><a href="#literature" data-nav="literature">Literature</a><a href="#experiments" data-nav="experiments">Experiments</a></nav>
-    <span class="course-tag">DA3021 · IIT GUWAHATI</span>
-  </div></header>
-  <main id="main" class="shell" tabindex="-1">
-    <article id="overview" data-page>
-      <section class="hero"><div><p class="eyebrow">MULTIMODAL DATA PROCESSING &amp; LEARNING</p><h1 id="overview-title" tabindex="-1">EEG<br><em>Compresion</em></h1><p class="hero-copy">Fewer bits. The same meaning?</p><p class="intro">A journey from smaller files to a harder question: how much can we compress a brain recording before we change what it tells us?</p><a class="button primary" href="#techniques">Start with the foundations</a></div>
-        <figure class="signal-figure"><div class="figure-head"><span>THE SIGNAL / THE DECISION</span><span class="pill">Illustration</span></div><svg id="hero-signal" class="plot" viewBox="0 0 520 255" role="img" aria-label="Illustrative original and quantized signals"></svg><div class="legend"><span><i class="key"></i>Original</span><span><i class="key coral"></i>Quantized</span></div><figcaption>A waveform can change while a useful pattern survives. The opposite is also possible. These traces are synthetic, not recorded EEG.</figcaption></figure>
-      </section>
-      <section class="lesson split"><div><p class="eyebrow">WHY COMPRESSION MATTERS</p><h2>Every sample has to<br>go somewhere.</h2></div><div class="prose"><p>Photos, streamed music and scientific recordings all compete for storage and bandwidth. Compression represents data using fewer bits, making it easier to store and transmit.</p><p>The important question is what must survive. A ZIP archive should recover every original byte. An audio codec may discard detail that is difficult to hear. A brain recording needs a different test: can we still extract the information we care about?</p></div></section>
-      <section class="lesson"><div class="section-heading"><div><p class="eyebrow">A LITTLE ARITHMETIC</p><h2>Watch the data add up.</h2></div><p>Uncompressed payload only. File headers and metadata add more.</p></div><div class="budget-panel"><div class="controls vertical"><label for="budget-channels">Channels <output id="budget-channels-value">64</output></label><input id="budget-channels" type="range" min="1" max="128" value="64"><label for="budget-minutes">Recording length <output id="budget-minutes-value">10 min</output></label><input id="budget-minutes" type="range" min="1" max="60" value="10"><label for="budget-bits">Bits per sample</label><select id="budget-bits"><option value="8">8 bits</option><option value="16" selected>16 bits</option><option value="24">24 bits</option><option value="32">32 bits</option></select></div><div class="budget-result" aria-live="polite"><p class="eyebrow">AT 250 SAMPLES / SECOND / CHANNEL</p><strong id="budget-size">19.2 MB</strong><p id="budget-formula"></p><p class="small">A storage calculation, not a measured compression result. MB uses 1,000,000 bytes.</p></div></div></section>
-      <section class="lesson"><p class="eyebrow">THE STORYLINE</p><h2>What do we want to preserve?</h2><div class="story-steps"><a href="#techniques"><span class="step-label">Exact values</span><h3>Recover every byte.</h3><p>Huffman coding and ZIP exploit redundancy without changing the input.</p></a><a href="#eeg"><span class="step-label">The waveform</span><h3>Keep the signal close.</h3><p>Quantization trades amplitude precision for a smaller representation.</p></a><a href="#experiments"><span class="step-label">Useful decisions</span><h3>Keep the answer useful.</h3><p>We test a fixed EEG decoder and inspect which individual trials change.</p></a></div></section>
-    </article>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#101923" />
+    <meta
+      name="description"
+      content="EEG compression: interactive foundations, a literature review and controlled experiments."
+    />
+    <title>EEG Compresion</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script type="module" src="app.js"></script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="site-header">
+      <div class="shell header-row">
+        <a href="#overview" class="brand"
+          ><svg viewBox="0 0 36 24" width="30" height="24" aria-hidden="true">
+            <path d="M1 13h7l3-7 5 15 5-19 4 11h10" /></svg
+          >EEG Compresion</a
+        >
+        <nav aria-label="Chapters">
+          <a href="#overview" data-nav="overview">Overview</a
+          ><a href="#techniques" data-nav="techniques">Techniques</a
+          ><a href="#eeg" data-nav="eeg">EEG</a
+          ><a href="#literature" data-nav="literature">Literature</a
+          ><a href="#experiments" data-nav="experiments">Experiments</a>
+        </nav>
+        <span class="course-tag">DA3021 · IIT GUWAHATI</span>
+      </div>
+    </header>
+    <main id="main" class="shell" tabindex="-1">
+      <article id="overview" data-page>
+        <section class="hero">
+          <div>
+            <p class="eyebrow">MULTIMODAL DATA PROCESSING &amp; LEARNING</p>
+            <h1 id="overview-title" tabindex="-1">
+              EEG<br /><em>Compresion</em>
+            </h1>
+            <p class="hero-copy">Fewer bits. The same meaning?</p>
+            <p class="intro">
+              A journey from smaller files to a harder question: how much can we
+              compress a brain recording before we change what it tells us?
+            </p>
+            <a class="button primary" href="#techniques"
+              >Start with the foundations</a
+            >
+          </div>
+          <figure class="signal-figure">
+            <div class="figure-head">
+              <span>THE SIGNAL / THE DECISION</span
+              ><span class="pill">Illustration</span>
+            </div>
+            <svg
+              id="hero-signal"
+              class="plot"
+              viewBox="0 0 520 255"
+              role="img"
+              aria-label="Illustrative original and quantized signals"
+            ></svg>
+            <div class="legend">
+              <span><i class="key"></i>Original</span
+              ><span><i class="key coral"></i>Quantized</span>
+            </div>
+            <figcaption>
+              A waveform can change while a useful pattern survives. The
+              opposite is also possible. These traces are synthetic, not
+              recorded EEG.
+            </figcaption>
+          </figure>
+        </section>
+        <section class="lesson split">
+          <div>
+            <p class="eyebrow">WHY COMPRESSION MATTERS</p>
+            <h2>Every sample has to<br />go somewhere.</h2>
+          </div>
+          <div class="prose">
+            <p>
+              Photos, streamed music and scientific recordings all compete for
+              storage and bandwidth. Compression represents data using fewer
+              bits, making it easier to store and transmit.
+            </p>
+            <p>
+              The important question is what must survive. A ZIP archive should
+              recover every original byte. An audio codec may discard detail
+              that is difficult to hear. A brain recording needs a different
+              test: can we still extract the information we care about?
+            </p>
+          </div>
+        </section>
+        <section class="lesson">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">A LITTLE ARITHMETIC</p>
+              <h2>Watch the data add up.</h2>
+            </div>
+            <p>
+              Uncompressed payload only. File headers and metadata add more.
+            </p>
+          </div>
+          <div class="budget-panel">
+            <div class="controls vertical">
+              <label for="budget-channels"
+                >Channels <output id="budget-channels-value">64</output></label
+              ><input
+                id="budget-channels"
+                type="range"
+                min="1"
+                max="128"
+                value="64"
+              /><label for="budget-minutes"
+                >Recording length
+                <output id="budget-minutes-value">10 min</output></label
+              ><input
+                id="budget-minutes"
+                type="range"
+                min="1"
+                max="60"
+                value="10"
+              /><label for="budget-bits">Bits per sample</label
+              ><select id="budget-bits">
+                <option value="8">8 bits</option>
+                <option value="16" selected>16 bits</option>
+                <option value="24">24 bits</option>
+                <option value="32">32 bits</option>
+              </select>
+            </div>
+            <div class="budget-result" aria-live="polite">
+              <p class="eyebrow">AT 250 SAMPLES / SECOND / CHANNEL</p>
+              <strong id="budget-size">19.2 MB</strong>
+              <p id="budget-formula"></p>
+              <p class="small">
+                A storage calculation, not a measured compression result. MB
+                uses 1,000,000 bytes.
+              </p>
+            </div>
+          </div>
+        </section>
+        <section class="lesson">
+          <p class="eyebrow">THE STORYLINE</p>
+          <h2>What do we want to preserve?</h2>
+          <div class="story-steps">
+            <a href="#techniques"
+              ><span class="step-label">Exact values</span>
+              <h3>Recover every byte.</h3>
+              <p>
+                Huffman coding and ZIP exploit redundancy without changing the
+                input.
+              </p></a
+            ><a href="#eeg"
+              ><span class="step-label">The waveform</span>
+              <h3>Keep the signal close.</h3>
+              <p>
+                Quantization trades amplitude precision for a smaller
+                representation.
+              </p></a
+            ><a href="#experiments"
+              ><span class="step-label">Useful decisions</span>
+              <h3>Keep the answer useful.</h3>
+              <p>
+                We test a fixed EEG decoder and inspect which individual trials
+                change.
+              </p></a
+            >
+          </div>
+        </section>
+      </article>
 
-    <article id="techniques" data-page hidden>
-      <section class="page-intro"><p class="eyebrow">FOUNDATIONS / FROM THE COURSE</p><h1 id="techniques-title" tabindex="-1">A small toolkit<br>for <em>fewer bits.</em></h1><p class="intro">Some methods remove redundancy. Others reduce precision or discard information. Understanding that distinction comes before compressing EEG.</p></section>
-      <section class="lesson split"><div><span class="pill">Lossless</span><h2>Huffman coding</h2><p class="prose">Give frequent symbols shorter codes and rare symbols longer ones. A prefix-free code can be decoded without separators. Savings depend on the symbol counts.</p></div><div class="lab-panel"><div class="controls"><label for="huffman-sample">Message</label><select id="huffman-sample"><option value="skewed">Uneven symbol counts</option><option value="balanced">Equal symbol counts</option></select></div><p id="huffman-input" class="code-line"></p><div class="table-scroll"><table><thead><tr><th>Symbol</th><th>Count</th><th>Fixed code</th><th>Huffman code</th></tr></thead><tbody id="huffman-rows"></tbody></table></div><p id="huffman-summary" class="result-callout" aria-live="polite"></p><p class="small">Toy four-symbol alphabet: fixed coding uses 2 bits/symbol. Message bits only; a real format must also store or agree on its codebook.</p></div></section>
-      <section class="lesson split"><div><span class="pill">Lossless</span><h2>ZIP &amp; DEFLATE</h2><p class="prose">ZIP is an archive format. One common method inside it, DEFLATE, combines LZ77 repetition matching with Huffman coding. It works on bytes, with no understanding of EEG.</p><p class="prose">A repeated sequence can be described by a length and a backward distance. Random-looking data offers fewer useful matches. Headers can even make a file larger.</p><p class="source-note"><a href="https://www.rfc-editor.org/rfc/rfc1951">Source: DEFLATE specification</a></p></div><div class="lab-panel"><h3>Same byte counts, different order.</h3><p class="small">The repeated and shuffled files have identical byte frequencies. This isolates order from symbol counts.</p><button id="zip-run" class="button secondary">Measure ZIP sizes</button><div id="zip-output" aria-live="polite"><p class="empty-state">Run the browser demonstration to see measured sizes.</p></div><p class="small">256 KiB inputs, seed 321. Actual ZIP sizes include headers. This foundation demonstration is separate from the EEG experiments.</p></div></section>
-      <section class="lesson split"><div><span class="pill coral-pill">Lossy</span><h2>MP3 encoding</h2></div><div class="prose"><p>MP3 is designed for human hearing. It uses a frequency-selective representation and a psychoacoustic model to guide how precisely audio components are coded. Quantization makes the process lossy; lossless entropy coding is also used inside the format.</p><p>At a lower bitrate, less information can be retained. Audibility depends on the sound and encoding settings. Re-encoding decoded audio cannot recover information already discarded.</p><div class="note"><strong>The EEG connection:</strong> “hard to hear” is not an EEG preservation criterion. We evaluate reconstructed EEG using waveform error and a defined recognition task.</div><p class="source-note"><a href="https://www.mp3-history.com/en/technology.html">Source: Fraunhofer, audio coding technology</a>. This is a brief explanation, not an MP3 encoder demonstration.</p></div></section>
-      <section class="lesson"><div class="section-heading"><div><span class="pill coral-pill">Lossy</span><h2>Uniform &amp; μ-law quantization</h2></div><p>Try fewer amplitude levels. Which parts of the signal lose detail?</p></div><div class="prose wide"><p>Uniform quantization places equally spaced levels across a chosen amplitude range. With <em>b</em> bits there are 2<sup>b</sup> levels. μ-law first applies a logarithmic compander: it gives relatively finer resolution near zero and coarser resolution at larger magnitudes, then quantizes.</p></div><div class="lab-panel"><div class="controls"><label for="quant-bits">Precision <output id="quant-bits-value">4 bits · 16 levels</output></label><input id="quant-bits" type="range" min="2" max="10" value="4"><label for="quant-method">Method</label><select id="quant-method"><option value="uniform">Uniform</option><option value="mulaw">μ-law (μ = 255)</option></select></div><svg id="quant-chart" class="plot" viewBox="0 0 1000 260" role="img" aria-label="Synthetic signal and its quantized reconstruction"></svg><div class="legend"><span><i class="key"></i>Original synthetic signal</span><span><i class="key coral"></i>Reconstruction</span></div><p id="quant-error" class="result-callout" aria-live="polite"></p><p class="small">Illustrative samples normalized to [−1, 1]. The error is computed from these samples. This continuous μ-law model is not a bit-exact G.711 codec and does not establish the best method for EEG.</p></div><p class="source-note"><a href="https://www.itu.int/rec/T-REC-G.711-198811-I/en">Voice-coding context: ITU-T G.711</a></p></section>
-      <div class="chapter-end"><p>Now change the modality.</p><a class="button primary" href="#eeg">Meet the EEG signal</a></div>
-    </article>
+      <article id="techniques" data-page hidden>
+        <section class="page-intro">
+          <p class="eyebrow">FOUNDATIONS / FROM THE COURSE</p>
+          <h1 id="techniques-title" tabindex="-1">
+            A small toolkit<br />for <em>fewer bits.</em>
+          </h1>
+          <p class="intro">
+            Some methods remove redundancy. Others reduce precision or discard
+            information. Understanding that distinction comes before compressing
+            EEG.
+          </p>
+        </section>
+        <section class="lesson split">
+          <div>
+            <span class="pill">Lossless</span>
+            <h2>Huffman coding</h2>
+            <p class="prose">
+              Give frequent symbols shorter codes and rare symbols longer ones.
+              A prefix-free code can be decoded without separators. Savings
+              depend on the symbol counts.
+            </p>
+          </div>
+          <div class="lab-panel">
+            <div class="controls">
+              <label for="huffman-sample">Message</label
+              ><select id="huffman-sample">
+                <option value="skewed">Uneven symbol counts</option>
+                <option value="balanced">Equal symbol counts</option>
+              </select>
+            </div>
+            <p id="huffman-input" class="code-line"></p>
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Symbol</th>
+                    <th>Count</th>
+                    <th>Fixed code</th>
+                    <th>Huffman code</th>
+                  </tr>
+                </thead>
+                <tbody id="huffman-rows"></tbody>
+              </table>
+            </div>
+            <p
+              id="huffman-summary"
+              class="result-callout"
+              aria-live="polite"
+            ></p>
+            <p class="small">
+              Toy four-symbol alphabet: fixed coding uses 2 bits/symbol. Message
+              bits only; a real format must also store or agree on its codebook.
+            </p>
+          </div>
+        </section>
+        <section class="lesson split">
+          <div>
+            <span class="pill">Lossless</span>
+            <h2>ZIP &amp; DEFLATE</h2>
+            <p class="prose">
+              ZIP is an archive format. One common method inside it, DEFLATE,
+              combines LZ77 repetition matching with Huffman coding. It works on
+              bytes, with no understanding of EEG.
+            </p>
+            <p class="prose">
+              A repeated sequence can be described by a length and a backward
+              distance. Random-looking data offers fewer useful matches. Headers
+              can even make a file larger.
+            </p>
+            <p class="source-note">
+              <a href="https://www.rfc-editor.org/rfc/rfc1951"
+                >Source: DEFLATE specification</a
+              >
+            </p>
+          </div>
+          <div class="lab-panel">
+            <h3>Same byte counts, different order.</h3>
+            <p class="small">
+              The repeated and shuffled files have identical byte frequencies.
+              This isolates order from symbol counts.
+            </p>
+            <button id="zip-run" class="button secondary">
+              Measure ZIP sizes
+            </button>
+            <div id="zip-output" aria-live="polite">
+              <p class="empty-state">
+                Run the browser demonstration to see measured sizes.
+              </p>
+            </div>
+            <p class="small">
+              256 KiB inputs, seed 321. Actual ZIP sizes include headers. This
+              foundation demonstration is separate from the EEG experiments.
+            </p>
+          </div>
+        </section>
+        <section class="lesson split">
+          <div>
+            <span class="pill coral-pill">Lossy</span>
+            <h2>MP3 encoding</h2>
+          </div>
+          <div class="prose">
+            <p>
+              MP3 is designed for human hearing. It uses a frequency-selective
+              representation and a psychoacoustic model to guide how precisely
+              audio components are coded. Quantization makes the process lossy;
+              lossless entropy coding is also used inside the format.
+            </p>
+            <p>
+              At a lower bitrate, less information can be retained. Audibility
+              depends on the sound and encoding settings. Re-encoding decoded
+              audio cannot recover information already discarded.
+            </p>
+            <div class="note">
+              <strong>The EEG connection:</strong> “hard to hear” is not an EEG
+              preservation criterion. We evaluate reconstructed EEG using
+              waveform error and a defined recognition task.
+            </div>
+            <p class="source-note">
+              <a href="https://www.mp3-history.com/en/technology.html"
+                >Source: Fraunhofer, audio coding technology</a
+              >. This is a brief explanation, not an MP3 encoder demonstration.
+            </p>
+          </div>
+        </section>
+        <section class="lesson">
+          <div class="section-heading">
+            <div>
+              <span class="pill coral-pill">Lossy</span>
+              <h2>Uniform &amp; μ-law quantization</h2>
+            </div>
+            <p>
+              Try fewer amplitude levels. Which parts of the signal lose detail?
+            </p>
+          </div>
+          <div class="prose wide">
+            <p>
+              Uniform quantization places equally spaced levels across a chosen
+              amplitude range. With <em>b</em> bits there are 2<sup>b</sup>
+              levels. μ-law first applies a logarithmic compander: it gives
+              relatively finer resolution near zero and coarser resolution at
+              larger magnitudes, then quantizes.
+            </p>
+          </div>
+          <div class="lab-panel">
+            <div class="controls">
+              <label for="quant-bits"
+                >Precision
+                <output id="quant-bits-value">4 bits · 16 levels</output></label
+              ><input
+                id="quant-bits"
+                type="range"
+                min="2"
+                max="10"
+                value="4"
+              /><label for="quant-method">Method</label
+              ><select id="quant-method">
+                <option value="uniform">Uniform</option>
+                <option value="mulaw">μ-law (μ = 255)</option>
+              </select>
+            </div>
+            <svg
+              id="quant-chart"
+              class="plot"
+              viewBox="0 0 1000 260"
+              role="img"
+              aria-label="Synthetic signal and its quantized reconstruction"
+            ></svg>
+            <div class="legend">
+              <span><i class="key"></i>Original synthetic signal</span
+              ><span><i class="key coral"></i>Reconstruction</span>
+            </div>
+            <p id="quant-error" class="result-callout" aria-live="polite"></p>
+            <p class="small">
+              Illustrative samples normalized to [−1, 1]. The error is computed
+              from these samples. This continuous μ-law model is not a bit-exact
+              G.711 codec and does not establish the best method for EEG.
+            </p>
+          </div>
+          <p class="source-note">
+            <a href="https://www.itu.int/rec/T-REC-G.711-198811-I/en"
+              >Voice-coding context: ITU-T G.711</a
+            >
+          </p>
+        </section>
+        <div class="chapter-end">
+          <p>Now change the modality.</p>
+          <a class="button primary" href="#eeg">Meet the EEG signal</a>
+        </div>
+      </article>
 
-    <article id="eeg" data-page hidden>
-      <section class="page-intro"><p class="eyebrow">NEURAL SIGNAL CAPTURE / EEG</p><h1 id="eeg-title" tabindex="-1">Many channels.<br><em>One noisy picture.</em></h1><p class="intro">Electroencephalography records voltage differences using electrodes on the scalp. Each channel is a time series; together they provide a view of population-level neural activity.</p><p class="source-note">Course basis: <cite>Neural Signal Capture</cite>, supplied lecture slides, pp. 162–188.</p></section>
-      <section class="lesson split"><div><h2>What are we recording?</h2><p class="prose">Scalp EEG is non-invasive. It predominantly reflects cortical activity, mixed as it travels through tissues to the electrodes. It is not a recording of one isolated neuron or a direct readout of a person's thoughts.</p><p class="prose">Electrodes are arranged using conventions such as the 10–20 system. Sampling produces amplitude values for each channel. Time-domain and spectral analysis reveal different aspects of those sequences.</p></div><figure class="lab-panel"><h3>From scalp to samples</h3><ol class="process-list"><li><strong>Electrodes</strong><span>Measure voltage differences relative to a reference.</span></li><li><strong>Acquisition</strong><span>Amplification, filtering and analog-to-digital conversion.</span></li><li><strong>Multichannel signal</strong><span>One sequence per channel, with timing and recording metadata.</span></li><li><strong>Analysis</strong><span>Waveforms, frequency content and task-specific features.</span></li></ol><figcaption class="small">Course slides: electrode placement pp. 171–173; multichannel EEG p. 172; cortical activity p. 175.</figcaption></figure></section>
-      <section class="lesson"><div class="section-heading"><div><p class="eyebrow">THE FREQUENCY VIEW</p><h2>Rhythms, not mind-reading.</h2></div><p>Band boundaries are conventions. Associations depend on location, state and task.</p></div><div class="table-scroll"><table><thead><tr><th>Band</th><th>Course range</th><th>How we use this idea</th></tr></thead><tbody><tr><th>Delta</th><td>0.5–4 Hz</td>Slow components in the spectrum.</td></tr><tr><th>Theta</th><td>4–8 Hz</td><span>A different part of the same multichannel signal.</span></td></tr><tr><th>Alpha</th><td>8–13 Hz</td>The course's eyes-open/closed example highlights occipital alpha activity.</td></tr><tr><th>Beta</th><td>13–30 Hz</td>Faster rhythmic content.</td></tr><tr><th>Gamma</th><td>Above 30 Hz</td>Higher-frequency activity; particularly careful artifact interpretation is needed.</td></tr></tbody></table></div><p class="source-note">Course slides: alpha demonstration pp. 180–183; band table p. 184. These bands do not uniquely identify a stimulus or mental state.</p></section>
-      <section class="lesson split"><div><h2>A clean-looking trace<br>can be misleading.</h2></div><div class="prose"><p>Eye blinks, muscle activity, movement and electrical interference can contaminate EEG. A compressor can preserve an artifact accurately or distort a useful low-amplitude pattern. “Looks smoother” does not automatically mean “contains better neural information.”</p><p class="source-note">Course slides: artifacts pp. 186–187.</p><div class="note"><strong>Our task: SSVEP.</strong> When a person attends to a flickering target, a steady-state visual evoked response can appear at the stimulus frequency and harmonics. We use an FFT-based score to identify one of four candidate targets in recorded public EEG. We do not flash stimuli or collect new recordings.</div><p class="source-note"><a href="https://doi.org/10.1109/TNSRE.2016.2627556">Source: SSVEP benchmark dataset</a></p></div></section>
-      <section class="lesson"><h2>What must EEG compression preserve?</h2><div class="story-steps"><div><span class="step-label">Sample values</span><h3>Lossless</h3><p>Reconstruct the exact input representation. Useful as a trustworthy control.</p></div><div><span class="step-label">Signal shape</span><h3>Waveform fidelity</h3><p>Measure reconstruction error and inspect time and frequency views.</p></div><div><span class="step-label">The analysis</span><h3>Task fidelity</h3><p>Measure accuracy and individual decision changes with a fixed decoder.</p></div></div><p class="takeaway">Our pipeline: <strong>EEG segment · quantize · pack + ZIP · reconstruct · FFT + decision.</strong> Quantization introduces loss. ZIP preserves the quantized representation exactly.</p></section>
-      <div class="chapter-end"><p>Others have already asked how much useful information survives.</p><a class="button primary" href="#literature">Explore the evidence</a></div>
-    </article>
+      <article id="eeg" data-page hidden>
+        <section class="page-intro">
+          <p class="eyebrow">NEURAL SIGNAL CAPTURE / EEG</p>
+          <h1 id="eeg-title" tabindex="-1">
+            Many channels.<br /><em>One noisy picture.</em>
+          </h1>
+          <p class="intro">
+            Electroencephalography records voltage differences using electrodes
+            on the scalp. Each channel is a time series; together they provide a
+            view of population-level neural activity.
+          </p>
+          <p class="source-note">
+            Course basis: <cite>Neural Signal Capture</cite>, supplied lecture
+            slides, pp. 162–188.
+          </p>
+        </section>
+        <section class="lesson split">
+          <div>
+            <h2>What are we recording?</h2>
+            <p class="prose">
+              Scalp EEG is non-invasive. It predominantly reflects cortical
+              activity, mixed as it travels through tissues to the electrodes.
+              It is not a recording of one isolated neuron or a direct readout
+              of a person's thoughts.
+            </p>
+            <p class="prose">
+              Electrodes are arranged using conventions such as the 10–20
+              system. Sampling produces amplitude values for each channel.
+              Time-domain and spectral analysis reveal different aspects of
+              those sequences.
+            </p>
+          </div>
+          <figure class="lab-panel">
+            <h3>From scalp to samples</h3>
+            <ol class="process-list">
+              <li>
+                <strong>Electrodes</strong
+                ><span
+                  >Measure voltage differences relative to a reference.</span
+                >
+              </li>
+              <li>
+                <strong>Acquisition</strong
+                ><span
+                  >Amplification, filtering and analog-to-digital
+                  conversion.</span
+                >
+              </li>
+              <li>
+                <strong>Multichannel signal</strong
+                ><span
+                  >One sequence per channel, with timing and recording
+                  metadata.</span
+                >
+              </li>
+              <li>
+                <strong>Analysis</strong
+                ><span
+                  >Waveforms, frequency content and task-specific
+                  features.</span
+                >
+              </li>
+            </ol>
+            <figcaption class="small">
+              Course slides: electrode placement pp. 171–173; multichannel EEG
+              p. 172; cortical activity p. 175.
+            </figcaption>
+          </figure>
+        </section>
+        <section class="lesson">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">THE FREQUENCY VIEW</p>
+              <h2>Rhythms, not mind-reading.</h2>
+            </div>
+            <p>
+              Band boundaries are conventions. Associations depend on location,
+              state and task.
+            </p>
+          </div>
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Band</th>
+                  <th>Course range</th>
+                  <th>How we use this idea</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th>Delta</th>
+                  <td>0.5–4 Hz</td>
+                  <td>Slow components in the spectrum.</td>
+                </tr>
+                <tr>
+                  <th>Theta</th>
+                  <td>4–8 Hz</td>
+                  <td>A different part of the same multichannel signal.</td>
+                </tr>
+                <tr>
+                  <th>Alpha</th>
+                  <td>8–13 Hz</td>
+                  <td>
+                    The course's eyes-open/closed example highlights occipital
+                    alpha activity.
+                  </td>
+                </tr>
+                <tr>
+                  <th>Beta</th>
+                  <td>13–30 Hz</td>
+                  <td>Faster rhythmic content.</td>
+                </tr>
+                <tr>
+                  <th>Gamma</th>
+                  <td>Above 30 Hz</td>
+                  <td>
+                    Higher-frequency activity; particularly careful artifact
+                    interpretation is needed.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="source-note">
+            Course slides: alpha demonstration pp. 180–183; band table p. 184.
+            These bands do not uniquely identify a stimulus or mental state.
+          </p>
+        </section>
+        <section class="lesson split">
+          <div>
+            <h2>A clean-looking trace<br />can be misleading.</h2>
+          </div>
+          <div class="prose">
+            <p>
+              Eye blinks, muscle activity, movement and electrical interference
+              can contaminate EEG. A compressor can preserve an artifact
+              accurately or distort a useful low-amplitude pattern. “Looks
+              smoother” does not automatically mean “contains better neural
+              information.”
+            </p>
+            <p class="source-note">Course slides: artifacts pp. 186–187.</p>
+            <div class="note">
+              <strong>Our task: SSVEP.</strong> When a person attends to a
+              flickering target, a steady-state visual evoked response can
+              appear at the stimulus frequency and harmonics. We use an
+              FFT-based score to identify one of four candidate targets in
+              recorded public EEG. We do not flash stimuli or collect new
+              recordings.
+            </div>
+            <p class="source-note">
+              <a href="https://doi.org/10.1109/TNSRE.2016.2627556"
+                >Source: SSVEP benchmark dataset</a
+              >
+            </p>
+          </div>
+        </section>
+        <section class="lesson">
+          <h2>What must EEG compression preserve?</h2>
+          <div class="story-steps">
+            <div>
+              <span class="step-label">Sample values</span>
+              <h3>Lossless</h3>
+              <p>
+                Reconstruct the exact input representation. Useful as a
+                trustworthy control.
+              </p>
+            </div>
+            <div>
+              <span class="step-label">Signal shape</span>
+              <h3>Waveform fidelity</h3>
+              <p>
+                Measure reconstruction error and inspect time and frequency
+                views.
+              </p>
+            </div>
+            <div>
+              <span class="step-label">The analysis</span>
+              <h3>Task fidelity</h3>
+              <p>
+                Measure accuracy and individual decision changes with a fixed
+                decoder.
+              </p>
+            </div>
+          </div>
+          <p class="takeaway">
+            Our pipeline:
+            <strong
+              >EEG segment · quantize · pack + ZIP · reconstruct · FFT +
+              decision.</strong
+            >
+            Quantization introduces loss. ZIP preserves the quantized
+            representation exactly.
+          </p>
+        </section>
+        <div class="chapter-end">
+          <p>Others have already asked how much useful information survives.</p>
+          <a class="button primary" href="#literature">Explore the evidence</a>
+        </div>
+      </article>
 
-    <article id="literature" data-page hidden>
-      <section class="page-intro"><p class="eyebrow">A RAPID STRUCTURED REVIEW</p><h1 id="literature-title" tabindex="-1">From exact values<br>to <em>useful decisions.</em></h1><p class="intro">EEG compression has a long history. Our aim is to understand the methods, compare what their evaluations establish, and make a small controlled attempt of our own.</p><div class="inline-links"><a href="output/pdf/eeg_compression_review_and_experiments.pdf">Read the full review (PDF)</a><a href="research/search_log.json">Search log (JSON)</a></div><p class="source-note">Search cutoff: 24 November 2026. Eight core studies; two are preprints. Representative coverage, not an exhaustive systematic review or meta-analysis.</p></section>
-      <section class="lesson"><div class="section-heading"><div><p class="eyebrow">THE EVIDENCE MAP</p><h2>Different methods.<br>Different promises.</h2></div><div class="controls"><label for="paper-filter">Show</label><select id="paper-filter"><option value="all">All core studies</option><option value="classical">Classical &amp; transform</option><option value="task">Task-aware &amp; personalized</option><option value="neural">Neural &amp; adaptive</option></select></div></div><div id="paper-list" class="paper-list"></div><p class="small">Source-reported findings, not reproduced benchmarks. Abstract-level assessment and preprint status are marked. Differences in data, precision baselines and decoder training prevent a fair ranking of headline compression ratios.</p></section>
-      <section class="lesson split"><div><p class="eyebrow">OUR SYNTHESIS</p><h2>What can a small<br>experiment clarify?</h2></div><div class="gap-list"><div><h3>Count real bytes.</h3><p>Separate lower-precision savings from ZIP savings. Include scales, dimensions, bit packing and archive overhead.</p></div><div><h3>Look beyond average accuracy.</h3><p>Some correct answers can become wrong while other wrong answers become correct. Keep the trial-level transitions.</p></div><div><h3>Test the confidence assumption.</h3><p>Score separation is already used for SSVEP confidence. Whether it predicts damage from our quantizer is an empirical question.</p><a href="https://eprints.whiterose.ac.uk/id/eprint/199879/">Related confidence study, Zhang et al. (2023)</a></div><div><h3>Keep claims within the evidence.</h3><p>Task-aware compression and multi-task evaluation already exist. Our experiments test a simple baseline; they do not establish clinical safety or superiority over neural codecs.</p></div></div></section>
-      <section class="lesson"><h2>A review that shows its limits.</h2><div class="prose wide"><p>We searched for EEG waveform compression, quantization, task-aware coding, confidence and bit allocation, then verified selected sources through publication records or author manuscripts. Some sources were only assessed through indexed abstracts. The search log records inclusion rules and access limits; it does not invent a screened-record count.</p><p>The open questions above are our synthesis of the selected evidence and our setup. We do not claim that nobody has studied them. A null result is useful if the comparison is controlled and the interpretation is honest.</p></div><details><summary>Complete reference list and access notes</summary><div id="reference-list" class="reference-list"></div></details></section>
-      <div class="chapter-end"><p>Turn the questions into measurements.</p><a class="button primary" href="#experiments">Open the experiments</a></div>
-    </article>
+      <article id="literature" data-page hidden>
+        <section class="page-intro">
+          <p class="eyebrow">A RAPID STRUCTURED REVIEW</p>
+          <h1 id="literature-title" tabindex="-1">
+            From exact values<br />to <em>useful decisions.</em>
+          </h1>
+          <p class="intro">
+            EEG compression has a long history. Our aim is to understand the
+            methods, compare what their evaluations establish, and make a small
+            controlled attempt of our own.
+          </p>
+          <div class="inline-links">
+            <a href="output/pdf/eeg_compression_review_and_experiments.pdf"
+              >Review &amp; initial protocol (PDF)</a
+            ><a href="research/search_log.json">Search log (JSON)</a>
+          </div>
+          <p class="source-note">
+            Search cutoff: 24 November 2026. Eight core studies; two are
+            preprints. Representative coverage, not an exhaustive systematic
+            review or meta-analysis.
+          </p>
+        </section>
+        <section class="lesson">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">THE EVIDENCE MAP</p>
+              <h2>Different methods.<br />Different promises.</h2>
+            </div>
+            <div class="controls">
+              <label for="paper-filter">Show</label
+              ><select id="paper-filter">
+                <option value="all">All core studies</option>
+                <option value="classical">Classical &amp; transform</option>
+                <option value="task">Task-aware &amp; personalized</option>
+                <option value="neural">Neural &amp; adaptive</option>
+              </select>
+            </div>
+          </div>
+          <div id="paper-list" class="paper-list"></div>
+          <p class="small">
+            Source-reported findings, not reproduced benchmarks. Abstract-level
+            assessment and preprint status are marked. Differences in data,
+            precision baselines and decoder training prevent a fair ranking of
+            headline compression ratios.
+          </p>
+        </section>
+        <section class="lesson split">
+          <div>
+            <p class="eyebrow">OUR SYNTHESIS</p>
+            <h2>What can a small<br />experiment clarify?</h2>
+          </div>
+          <div class="gap-list">
+            <div>
+              <h3>Count real bytes.</h3>
+              <p>
+                Separate lower-precision savings from ZIP savings. Include
+                scales, dimensions, bit packing and archive overhead.
+              </p>
+            </div>
+            <div>
+              <h3>Look beyond average accuracy.</h3>
+              <p>
+                Some correct answers can become wrong while other wrong answers
+                become correct. Keep the trial-level transitions.
+              </p>
+            </div>
+            <div>
+              <h3>Test the confidence assumption.</h3>
+              <p>
+                Score separation is already used for SSVEP confidence. Whether
+                it predicts damage from our quantizer is an empirical question.
+              </p>
+              <a href="https://eprints.whiterose.ac.uk/id/eprint/199879/"
+                >Related confidence study, Zhang et al. (2023)</a
+              >
+            </div>
+            <div>
+              <h3>Keep claims within the evidence.</h3>
+              <p>
+                Task-aware compression and multi-task evaluation already exist.
+                Our experiments test a simple baseline; they do not establish
+                clinical safety or superiority over neural codecs.
+              </p>
+            </div>
+          </div>
+        </section>
+        <section class="lesson">
+          <h2>A review that shows its limits.</h2>
+          <div class="prose wide">
+            <p>
+              We searched for EEG waveform compression, quantization, task-aware
+              coding, confidence and bit allocation, then verified selected
+              sources through publication records or author manuscripts. Some
+              sources were only assessed through indexed abstracts. The search
+              log records inclusion rules and access limits; it does not invent
+              a screened-record count.
+            </p>
+            <p>
+              The open questions above are our synthesis of the selected
+              evidence and our setup. We do not claim that nobody has studied
+              them. A null result is useful if the comparison is controlled and
+              the interpretation is honest.
+            </p>
+          </div>
+          <details>
+            <summary>Complete reference list and access notes</summary>
+            <div id="reference-list" class="reference-list"></div>
+          </details>
+        </section>
+        <div class="chapter-end">
+          <p>Turn the questions into measurements.</p>
+          <a class="button primary" href="#experiments">Open the experiments</a>
+        </div>
+      </article>
 
-    <article id="experiments" data-page hidden>
-      <section class="page-intro"><p class="eyebrow">CONTROLLED EXPLORATION / PUBLIC EEG</p><h1 id="experiments-title" tabindex="-1">How many bits<br>does a <em>decision need?</em></h1><p class="intro">Two experiments, one fixed pipeline. Every displayed research result must come from a recorded run, with its data subset and settings attached.</p></section>
-      <div id="experiment-status" class="note" role="status">The experiment implementation is being prepared. No EEG results have been generated yet.</div>
-      <section class="lesson" id="precision-experiment"><p class="eyebrow">EXPERIMENT 1 / PRECISION</p><h2>How many bits are enough?</h2><p class="section-intro">Reduce precision, store the actual archive, reconstruct the waveform and run the same target decoder. Compare storage, waveform error and decision changes.</p><div class="pipeline"><span>Original EEG</span><span>Quantize</span><span>Pack + ZIP</span><span>Reconstruct</span><span>Fixed FFT decoder</span></div><div id="precision-results"><p class="empty-state">Measured results will appear here after the reproducible experiment runs.</p></div></section>
-      <section class="lesson" id="gap-experiment"><p class="eyebrow">EXPERIMENT 2 / VULNERABILITY</p><h2>Which trials fail first?</h2><p class="section-intro">Does the original strongest-versus-runner-up score gap predict later compression failures? Compare gap groups with a shuffled control and simple signal statistics.</p><div class="note">A large score gap is not a calibrated probability. Keeping an originally wrong prediction unchanged is decision stability, not preserved accuracy.</div><div id="gap-results"><p class="empty-state">No result is assumed. A weak or absent relationship is a valid outcome.</p></div></section>
-      <section class="lesson"><h2>The controls matter.</h2><div class="story-steps"><div><h3>One fixed decoder</h3><p>Freeze settings on development participants. Use the same trials and processing at every precision.</p></div><div><h3>Separate evaluation data</h3><p>Evaluate on different participants. Declare the simplified task, cohort and final sample size.</p></div><div><h3>Actual archive sizes</h3><p>Include reconstruction metadata. Compare against the declared float32 representation, not an invented acquisition bit depth.</p></div></div><p class="takeaway">An exploratory storage-and-analysis study. It does not measure clinical suitability, battery life or whether every future analysis survives.</p></section>
-    </article>
-  </main>
-  <footer class="shell site-footer"><span>EEG COMPRESION · DA3021 · IIT GUWAHATI</span><span>Literature + controlled exploration</span><a href="https://github.com/Deb044/DataCompression">Code &amp; reproducibility</a></footer>
-</body>
+      <article id="experiments" data-page hidden>
+        <section class="page-intro">
+          <p class="eyebrow">CONTROLLED EXPLORATION / PUBLIC EEG</p>
+          <h1 id="experiments-title" tabindex="-1">
+            How many bits<br />does a <em>decision need?</em>
+          </h1>
+          <p class="intro">
+            Two experiments, one fixed pipeline. Every displayed research result
+            must come from a recorded run, with its data subset and settings
+            attached.
+          </p>
+        </section>
+        <div id="experiment-status" class="note" role="status">
+          Loading the measured experiment exports. The trial-level data and
+          settings are available in the repository.
+        </div>
+        <section class="lesson" id="precision-experiment">
+          <p class="eyebrow">EXPERIMENT 1 / PRECISION</p>
+          <h2>How many bits are enough?</h2>
+          <p class="section-intro">
+            Reduce precision, store the actual archive, reconstruct the waveform
+            and run the same target decoder. Compare storage, waveform error and
+            decision changes.
+          </p>
+          <div class="pipeline">
+            <span>Original EEG</span><span>Quantize</span><span>Pack + ZIP</span
+            ><span>Reconstruct</span><span>Fixed FFT decoder</span>
+          </div>
+          <div id="precision-results">
+            <p class="empty-state">
+              The measured precision sweep loads here. See results/trials.csv
+              for the complete recorded data.
+            </p>
+          </div>
+        </section>
+        <section class="lesson" id="gap-experiment">
+          <p class="eyebrow">EXPERIMENT 2 / VULNERABILITY</p>
+          <h2>Which trials fail first?</h2>
+          <p class="section-intro">
+            Does the original strongest-versus-runner-up score gap predict later
+            compression failures? Compare gap groups with a shuffled control and
+            simple signal statistics.
+          </p>
+          <div class="note">
+            A large score gap is not a calibrated probability. Keeping an
+            originally wrong prediction unchanged is decision stability, not
+            preserved accuracy.
+          </div>
+          <div id="gap-results">
+            <p class="empty-state">
+              The recorded gap comparisons load here. Undefined metrics are
+              explicitly marked.
+            </p>
+          </div>
+        </section>
+        <section class="lesson">
+          <h2>The controls matter.</h2>
+          <div class="story-steps">
+            <div>
+              <h3>One fixed decoder</h3>
+              <p>
+                Freeze settings on development participants. Use the same trials
+                and processing at every precision.
+              </p>
+            </div>
+            <div>
+              <h3>Separate evaluation data</h3>
+              <p>
+                Evaluate on different participants. Declare the simplified task,
+                cohort and final sample size.
+              </p>
+            </div>
+            <div>
+              <h3>Actual archive sizes</h3>
+              <p>
+                Include reconstruction metadata. Compare against the declared
+                float32 representation, not an invented acquisition bit depth.
+              </p>
+            </div>
+          </div>
+          <p class="takeaway">
+            An exploratory storage-and-analysis study. It does not measure
+            clinical suitability, battery life or whether every future analysis
+            survives.
+          </p>
+        </section>
+      </article>
+    </main>
+    <footer class="shell site-footer">
+      <span>EEG COMPRESION · DA3021 · IIT GUWAHATI</span
+      ><span>Literature + controlled exploration</span
+      ><a href="https://github.com/Deb044/DataCompression"
+        >Code &amp; reproducibility</a
+      >
+    </footer>
+  </body>
 </html>

@@ -1,0 +1,5135 @@
+{
+  "schema_version": 1,
+  "status": "measured",
+  "provenance": {
+    "generated_at_utc": "2026-11-24T07:41:04.517650+00:00",
+    "code_commit": "f641b21af089330db5aa18f54356a3cd988f151b",
+    "config_sha256": "35209801145823ae2c7c8d749bdc7bed3d151cefe66cd44877a2bc84491b37c5",
+    "configuration": {
+      "dataset": "Tsinghua SSVEP benchmark (Wang et al., 2017)",
+      "development_subjects": [
+        1,
+        2
+      ],
+      "evaluation_subjects": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "cohort": "Experienced participants only; not representative of the full benchmark",
+      "channels": [
+        "O1",
+        "Oz",
+        "O2"
+      ],
+      "sample_rate_hz": 250,
+      "start_sample": 160,
+      "stop_sample": 1160,
+      "target_frequencies_hz": [
+        9,
+        11,
+        13,
+        15
+      ],
+      "bit_depths": [
+        16,
+        12,
+        8,
+        6,
+        4,
+        2
+      ],
+      "methods": [
+        "uniform",
+        "mulaw"
+      ],
+      "mu": 255,
+      "harmonics": [
+        1,
+        2
+      ],
+      "primary_method": "uniform",
+      "primary_bit_depth": 2,
+      "permutations": 500,
+      "seed": 321,
+      "protocol_note": "Frozen before reading participant waveforms. Fixed nearest-bin FFT power with equal weights, no filtering or classifier fitting. Mu-law is the optional secondary baseline described in the review. No adaptive bit allocation or second task in the core run."
+    },
+    "source_files": [
+      {
+        "file": "64-channels.loc",
+        "url": "https://bci.med.tsinghua.edu.cn/upload/yijun/64-channels.loc",
+        "bytes": 1982,
+        "sha256": "da8c1d84451930234392b9283fccffb7994d69ed97bb452c6927613bb33c3ab0"
+      },
+      {
+        "file": "Freq_Phase.mat",
+        "url": "https://bci.med.tsinghua.edu.cn/upload/yijun/Freq_Phase.mat",
+        "bytes": 366,
+        "sha256": "6059f712688ec9e5df0beace9244dc0a4b03c418dacdef86bac50cf2b95f71b5"
+      },
+      {
+        "file": "Readme.txt",
+        "url": "https://bci.med.tsinghua.edu.cn/upload/yijun/Readme.txt",
+        "bytes": 2976,
+        "sha256": "3bf106f1901a2ce2c7c309fee948eb13a692597a00e23cbc8d8b9ae170988e69"
+      },
+      {
+        "file": "S1.mat.7z",
+        "url": "https://bci.med.tsinghua.edu.cn/upload/yijun/S1.mat.7z",
+        "bytes": 105644644,
+        "sha256": "2e72ca82202ad82268c45a204cc19ae9df6e4866c62b4ecd1e2a367ec14f601e"
+      },
+      {
+        "file": "S2.mat.7z",
+        "url": "https://bci.med.tsinghua.edu.cn/upload/yijun/S2.mat.7z",
+        "bytes": 105466798,
+        "sha256": "119811b9d12f6fb865b4e9436f688208344405282d9621a1691349972f0f73fa"
+      },
+      {
+        "file": "S3.mat.7z",
+        "url": "https://bci.med.tsinghua.edu.cn/upload/yijun/S3.mat.7z",
+        "bytes": 105557028,
+        "sha256": "3c6addba14c5515f60d2efa8d2c7449f3f6a25fba735bb7d3861cd3187504e83"
+      },
+      {
+        "file": "S4.mat.7z",
+        "url": "https://bci.med.tsinghua.edu.cn/upload/yijun/S4.mat.7z",
+        "bytes": 104763397,
+        "sha256": "6ba7ae965ac5f1c3df08c5e1497c3f48f03deb112078521d580ee484d3d714a6"
+      },
+      {
+        "file": "S5.mat.7z",
+        "url": "https://bci.med.tsinghua.edu.cn/upload/yijun/S5.mat.7z",
+        "bytes": 105723352,
+        "sha256": "120e6b5f7822095484730f0c180cea2c71503f4fa0bf47003d14db5c1b524566"
+      },
+      {
+        "file": "S6.mat.7z",
+        "url": "https://bci.med.tsinghua.edu.cn/upload/yijun/S6.mat.7z",
+        "bytes": 105800531,
+        "sha256": "8ed4971187a07b6223cc1f0739bd5bbe6501b15ad231cc0597debba4a423cd3f"
+      },
+      {
+        "file": "S7.mat.7z",
+        "url": "https://bci.med.tsinghua.edu.cn/upload/yijun/S7.mat.7z",
+        "bytes": 105097049,
+        "sha256": "dea154a7b4a025ae645bf812cda77db3709e713813aefabc8babe029c87aa28e"
+      },
+      {
+        "file": "S8.mat.7z",
+        "url": "https://bci.med.tsinghua.edu.cn/upload/yijun/S8.mat.7z",
+        "bytes": 105615751,
+        "sha256": "e8eec0350ee02d6d5f8db44c316be16ad839db728446de077f263fad1ee57ab4"
+      }
+    ],
+    "environment": {
+      "python": "3.13.5",
+      "numpy": "2.1.3",
+      "scipy": "1.15.3",
+      "matplotlib": "3.10.0",
+      "py7zr": "1.1.4",
+      "zlib_runtime": "1.2.13"
+    },
+    "duration_seconds": 50.477,
+    "notes": [
+      "Official downloaded MATLAB values are float64. Baseline is a declared centered float32 representation, not the native acquisition bit depth.",
+      "Every archive includes shape and method. Quantized payloads additionally include float32 per-channel minimum and maximum. All reported ZIP sizes count the complete archive.",
+      "Each trial is archived independently; corpus sizes are sums of those independent archive sizes.",
+      "No participant, target or trial was selected for high observed accuracy. No artifact rejection was performed.",
+      "All participants are experienced SSVEP users. Four-class simplified task, 25% chance accuracy; not the full 40-target benchmark.",
+      "Primary vulnerability test: uniform, 2 bits. Other precisions are exploratory and their permutation p values are not multiplicity-corrected.",
+      "Permutation controls shuffle original gaps within participant and true-target strata. Their 95% range is a null range, not a confidence interval.",
+      "All evaluation participants are shown separately. No population-level claim or clinical conclusion is inferred.",
+      "Displayed waveform arrays are rounded to six decimal places; metrics use full reconstructed arrays.",
+      "Runtime includes local cache verification and extraction; download time is not included when files were already cached."
+    ]
+  },
+  "gap_thresholds": [
+    0.2740854061461816,
+    0.6500850999098977
+  ],
+  "conditions": [
+    {
+      "n": 48,
+      "accuracy": 0.7291666666666666,
+      "original_accuracy": 0.7291666666666666,
+      "flip_rate": 0.0,
+      "original_correct_count": 35,
+      "correct_to_wrong_rate": 0.0,
+      "archive_bytes_total": 540628,
+      "payload_bytes_total": 576576,
+      "raw_float32_bytes_total": 576000,
+      "mean_nrmse": 0.0,
+      "transitions": {
+        "correct_to_correct": 35,
+        "correct_to_wrong": 0,
+        "wrong_to_correct": 0,
+        "wrong_to_wrong": 13
+      },
+      "split": "development",
+      "method": "float32",
+      "bits": 32,
+      "archive_bytes_per_second_channel": 938.5902777777778,
+      "archive_fraction_of_float32": 0.9385902777777778,
+      "participants": [
+        {
+          "subject": 1,
+          "n": 24,
+          "accuracy": 0.625,
+          "original_accuracy": 0.625,
+          "flip_rate": 0.0,
+          "original_correct_count": 15,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 270492,
+          "payload_bytes_total": 288288,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.0,
+          "transitions": {
+            "correct_to_correct": 15,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 9
+          }
+        },
+        {
+          "subject": 2,
+          "n": 24,
+          "accuracy": 0.8333333333333334,
+          "original_accuracy": 0.8333333333333334,
+          "flip_rate": 0.0,
+          "original_correct_count": 20,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 270136,
+          "payload_bytes_total": 288288,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.0,
+          "transitions": {
+            "correct_to_correct": 20,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 4
+          }
+        }
+      ]
+    },
+    {
+      "n": 48,
+      "accuracy": 0.7291666666666666,
+      "original_accuracy": 0.7291666666666666,
+      "flip_rate": 0.0,
+      "original_correct_count": 35,
+      "correct_to_wrong_rate": 0.0,
+      "archive_bytes_total": 293279,
+      "payload_bytes_total": 289728,
+      "raw_float32_bytes_total": 576000,
+      "mean_nrmse": 2.9776324464056647e-05,
+      "transitions": {
+        "correct_to_correct": 35,
+        "correct_to_wrong": 0,
+        "wrong_to_correct": 0,
+        "wrong_to_wrong": 13
+      },
+      "split": "development",
+      "method": "uniform",
+      "bits": 16,
+      "archive_bytes_per_second_channel": 509.16493055555554,
+      "archive_fraction_of_float32": 0.5091649305555556,
+      "participants": [
+        {
+          "subject": 1,
+          "n": 24,
+          "accuracy": 0.625,
+          "original_accuracy": 0.625,
+          "flip_rate": 0.0,
+          "original_correct_count": 15,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 146788,
+          "payload_bytes_total": 144864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 2.7445486376251264e-05,
+          "transitions": {
+            "correct_to_correct": 15,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 9
+          }
+        },
+        {
+          "subject": 2,
+          "n": 24,
+          "accuracy": 0.8333333333333334,
+          "original_accuracy": 0.8333333333333334,
+          "flip_rate": 0.0,
+          "original_correct_count": 20,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 146491,
+          "payload_bytes_total": 144864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 3.210716255186203e-05,
+          "transitions": {
+            "correct_to_correct": 20,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 4
+          }
+        }
+      ]
+    },
+    {
+      "n": 48,
+      "accuracy": 0.7291666666666666,
+      "original_accuracy": 0.7291666666666666,
+      "flip_rate": 0.0,
+      "original_correct_count": 35,
+      "correct_to_wrong_rate": 0.0,
+      "archive_bytes_total": 222599,
+      "payload_bytes_total": 217728,
+      "raw_float32_bytes_total": 576000,
+      "mean_nrmse": 0.00047694869411753996,
+      "transitions": {
+        "correct_to_correct": 35,
+        "correct_to_wrong": 0,
+        "wrong_to_correct": 0,
+        "wrong_to_wrong": 13
+      },
+      "split": "development",
+      "method": "uniform",
+      "bits": 12,
+      "archive_bytes_per_second_channel": 386.45659722222223,
+      "archive_fraction_of_float32": 0.3864565972222222,
+      "participants": [
+        {
+          "subject": 1,
+          "n": 24,
+          "accuracy": 0.625,
+          "original_accuracy": 0.625,
+          "flip_rate": 0.0,
+          "original_correct_count": 15,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 111375,
+          "payload_bytes_total": 108864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.0004396426397401261,
+          "transitions": {
+            "correct_to_correct": 15,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 9
+          }
+        },
+        {
+          "subject": 2,
+          "n": 24,
+          "accuracy": 0.8333333333333334,
+          "original_accuracy": 0.8333333333333334,
+          "flip_rate": 0.0,
+          "original_correct_count": 20,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 111224,
+          "payload_bytes_total": 108864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.0005142547484949539,
+          "transitions": {
+            "correct_to_correct": 20,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 4
+          }
+        }
+      ]
+    },
+    {
+      "n": 48,
+      "accuracy": 0.7291666666666666,
+      "original_accuracy": 0.7291666666666666,
+      "flip_rate": 0.0,
+      "original_correct_count": 35,
+      "correct_to_wrong_rate": 0.0,
+      "archive_bytes_total": 143874,
+      "payload_bytes_total": 145728,
+      "raw_float32_bytes_total": 576000,
+      "mean_nrmse": 0.007647193262157318,
+      "transitions": {
+        "correct_to_correct": 35,
+        "correct_to_wrong": 0,
+        "wrong_to_correct": 0,
+        "wrong_to_wrong": 13
+      },
+      "split": "development",
+      "method": "uniform",
+      "bits": 8,
+      "archive_bytes_per_second_channel": 249.78125,
+      "archive_fraction_of_float32": 0.24978125,
+      "participants": [
+        {
+          "subject": 1,
+          "n": 24,
+          "accuracy": 0.625,
+          "original_accuracy": 0.625,
+          "flip_rate": 0.0,
+          "original_correct_count": 15,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 72185,
+          "payload_bytes_total": 72864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.007056497547154181,
+          "transitions": {
+            "correct_to_correct": 15,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 9
+          }
+        },
+        {
+          "subject": 2,
+          "n": 24,
+          "accuracy": 0.8333333333333334,
+          "original_accuracy": 0.8333333333333334,
+          "flip_rate": 0.0,
+          "original_correct_count": 20,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 71689,
+          "payload_bytes_total": 72864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.008237888977160455,
+          "transitions": {
+            "correct_to_correct": 20,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 4
+          }
+        }
+      ]
+    },
+    {
+      "n": 48,
+      "accuracy": 0.7291666666666666,
+      "original_accuracy": 0.7291666666666666,
+      "flip_rate": 0.020833333333333332,
+      "original_correct_count": 35,
+      "correct_to_wrong_rate": 0.0,
+      "archive_bytes_total": 112516,
+      "payload_bytes_total": 109728,
+      "raw_float32_bytes_total": 576000,
+      "mean_nrmse": 0.030978612950798873,
+      "transitions": {
+        "correct_to_correct": 35,
+        "correct_to_wrong": 0,
+        "wrong_to_correct": 0,
+        "wrong_to_wrong": 13
+      },
+      "split": "development",
+      "method": "uniform",
+      "bits": 6,
+      "archive_bytes_per_second_channel": 195.34027777777777,
+      "archive_fraction_of_float32": 0.19534027777777777,
+      "participants": [
+        {
+          "subject": 1,
+          "n": 24,
+          "accuracy": 0.625,
+          "original_accuracy": 0.625,
+          "flip_rate": 0.041666666666666664,
+          "original_correct_count": 15,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 56569,
+          "payload_bytes_total": 54864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.028511511048485122,
+          "transitions": {
+            "correct_to_correct": 15,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 9
+          }
+        },
+        {
+          "subject": 2,
+          "n": 24,
+          "accuracy": 0.8333333333333334,
+          "original_accuracy": 0.8333333333333334,
+          "flip_rate": 0.0,
+          "original_correct_count": 20,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 55947,
+          "payload_bytes_total": 54864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.033445714853112624,
+          "transitions": {
+            "correct_to_correct": 20,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 4
+          }
+        }
+      ]
+    },
+    {
+      "n": 48,
+      "accuracy": 0.7291666666666666,
+      "original_accuracy": 0.7291666666666666,
+      "flip_rate": 0.020833333333333332,
+      "original_correct_count": 35,
+      "correct_to_wrong_rate": 0.0,
+      "archive_bytes_total": 59674,
+      "payload_bytes_total": 73728,
+      "raw_float32_bytes_total": 576000,
+      "mean_nrmse": 0.13028408759894786,
+      "transitions": {
+        "correct_to_correct": 35,
+        "correct_to_wrong": 0,
+        "wrong_to_correct": 0,
+        "wrong_to_wrong": 13
+      },
+      "split": "development",
+      "method": "uniform",
+      "bits": 4,
+      "archive_bytes_per_second_channel": 103.60069444444444,
+      "archive_fraction_of_float32": 0.10360069444444445,
+      "participants": [
+        {
+          "subject": 1,
+          "n": 24,
+          "accuracy": 0.625,
+          "original_accuracy": 0.625,
+          "flip_rate": 0.041666666666666664,
+          "original_correct_count": 15,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 30672,
+          "payload_bytes_total": 36864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.11977171763279874,
+          "transitions": {
+            "correct_to_correct": 15,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 9
+          }
+        },
+        {
+          "subject": 2,
+          "n": 24,
+          "accuracy": 0.8333333333333334,
+          "original_accuracy": 0.8333333333333334,
+          "flip_rate": 0.0,
+          "original_correct_count": 20,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 29002,
+          "payload_bytes_total": 36864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.14079645756509698,
+          "transitions": {
+            "correct_to_correct": 20,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 4
+          }
+        }
+      ]
+    },
+    {
+      "n": 48,
+      "accuracy": 0.7708333333333334,
+      "original_accuracy": 0.7291666666666666,
+      "flip_rate": 0.10416666666666667,
+      "original_correct_count": 35,
+      "correct_to_wrong_rate": 0.02857142857142857,
+      "archive_bytes_total": 25131,
+      "payload_bytes_total": 37728,
+      "raw_float32_bytes_total": 576000,
+      "mean_nrmse": 0.6400938421940966,
+      "transitions": {
+        "correct_to_correct": 34,
+        "correct_to_wrong": 1,
+        "wrong_to_correct": 3,
+        "wrong_to_wrong": 10
+      },
+      "split": "development",
+      "method": "uniform",
+      "bits": 2,
+      "archive_bytes_per_second_channel": 43.630208333333336,
+      "archive_fraction_of_float32": 0.04363020833333333,
+      "participants": [
+        {
+          "subject": 1,
+          "n": 24,
+          "accuracy": 0.6666666666666666,
+          "original_accuracy": 0.625,
+          "flip_rate": 0.125,
+          "original_correct_count": 15,
+          "correct_to_wrong_rate": 0.06666666666666667,
+          "archive_bytes_total": 12921,
+          "payload_bytes_total": 18864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.5960162101662537,
+          "transitions": {
+            "correct_to_correct": 14,
+            "correct_to_wrong": 1,
+            "wrong_to_correct": 2,
+            "wrong_to_wrong": 7
+          }
+        },
+        {
+          "subject": 2,
+          "n": 24,
+          "accuracy": 0.875,
+          "original_accuracy": 0.8333333333333334,
+          "flip_rate": 0.08333333333333333,
+          "original_correct_count": 20,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 12210,
+          "payload_bytes_total": 18864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.6841714742219396,
+          "transitions": {
+            "correct_to_correct": 20,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 1,
+            "wrong_to_wrong": 3
+          }
+        }
+      ]
+    },
+    {
+      "n": 48,
+      "accuracy": 0.7291666666666666,
+      "original_accuracy": 0.7291666666666666,
+      "flip_rate": 0.0,
+      "original_correct_count": 35,
+      "correct_to_wrong_rate": 0.0,
+      "archive_bytes_total": 291500,
+      "payload_bytes_total": 289728,
+      "raw_float32_bytes_total": 576000,
+      "mean_nrmse": 5.649379060589867e-05,
+      "transitions": {
+        "correct_to_correct": 35,
+        "correct_to_wrong": 0,
+        "wrong_to_correct": 0,
+        "wrong_to_wrong": 13
+      },
+      "split": "development",
+      "method": "mulaw",
+      "bits": 16,
+      "archive_bytes_per_second_channel": 506.0763888888889,
+      "archive_fraction_of_float32": 0.5060763888888888,
+      "participants": [
+        {
+          "subject": 1,
+          "n": 24,
+          "accuracy": 0.625,
+          "original_accuracy": 0.625,
+          "flip_rate": 0.0,
+          "original_correct_count": 15,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 145798,
+          "payload_bytes_total": 144864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 5.244231404688527e-05,
+          "transitions": {
+            "correct_to_correct": 15,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 9
+          }
+        },
+        {
+          "subject": 2,
+          "n": 24,
+          "accuracy": 0.8333333333333334,
+          "original_accuracy": 0.8333333333333334,
+          "flip_rate": 0.0,
+          "original_correct_count": 20,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 145702,
+          "payload_bytes_total": 144864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 6.054526716491209e-05,
+          "transitions": {
+            "correct_to_correct": 20,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 4
+          }
+        }
+      ]
+    },
+    {
+      "n": 48,
+      "accuracy": 0.7291666666666666,
+      "original_accuracy": 0.7291666666666666,
+      "flip_rate": 0.0,
+      "original_correct_count": 35,
+      "correct_to_wrong_rate": 0.0,
+      "archive_bytes_total": 221795,
+      "payload_bytes_total": 217728,
+      "raw_float32_bytes_total": 576000,
+      "mean_nrmse": 0.0009020171844842527,
+      "transitions": {
+        "correct_to_correct": 35,
+        "correct_to_wrong": 0,
+        "wrong_to_correct": 0,
+        "wrong_to_wrong": 13
+      },
+      "split": "development",
+      "method": "mulaw",
+      "bits": 12,
+      "archive_bytes_per_second_channel": 385.0607638888889,
+      "archive_fraction_of_float32": 0.3850607638888889,
+      "participants": [
+        {
+          "subject": 1,
+          "n": 24,
+          "accuracy": 0.625,
+          "original_accuracy": 0.625,
+          "flip_rate": 0.0,
+          "original_correct_count": 15,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 110929,
+          "payload_bytes_total": 108864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.0008388681917257468,
+          "transitions": {
+            "correct_to_correct": 15,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 9
+          }
+        },
+        {
+          "subject": 2,
+          "n": 24,
+          "accuracy": 0.8333333333333334,
+          "original_accuracy": 0.8333333333333334,
+          "flip_rate": 0.0,
+          "original_correct_count": 20,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 110866,
+          "payload_bytes_total": 108864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.0009651661772427587,
+          "transitions": {
+            "correct_to_correct": 20,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 4
+          }
+        }
+      ]
+    },
+    {
+      "n": 48,
+      "accuracy": 0.7291666666666666,
+      "original_accuracy": 0.7291666666666666,
+      "flip_rate": 0.0,
+      "original_correct_count": 35,
+      "correct_to_wrong_rate": 0.0,
+      "archive_bytes_total": 141264,
+      "payload_bytes_total": 145728,
+      "raw_float32_bytes_total": 576000,
+      "mean_nrmse": 0.014532063577406273,
+      "transitions": {
+        "correct_to_correct": 35,
+        "correct_to_wrong": 0,
+        "wrong_to_correct": 0,
+        "wrong_to_wrong": 13
+      },
+      "split": "development",
+      "method": "mulaw",
+      "bits": 8,
+      "archive_bytes_per_second_channel": 245.25,
+      "archive_fraction_of_float32": 0.24525,
+      "participants": [
+        {
+          "subject": 1,
+          "n": 24,
+          "accuracy": 0.625,
+          "original_accuracy": 0.625,
+          "flip_rate": 0.0,
+          "original_correct_count": 15,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 70805,
+          "payload_bytes_total": 72864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.013543777249824496,
+          "transitions": {
+            "correct_to_correct": 15,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 9
+          }
+        },
+        {
+          "subject": 2,
+          "n": 24,
+          "accuracy": 0.8333333333333334,
+          "original_accuracy": 0.8333333333333334,
+          "flip_rate": 0.0,
+          "original_correct_count": 20,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 70459,
+          "payload_bytes_total": 72864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.015520349904988053,
+          "transitions": {
+            "correct_to_correct": 20,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 4
+          }
+        }
+      ]
+    },
+    {
+      "n": 48,
+      "accuracy": 0.7291666666666666,
+      "original_accuracy": 0.7291666666666666,
+      "flip_rate": 0.020833333333333332,
+      "original_correct_count": 35,
+      "correct_to_wrong_rate": 0.0,
+      "archive_bytes_total": 109655,
+      "payload_bytes_total": 109728,
+      "raw_float32_bytes_total": 576000,
+      "mean_nrmse": 0.05898616342599152,
+      "transitions": {
+        "correct_to_correct": 35,
+        "correct_to_wrong": 0,
+        "wrong_to_correct": 0,
+        "wrong_to_wrong": 13
+      },
+      "split": "development",
+      "method": "mulaw",
+      "bits": 6,
+      "archive_bytes_per_second_channel": 190.37326388888889,
+      "archive_fraction_of_float32": 0.1903732638888889,
+      "participants": [
+        {
+          "subject": 1,
+          "n": 24,
+          "accuracy": 0.625,
+          "original_accuracy": 0.625,
+          "flip_rate": 0.041666666666666664,
+          "original_correct_count": 15,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 55295,
+          "payload_bytes_total": 54864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.054825987931714705,
+          "transitions": {
+            "correct_to_correct": 15,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 9
+          }
+        },
+        {
+          "subject": 2,
+          "n": 24,
+          "accuracy": 0.8333333333333334,
+          "original_accuracy": 0.8333333333333334,
+          "flip_rate": 0.0,
+          "original_correct_count": 20,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 54360,
+          "payload_bytes_total": 54864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.06314633892026833,
+          "transitions": {
+            "correct_to_correct": 20,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 4
+          }
+        }
+      ]
+    },
+    {
+      "n": 48,
+      "accuracy": 0.7708333333333334,
+      "original_accuracy": 0.7291666666666666,
+      "flip_rate": 0.041666666666666664,
+      "original_correct_count": 35,
+      "correct_to_wrong_rate": 0.0,
+      "archive_bytes_total": 59006,
+      "payload_bytes_total": 73728,
+      "raw_float32_bytes_total": 576000,
+      "mean_nrmse": 0.2565461062571056,
+      "transitions": {
+        "correct_to_correct": 35,
+        "correct_to_wrong": 0,
+        "wrong_to_correct": 2,
+        "wrong_to_wrong": 11
+      },
+      "split": "development",
+      "method": "mulaw",
+      "bits": 4,
+      "archive_bytes_per_second_channel": 102.44097222222223,
+      "archive_fraction_of_float32": 0.10244097222222222,
+      "participants": [
+        {
+          "subject": 1,
+          "n": 24,
+          "accuracy": 0.6666666666666666,
+          "original_accuracy": 0.625,
+          "flip_rate": 0.041666666666666664,
+          "original_correct_count": 15,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 30254,
+          "payload_bytes_total": 36864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.24313655627116315,
+          "transitions": {
+            "correct_to_correct": 15,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 1,
+            "wrong_to_wrong": 8
+          }
+        },
+        {
+          "subject": 2,
+          "n": 24,
+          "accuracy": 0.875,
+          "original_accuracy": 0.8333333333333334,
+          "flip_rate": 0.041666666666666664,
+          "original_correct_count": 20,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 28752,
+          "payload_bytes_total": 36864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.26995565624304807,
+          "transitions": {
+            "correct_to_correct": 20,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 1,
+            "wrong_to_wrong": 3
+          }
+        }
+      ]
+    },
+    {
+      "n": 48,
+      "accuracy": 0.7291666666666666,
+      "original_accuracy": 0.7291666666666666,
+      "flip_rate": 0.08333333333333333,
+      "original_correct_count": 35,
+      "correct_to_wrong_rate": 0.02857142857142857,
+      "archive_bytes_total": 33137,
+      "payload_bytes_total": 37728,
+      "raw_float32_bytes_total": 576000,
+      "mean_nrmse": 1.8022070893983637,
+      "transitions": {
+        "correct_to_correct": 34,
+        "correct_to_wrong": 1,
+        "wrong_to_correct": 1,
+        "wrong_to_wrong": 12
+      },
+      "split": "development",
+      "method": "mulaw",
+      "bits": 2,
+      "archive_bytes_per_second_channel": 57.529513888888886,
+      "archive_fraction_of_float32": 0.05752951388888889,
+      "participants": [
+        {
+          "subject": 1,
+          "n": 24,
+          "accuracy": 0.625,
+          "original_accuracy": 0.625,
+          "flip_rate": 0.041666666666666664,
+          "original_correct_count": 15,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 17070,
+          "payload_bytes_total": 18864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 1.6496991466093878,
+          "transitions": {
+            "correct_to_correct": 15,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 9
+          }
+        },
+        {
+          "subject": 2,
+          "n": 24,
+          "accuracy": 0.8333333333333334,
+          "original_accuracy": 0.8333333333333334,
+          "flip_rate": 0.125,
+          "original_correct_count": 20,
+          "correct_to_wrong_rate": 0.05,
+          "archive_bytes_total": 16067,
+          "payload_bytes_total": 18864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 1.9547150321873399,
+          "transitions": {
+            "correct_to_correct": 19,
+            "correct_to_wrong": 1,
+            "wrong_to_correct": 1,
+            "wrong_to_wrong": 3
+          }
+        }
+      ]
+    },
+    {
+      "n": 144,
+      "accuracy": 0.875,
+      "original_accuracy": 0.875,
+      "flip_rate": 0.0,
+      "original_correct_count": 126,
+      "correct_to_wrong_rate": 0.0,
+      "archive_bytes_total": 1621363,
+      "payload_bytes_total": 1729728,
+      "raw_float32_bytes_total": 1728000,
+      "mean_nrmse": 0.0,
+      "transitions": {
+        "correct_to_correct": 126,
+        "correct_to_wrong": 0,
+        "wrong_to_correct": 0,
+        "wrong_to_wrong": 18
+      },
+      "split": "evaluation",
+      "method": "float32",
+      "bits": 32,
+      "archive_bytes_per_second_channel": 938.2887731481482,
+      "archive_fraction_of_float32": 0.9382887731481482,
+      "participants": [
+        {
+          "subject": 3,
+          "n": 24,
+          "accuracy": 1.0,
+          "original_accuracy": 1.0,
+          "flip_rate": 0.0,
+          "original_correct_count": 24,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 270590,
+          "payload_bytes_total": 288288,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.0,
+          "transitions": {
+            "correct_to_correct": 24,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 0
+          }
+        },
+        {
+          "subject": 4,
+          "n": 24,
+          "accuracy": 0.625,
+          "original_accuracy": 0.625,
+          "flip_rate": 0.0,
+          "original_correct_count": 15,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 270055,
+          "payload_bytes_total": 288288,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.0,
+          "transitions": {
+            "correct_to_correct": 15,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 9
+          }
+        },
+        {
+          "subject": 5,
+          "n": 24,
+          "accuracy": 1.0,
+          "original_accuracy": 1.0,
+          "flip_rate": 0.0,
+          "original_correct_count": 24,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 270459,
+          "payload_bytes_total": 288288,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.0,
+          "transitions": {
+            "correct_to_correct": 24,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 0
+          }
+        },
+        {
+          "subject": 6,
+          "n": 24,
+          "accuracy": 1.0,
+          "original_accuracy": 1.0,
+          "flip_rate": 0.0,
+          "original_correct_count": 24,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 270086,
+          "payload_bytes_total": 288288,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.0,
+          "transitions": {
+            "correct_to_correct": 24,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 0
+          }
+        },
+        {
+          "subject": 7,
+          "n": 24,
+          "accuracy": 0.625,
+          "original_accuracy": 0.625,
+          "flip_rate": 0.0,
+          "original_correct_count": 15,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 270224,
+          "payload_bytes_total": 288288,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.0,
+          "transitions": {
+            "correct_to_correct": 15,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 9
+          }
+        },
+        {
+          "subject": 8,
+          "n": 24,
+          "accuracy": 1.0,
+          "original_accuracy": 1.0,
+          "flip_rate": 0.0,
+          "original_correct_count": 24,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 269949,
+          "payload_bytes_total": 288288,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.0,
+          "transitions": {
+            "correct_to_correct": 24,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 0
+          }
+        }
+      ]
+    },
+    {
+      "n": 144,
+      "accuracy": 0.875,
+      "original_accuracy": 0.875,
+      "flip_rate": 0.0,
+      "original_correct_count": 126,
+      "correct_to_wrong_rate": 0.0,
+      "archive_bytes_total": 880675,
+      "payload_bytes_total": 869184,
+      "raw_float32_bytes_total": 1728000,
+      "mean_nrmse": 2.7428024178596363e-05,
+      "transitions": {
+        "correct_to_correct": 126,
+        "correct_to_wrong": 0,
+        "wrong_to_correct": 0,
+        "wrong_to_wrong": 18
+      },
+      "split": "evaluation",
+      "method": "uniform",
+      "bits": 16,
+      "archive_bytes_per_second_channel": 509.64988425925924,
+      "archive_fraction_of_float32": 0.5096498842592593,
+      "participants": [
+        {
+          "subject": 3,
+          "n": 24,
+          "accuracy": 1.0,
+          "original_accuracy": 1.0,
+          "flip_rate": 0.0,
+          "original_correct_count": 24,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 146612,
+          "payload_bytes_total": 144864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 2.620381060405897e-05,
+          "transitions": {
+            "correct_to_correct": 24,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 0
+          }
+        },
+        {
+          "subject": 4,
+          "n": 24,
+          "accuracy": 0.625,
+          "original_accuracy": 0.625,
+          "flip_rate": 0.0,
+          "original_correct_count": 15,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 146875,
+          "payload_bytes_total": 144864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 2.793690657569743e-05,
+          "transitions": {
+            "correct_to_correct": 15,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 9
+          }
+        },
+        {
+          "subject": 5,
+          "n": 24,
+          "accuracy": 1.0,
+          "original_accuracy": 1.0,
+          "flip_rate": 0.0,
+          "original_correct_count": 24,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 147120,
+          "payload_bytes_total": 144864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 2.556769206257166e-05,
+          "transitions": {
+            "correct_to_correct": 24,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 0
+          }
+        },
+        {
+          "subject": 6,
+          "n": 24,
+          "accuracy": 1.0,
+          "original_accuracy": 1.0,
+          "flip_rate": 0.0,
+          "original_correct_count": 24,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 146890,
+          "payload_bytes_total": 144864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 2.570692863491083e-05,
+          "transitions": {
+            "correct_to_correct": 24,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 0
+          }
+        },
+        {
+          "subject": 7,
+          "n": 24,
+          "accuracy": 0.625,
+          "original_accuracy": 0.625,
+          "flip_rate": 0.0,
+          "original_correct_count": 15,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 146595,
+          "payload_bytes_total": 144864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 2.9883053095148786e-05,
+          "transitions": {
+            "correct_to_correct": 15,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 9
+          }
+        },
+        {
+          "subject": 8,
+          "n": 24,
+          "accuracy": 1.0,
+          "original_accuracy": 1.0,
+          "flip_rate": 0.0,
+          "original_correct_count": 24,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 146583,
+          "payload_bytes_total": 144864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 2.9269754099190505e-05,
+          "transitions": {
+            "correct_to_correct": 24,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 0
+          }
+        }
+      ]
+    },
+    {
+      "n": 144,
+      "accuracy": 0.875,
+      "original_accuracy": 0.875,
+      "flip_rate": 0.0,
+      "original_correct_count": 126,
+      "correct_to_wrong_rate": 0.0,
+      "archive_bytes_total": 668613,
+      "payload_bytes_total": 653184,
+      "raw_float32_bytes_total": 1728000,
+      "mean_nrmse": 0.0004386640091970824,
+      "transitions": {
+        "correct_to_correct": 126,
+        "correct_to_wrong": 0,
+        "wrong_to_correct": 0,
+        "wrong_to_wrong": 18
+      },
+      "split": "evaluation",
+      "method": "uniform",
+      "bits": 12,
+      "archive_bytes_per_second_channel": 386.92881944444446,
+      "archive_fraction_of_float32": 0.38692881944444446,
+      "participants": [
+        {
+          "subject": 3,
+          "n": 24,
+          "accuracy": 1.0,
+          "original_accuracy": 1.0,
+          "flip_rate": 0.0,
+          "original_correct_count": 24,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 111380,
+          "payload_bytes_total": 108864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.0004172643783995616,
+          "transitions": {
+            "correct_to_correct": 24,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 0
+          }
+        },
+        {
+          "subject": 4,
+          "n": 24,
+          "accuracy": 0.625,
+          "original_accuracy": 0.625,
+          "flip_rate": 0.0,
+          "original_correct_count": 15,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 111477,
+          "payload_bytes_total": 108864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.0004461849097192336,
+          "transitions": {
+            "correct_to_correct": 15,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 9
+          }
+        },
+        {
+          "subject": 5,
+          "n": 24,
+          "accuracy": 1.0,
+          "original_accuracy": 1.0,
+          "flip_rate": 0.0,
+          "original_correct_count": 24,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 111571,
+          "payload_bytes_total": 108864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.0004084793127640572,
+          "transitions": {
+            "correct_to_correct": 24,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 0
+          }
+        },
+        {
+          "subject": 6,
+          "n": 24,
+          "accuracy": 1.0,
+          "original_accuracy": 1.0,
+          "flip_rate": 0.0,
+          "original_correct_count": 24,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 111467,
+          "payload_bytes_total": 108864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.00041251324959596156,
+          "transitions": {
+            "correct_to_correct": 24,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 0
+          }
+        },
+        {
+          "subject": 7,
+          "n": 24,
+          "accuracy": 0.625,
+          "original_accuracy": 0.625,
+          "flip_rate": 0.0,
+          "original_correct_count": 15,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 111338,
+          "payload_bytes_total": 108864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.00047903279640728436,
+          "transitions": {
+            "correct_to_correct": 15,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 9
+          }
+        },
+        {
+          "subject": 8,
+          "n": 24,
+          "accuracy": 1.0,
+          "original_accuracy": 1.0,
+          "flip_rate": 0.0,
+          "original_correct_count": 24,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 111380,
+          "payload_bytes_total": 108864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.00046850940829639586,
+          "transitions": {
+            "correct_to_correct": 24,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 0
+          }
+        }
+      ]
+    },
+    {
+      "n": 144,
+      "accuracy": 0.875,
+      "original_accuracy": 0.875,
+      "flip_rate": 0.0,
+      "original_correct_count": 126,
+      "correct_to_wrong_rate": 0.0,
+      "archive_bytes_total": 434331,
+      "payload_bytes_total": 437184,
+      "raw_float32_bytes_total": 1728000,
+      "mean_nrmse": 0.00704695729865744,
+      "transitions": {
+        "correct_to_correct": 126,
+        "correct_to_wrong": 0,
+        "wrong_to_correct": 0,
+        "wrong_to_wrong": 18
+      },
+      "split": "evaluation",
+      "method": "uniform",
+      "bits": 8,
+      "archive_bytes_per_second_channel": 251.34895833333334,
+      "archive_fraction_of_float32": 0.2513489583333333,
+      "participants": [
+        {
+          "subject": 3,
+          "n": 24,
+          "accuracy": 1.0,
+          "original_accuracy": 1.0,
+          "flip_rate": 0.0,
+          "original_correct_count": 24,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 72392,
+          "payload_bytes_total": 72864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.006704219005015528,
+          "transitions": {
+            "correct_to_correct": 24,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 0
+          }
+        },
+        {
+          "subject": 4,
+          "n": 24,
+          "accuracy": 0.625,
+          "original_accuracy": 0.625,
+          "flip_rate": 0.0,
+          "original_correct_count": 15,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 72378,
+          "payload_bytes_total": 72864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.00717599257884071,
+          "transitions": {
+            "correct_to_correct": 15,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 9
+          }
+        },
+        {
+          "subject": 5,
+          "n": 24,
+          "accuracy": 1.0,
+          "original_accuracy": 1.0,
+          "flip_rate": 0.0,
+          "original_correct_count": 24,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 73075,
+          "payload_bytes_total": 72864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.006543955512343855,
+          "transitions": {
+            "correct_to_correct": 24,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 0
+          }
+        },
+        {
+          "subject": 6,
+          "n": 24,
+          "accuracy": 1.0,
+          "original_accuracy": 1.0,
+          "flip_rate": 0.0,
+          "original_correct_count": 24,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 72844,
+          "payload_bytes_total": 72864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.006597675821113466,
+          "transitions": {
+            "correct_to_correct": 24,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 0
+          }
+        },
+        {
+          "subject": 7,
+          "n": 24,
+          "accuracy": 0.625,
+          "original_accuracy": 0.625,
+          "flip_rate": 0.0,
+          "original_correct_count": 15,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 71871,
+          "payload_bytes_total": 72864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.0077130362776186906,
+          "transitions": {
+            "correct_to_correct": 15,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 9
+          }
+        },
+        {
+          "subject": 8,
+          "n": 24,
+          "accuracy": 1.0,
+          "original_accuracy": 1.0,
+          "flip_rate": 0.0,
+          "original_correct_count": 24,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 71771,
+          "payload_bytes_total": 72864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.007546864597012396,
+          "transitions": {
+            "correct_to_correct": 24,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 0
+          }
+        }
+      ]
+    },
+    {
+      "n": 144,
+      "accuracy": 0.8680555555555556,
+      "original_accuracy": 0.875,
+      "flip_rate": 0.006944444444444444,
+      "original_correct_count": 126,
+      "correct_to_wrong_rate": 0.007936507936507936,
+      "archive_bytes_total": 340676,
+      "payload_bytes_total": 329184,
+      "raw_float32_bytes_total": 1728000,
+      "mean_nrmse": 0.028547714799757224,
+      "transitions": {
+        "correct_to_correct": 125,
+        "correct_to_wrong": 1,
+        "wrong_to_correct": 0,
+        "wrong_to_wrong": 18
+      },
+      "split": "evaluation",
+      "method": "uniform",
+      "bits": 6,
+      "archive_bytes_per_second_channel": 197.15046296296296,
+      "archive_fraction_of_float32": 0.19715046296296296,
+      "participants": [
+        {
+          "subject": 3,
+          "n": 24,
+          "accuracy": 1.0,
+          "original_accuracy": 1.0,
+          "flip_rate": 0.0,
+          "original_correct_count": 24,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 55721,
+          "payload_bytes_total": 54864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.027198913073129685,
+          "transitions": {
+            "correct_to_correct": 24,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 0
+          }
+        },
+        {
+          "subject": 4,
+          "n": 24,
+          "accuracy": 0.5833333333333334,
+          "original_accuracy": 0.625,
+          "flip_rate": 0.041666666666666664,
+          "original_correct_count": 15,
+          "correct_to_wrong_rate": 0.06666666666666667,
+          "archive_bytes_total": 57111,
+          "payload_bytes_total": 54864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.029091378260401174,
+          "transitions": {
+            "correct_to_correct": 14,
+            "correct_to_wrong": 1,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 9
+          }
+        },
+        {
+          "subject": 5,
+          "n": 24,
+          "accuracy": 1.0,
+          "original_accuracy": 1.0,
+          "flip_rate": 0.0,
+          "original_correct_count": 24,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 56830,
+          "payload_bytes_total": 54864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.026489593971159697,
+          "transitions": {
+            "correct_to_correct": 24,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 0
+          }
+        },
+        {
+          "subject": 6,
+          "n": 24,
+          "accuracy": 1.0,
+          "original_accuracy": 1.0,
+          "flip_rate": 0.0,
+          "original_correct_count": 24,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 57098,
+          "payload_bytes_total": 54864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.026871725331739548,
+          "transitions": {
+            "correct_to_correct": 24,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 0
+          }
+        },
+        {
+          "subject": 7,
+          "n": 24,
+          "accuracy": 0.625,
+          "original_accuracy": 0.625,
+          "flip_rate": 0.0,
+          "original_correct_count": 15,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 56918,
+          "payload_bytes_total": 54864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.031178949154061702,
+          "transitions": {
+            "correct_to_correct": 15,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 9
+          }
+        },
+        {
+          "subject": 8,
+          "n": 24,
+          "accuracy": 1.0,
+          "original_accuracy": 1.0,
+          "flip_rate": 0.0,
+          "original_correct_count": 24,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 56998,
+          "payload_bytes_total": 54864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.030455729008051574,
+          "transitions": {
+            "correct_to_correct": 24,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 0
+          }
+        }
+      ]
+    },
+    {
+      "n": 144,
+      "accuracy": 0.8680555555555556,
+      "original_accuracy": 0.875,
+      "flip_rate": 0.013888888888888888,
+      "original_correct_count": 126,
+      "correct_to_wrong_rate": 0.007936507936507936,
+      "archive_bytes_total": 189419,
+      "payload_bytes_total": 221184,
+      "raw_float32_bytes_total": 1728000,
+      "mean_nrmse": 0.11986826695788912,
+      "transitions": {
+        "correct_to_correct": 125,
+        "correct_to_wrong": 1,
+        "wrong_to_correct": 0,
+        "wrong_to_wrong": 18
+      },
+      "split": "evaluation",
+      "method": "uniform",
+      "bits": 4,
+      "archive_bytes_per_second_channel": 109.61747685185185,
+      "archive_fraction_of_float32": 0.10961747685185186,
+      "participants": [
+        {
+          "subject": 3,
+          "n": 24,
+          "accuracy": 1.0,
+          "original_accuracy": 1.0,
+          "flip_rate": 0.0,
+          "original_correct_count": 24,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 27987,
+          "payload_bytes_total": 36864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.11390030781840914,
+          "transitions": {
+            "correct_to_correct": 24,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 0
+          }
+        },
+        {
+          "subject": 4,
+          "n": 24,
+          "accuracy": 0.5833333333333334,
+          "original_accuracy": 0.625,
+          "flip_rate": 0.041666666666666664,
+          "original_correct_count": 15,
+          "correct_to_wrong_rate": 0.06666666666666667,
+          "archive_bytes_total": 32790,
+          "payload_bytes_total": 36864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.12214503808801676,
+          "transitions": {
+            "correct_to_correct": 14,
+            "correct_to_wrong": 1,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 9
+          }
+        },
+        {
+          "subject": 5,
+          "n": 24,
+          "accuracy": 1.0,
+          "original_accuracy": 1.0,
+          "flip_rate": 0.0,
+          "original_correct_count": 24,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 30474,
+          "payload_bytes_total": 36864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.11171558170814677,
+          "transitions": {
+            "correct_to_correct": 24,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 0
+          }
+        },
+        {
+          "subject": 6,
+          "n": 24,
+          "accuracy": 1.0,
+          "original_accuracy": 1.0,
+          "flip_rate": 0.0,
+          "original_correct_count": 24,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 32365,
+          "payload_bytes_total": 36864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.11235769447977327,
+          "transitions": {
+            "correct_to_correct": 24,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 0
+          }
+        },
+        {
+          "subject": 7,
+          "n": 24,
+          "accuracy": 0.625,
+          "original_accuracy": 0.625,
+          "flip_rate": 0.041666666666666664,
+          "original_correct_count": 15,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 32710,
+          "payload_bytes_total": 36864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.13081332950856947,
+          "transitions": {
+            "correct_to_correct": 15,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 9
+          }
+        },
+        {
+          "subject": 8,
+          "n": 24,
+          "accuracy": 1.0,
+          "original_accuracy": 1.0,
+          "flip_rate": 0.0,
+          "original_correct_count": 24,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 33093,
+          "payload_bytes_total": 36864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.12827765014441925,
+          "transitions": {
+            "correct_to_correct": 24,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 0
+          }
+        }
+      ]
+    },
+    {
+      "n": 144,
+      "accuracy": 0.8680555555555556,
+      "original_accuracy": 0.875,
+      "flip_rate": 0.08333333333333333,
+      "original_correct_count": 126,
+      "correct_to_wrong_rate": 0.03968253968253968,
+      "archive_bytes_total": 81874,
+      "payload_bytes_total": 113184,
+      "raw_float32_bytes_total": 1728000,
+      "mean_nrmse": 0.5993230265017812,
+      "transitions": {
+        "correct_to_correct": 121,
+        "correct_to_wrong": 5,
+        "wrong_to_correct": 4,
+        "wrong_to_wrong": 14
+      },
+      "split": "evaluation",
+      "method": "uniform",
+      "bits": 2,
+      "archive_bytes_per_second_channel": 47.38078703703704,
+      "archive_fraction_of_float32": 0.047380787037037034,
+      "participants": [
+        {
+          "subject": 3,
+          "n": 24,
+          "accuracy": 1.0,
+          "original_accuracy": 1.0,
+          "flip_rate": 0.0,
+          "original_correct_count": 24,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 11607,
+          "payload_bytes_total": 18864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.5747738222944512,
+          "transitions": {
+            "correct_to_correct": 24,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 0
+          }
+        },
+        {
+          "subject": 4,
+          "n": 24,
+          "accuracy": 0.625,
+          "original_accuracy": 0.625,
+          "flip_rate": 0.2916666666666667,
+          "original_correct_count": 15,
+          "correct_to_wrong_rate": 0.2,
+          "archive_bytes_total": 14150,
+          "payload_bytes_total": 18864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.6055813757038909,
+          "transitions": {
+            "correct_to_correct": 12,
+            "correct_to_wrong": 3,
+            "wrong_to_correct": 3,
+            "wrong_to_wrong": 6
+          }
+        },
+        {
+          "subject": 5,
+          "n": 24,
+          "accuracy": 1.0,
+          "original_accuracy": 1.0,
+          "flip_rate": 0.0,
+          "original_correct_count": 24,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 13012,
+          "payload_bytes_total": 18864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.5582673984114855,
+          "transitions": {
+            "correct_to_correct": 24,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 0
+          }
+        },
+        {
+          "subject": 6,
+          "n": 24,
+          "accuracy": 1.0,
+          "original_accuracy": 1.0,
+          "flip_rate": 0.0,
+          "original_correct_count": 24,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 14045,
+          "payload_bytes_total": 18864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.5647634372907825,
+          "transitions": {
+            "correct_to_correct": 24,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 0
+          }
+        },
+        {
+          "subject": 7,
+          "n": 24,
+          "accuracy": 0.5833333333333334,
+          "original_accuracy": 0.625,
+          "flip_rate": 0.20833333333333334,
+          "original_correct_count": 15,
+          "correct_to_wrong_rate": 0.13333333333333333,
+          "archive_bytes_total": 14191,
+          "payload_bytes_total": 18864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.6492945291324014,
+          "transitions": {
+            "correct_to_correct": 13,
+            "correct_to_wrong": 2,
+            "wrong_to_correct": 1,
+            "wrong_to_wrong": 8
+          }
+        },
+        {
+          "subject": 8,
+          "n": 24,
+          "accuracy": 1.0,
+          "original_accuracy": 1.0,
+          "flip_rate": 0.0,
+          "original_correct_count": 24,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 14869,
+          "payload_bytes_total": 18864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.6432575961776755,
+          "transitions": {
+            "correct_to_correct": 24,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 0
+          }
+        }
+      ]
+    },
+    {
+      "n": 144,
+      "accuracy": 0.875,
+      "original_accuracy": 0.875,
+      "flip_rate": 0.0,
+      "original_correct_count": 126,
+      "correct_to_wrong_rate": 0.0,
+      "archive_bytes_total": 875601,
+      "payload_bytes_total": 869184,
+      "raw_float32_bytes_total": 1728000,
+      "mean_nrmse": 5.2496762907403314e-05,
+      "transitions": {
+        "correct_to_correct": 126,
+        "correct_to_wrong": 0,
+        "wrong_to_correct": 0,
+        "wrong_to_wrong": 18
+      },
+      "split": "evaluation",
+      "method": "mulaw",
+      "bits": 16,
+      "archive_bytes_per_second_channel": 506.7135416666667,
+      "archive_fraction_of_float32": 0.5067135416666667,
+      "participants": [
+        {
+          "subject": 3,
+          "n": 24,
+          "accuracy": 1.0,
+          "original_accuracy": 1.0,
+          "flip_rate": 0.0,
+          "original_correct_count": 24,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 145248,
+          "payload_bytes_total": 144864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 5.484715390094401e-05,
+          "transitions": {
+            "correct_to_correct": 24,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 0
+          }
+        },
+        {
+          "subject": 4,
+          "n": 24,
+          "accuracy": 0.625,
+          "original_accuracy": 0.625,
+          "flip_rate": 0.0,
+          "original_correct_count": 15,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 146097,
+          "payload_bytes_total": 144864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 5.182447515168564e-05,
+          "transitions": {
+            "correct_to_correct": 15,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 9
+          }
+        },
+        {
+          "subject": 5,
+          "n": 24,
+          "accuracy": 1.0,
+          "original_accuracy": 1.0,
+          "flip_rate": 0.0,
+          "original_correct_count": 24,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 146178,
+          "payload_bytes_total": 144864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 5.094890442334147e-05,
+          "transitions": {
+            "correct_to_correct": 24,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 0
+          }
+        },
+        {
+          "subject": 6,
+          "n": 24,
+          "accuracy": 1.0,
+          "original_accuracy": 1.0,
+          "flip_rate": 0.0,
+          "original_correct_count": 24,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 145771,
+          "payload_bytes_total": 144864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 5.1172338095468896e-05,
+          "transitions": {
+            "correct_to_correct": 24,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 0
+          }
+        },
+        {
+          "subject": 7,
+          "n": 24,
+          "accuracy": 0.625,
+          "original_accuracy": 0.625,
+          "flip_rate": 0.0,
+          "original_correct_count": 15,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 145965,
+          "payload_bytes_total": 144864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 5.4631598060441725e-05,
+          "transitions": {
+            "correct_to_correct": 15,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 9
+          }
+        },
+        {
+          "subject": 8,
+          "n": 24,
+          "accuracy": 1.0,
+          "original_accuracy": 1.0,
+          "flip_rate": 0.0,
+          "original_correct_count": 24,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 146342,
+          "payload_bytes_total": 144864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 5.155610781253816e-05,
+          "transitions": {
+            "correct_to_correct": 24,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 0
+          }
+        }
+      ]
+    },
+    {
+      "n": 144,
+      "accuracy": 0.875,
+      "original_accuracy": 0.875,
+      "flip_rate": 0.0,
+      "original_correct_count": 126,
+      "correct_to_wrong_rate": 0.0,
+      "archive_bytes_total": 666416,
+      "payload_bytes_total": 653184,
+      "raw_float32_bytes_total": 1728000,
+      "mean_nrmse": 0.0008388336232264664,
+      "transitions": {
+        "correct_to_correct": 126,
+        "correct_to_wrong": 0,
+        "wrong_to_correct": 0,
+        "wrong_to_wrong": 18
+      },
+      "split": "evaluation",
+      "method": "mulaw",
+      "bits": 12,
+      "archive_bytes_per_second_channel": 385.6574074074074,
+      "archive_fraction_of_float32": 0.3856574074074074,
+      "participants": [
+        {
+          "subject": 3,
+          "n": 24,
+          "accuracy": 1.0,
+          "original_accuracy": 1.0,
+          "flip_rate": 0.0,
+          "original_correct_count": 24,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 110601,
+          "payload_bytes_total": 108864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.0008774004340906732,
+          "transitions": {
+            "correct_to_correct": 24,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 0
+          }
+        },
+        {
+          "subject": 4,
+          "n": 24,
+          "accuracy": 0.625,
+          "original_accuracy": 0.625,
+          "flip_rate": 0.0,
+          "original_correct_count": 15,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 111173,
+          "payload_bytes_total": 108864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.0008370004220823473,
+          "transitions": {
+            "correct_to_correct": 15,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 9
+          }
+        },
+        {
+          "subject": 5,
+          "n": 24,
+          "accuracy": 1.0,
+          "original_accuracy": 1.0,
+          "flip_rate": 0.0,
+          "original_correct_count": 24,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 111257,
+          "payload_bytes_total": 108864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.0008151799888897006,
+          "transitions": {
+            "correct_to_correct": 24,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 0
+          }
+        },
+        {
+          "subject": 6,
+          "n": 24,
+          "accuracy": 1.0,
+          "original_accuracy": 1.0,
+          "flip_rate": 0.0,
+          "original_correct_count": 24,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 111003,
+          "payload_bytes_total": 108864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.0008113545013460262,
+          "transitions": {
+            "correct_to_correct": 24,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 0
+          }
+        },
+        {
+          "subject": 7,
+          "n": 24,
+          "accuracy": 0.625,
+          "original_accuracy": 0.625,
+          "flip_rate": 0.0,
+          "original_correct_count": 15,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 111071,
+          "payload_bytes_total": 108864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.0008729504373995271,
+          "transitions": {
+            "correct_to_correct": 15,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 9
+          }
+        },
+        {
+          "subject": 8,
+          "n": 24,
+          "accuracy": 1.0,
+          "original_accuracy": 1.0,
+          "flip_rate": 0.0,
+          "original_correct_count": 24,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 111311,
+          "payload_bytes_total": 108864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.0008191159555505237,
+          "transitions": {
+            "correct_to_correct": 24,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 0
+          }
+        }
+      ]
+    },
+    {
+      "n": 144,
+      "accuracy": 0.875,
+      "original_accuracy": 0.875,
+      "flip_rate": 0.0,
+      "original_correct_count": 126,
+      "correct_to_wrong_rate": 0.0,
+      "archive_bytes_total": 425114,
+      "payload_bytes_total": 437184,
+      "raw_float32_bytes_total": 1728000,
+      "mean_nrmse": 0.01349209164436107,
+      "transitions": {
+        "correct_to_correct": 126,
+        "correct_to_wrong": 0,
+        "wrong_to_correct": 0,
+        "wrong_to_wrong": 18
+      },
+      "split": "evaluation",
+      "method": "mulaw",
+      "bits": 8,
+      "archive_bytes_per_second_channel": 246.0150462962963,
+      "archive_fraction_of_float32": 0.2460150462962963,
+      "participants": [
+        {
+          "subject": 3,
+          "n": 24,
+          "accuracy": 1.0,
+          "original_accuracy": 1.0,
+          "flip_rate": 0.0,
+          "original_correct_count": 24,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 69039,
+          "payload_bytes_total": 72864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.01402559491700871,
+          "transitions": {
+            "correct_to_correct": 24,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 0
+          }
+        },
+        {
+          "subject": 4,
+          "n": 24,
+          "accuracy": 0.625,
+          "original_accuracy": 0.625,
+          "flip_rate": 0.0,
+          "original_correct_count": 15,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 71316,
+          "payload_bytes_total": 72864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.013388445335999253,
+          "transitions": {
+            "correct_to_correct": 15,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 9
+          }
+        },
+        {
+          "subject": 5,
+          "n": 24,
+          "accuracy": 1.0,
+          "original_accuracy": 1.0,
+          "flip_rate": 0.0,
+          "original_correct_count": 24,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 71255,
+          "payload_bytes_total": 72864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.013183117061521485,
+          "transitions": {
+            "correct_to_correct": 24,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 0
+          }
+        },
+        {
+          "subject": 6,
+          "n": 24,
+          "accuracy": 1.0,
+          "original_accuracy": 1.0,
+          "flip_rate": 0.0,
+          "original_correct_count": 24,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 70344,
+          "payload_bytes_total": 72864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.01308778831781684,
+          "transitions": {
+            "correct_to_correct": 24,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 0
+          }
+        },
+        {
+          "subject": 7,
+          "n": 24,
+          "accuracy": 0.625,
+          "original_accuracy": 0.625,
+          "flip_rate": 0.0,
+          "original_correct_count": 15,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 71229,
+          "payload_bytes_total": 72864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.014057810599490664,
+          "transitions": {
+            "correct_to_correct": 15,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 9
+          }
+        },
+        {
+          "subject": 8,
+          "n": 24,
+          "accuracy": 1.0,
+          "original_accuracy": 1.0,
+          "flip_rate": 0.0,
+          "original_correct_count": 24,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 71931,
+          "payload_bytes_total": 72864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.01320979363432946,
+          "transitions": {
+            "correct_to_correct": 24,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 0
+          }
+        }
+      ]
+    },
+    {
+      "n": 144,
+      "accuracy": 0.8819444444444444,
+      "original_accuracy": 0.875,
+      "flip_rate": 0.006944444444444444,
+      "original_correct_count": 126,
+      "correct_to_wrong_rate": 0.0,
+      "archive_bytes_total": 332647,
+      "payload_bytes_total": 329184,
+      "raw_float32_bytes_total": 1728000,
+      "mean_nrmse": 0.05471522285917788,
+      "transitions": {
+        "correct_to_correct": 126,
+        "correct_to_wrong": 0,
+        "wrong_to_correct": 1,
+        "wrong_to_wrong": 17
+      },
+      "split": "evaluation",
+      "method": "mulaw",
+      "bits": 6,
+      "archive_bytes_per_second_channel": 192.50405092592592,
+      "archive_fraction_of_float32": 0.19250405092592593,
+      "participants": [
+        {
+          "subject": 3,
+          "n": 24,
+          "accuracy": 1.0,
+          "original_accuracy": 1.0,
+          "flip_rate": 0.0,
+          "original_correct_count": 24,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 52209,
+          "payload_bytes_total": 54864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.0573267687660323,
+          "transitions": {
+            "correct_to_correct": 24,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 0
+          }
+        },
+        {
+          "subject": 4,
+          "n": 24,
+          "accuracy": 0.6666666666666666,
+          "original_accuracy": 0.625,
+          "flip_rate": 0.041666666666666664,
+          "original_correct_count": 15,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 56542,
+          "payload_bytes_total": 54864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.054328968963782635,
+          "transitions": {
+            "correct_to_correct": 15,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 1,
+            "wrong_to_wrong": 8
+          }
+        },
+        {
+          "subject": 5,
+          "n": 24,
+          "accuracy": 1.0,
+          "original_accuracy": 1.0,
+          "flip_rate": 0.0,
+          "original_correct_count": 24,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 55133,
+          "payload_bytes_total": 54864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.05317776649202443,
+          "transitions": {
+            "correct_to_correct": 24,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 0
+          }
+        },
+        {
+          "subject": 6,
+          "n": 24,
+          "accuracy": 1.0,
+          "original_accuracy": 1.0,
+          "flip_rate": 0.0,
+          "original_correct_count": 24,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 55008,
+          "payload_bytes_total": 54864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.053237720381048646,
+          "transitions": {
+            "correct_to_correct": 24,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 0
+          }
+        },
+        {
+          "subject": 7,
+          "n": 24,
+          "accuracy": 0.625,
+          "original_accuracy": 0.625,
+          "flip_rate": 0.0,
+          "original_correct_count": 15,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 56521,
+          "payload_bytes_total": 54864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.05670645911075516,
+          "transitions": {
+            "correct_to_correct": 15,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 9
+          }
+        },
+        {
+          "subject": 8,
+          "n": 24,
+          "accuracy": 1.0,
+          "original_accuracy": 1.0,
+          "flip_rate": 0.0,
+          "original_correct_count": 24,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 57234,
+          "payload_bytes_total": 54864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.05351365344142416,
+          "transitions": {
+            "correct_to_correct": 24,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 0
+          }
+        }
+      ]
+    },
+    {
+      "n": 144,
+      "accuracy": 0.875,
+      "original_accuracy": 0.875,
+      "flip_rate": 0.006944444444444444,
+      "original_correct_count": 126,
+      "correct_to_wrong_rate": 0.0,
+      "archive_bytes_total": 186140,
+      "payload_bytes_total": 221184,
+      "raw_float32_bytes_total": 1728000,
+      "mean_nrmse": 0.24033771305936558,
+      "transitions": {
+        "correct_to_correct": 126,
+        "correct_to_wrong": 0,
+        "wrong_to_correct": 0,
+        "wrong_to_wrong": 18
+      },
+      "split": "evaluation",
+      "method": "mulaw",
+      "bits": 4,
+      "archive_bytes_per_second_channel": 107.7199074074074,
+      "archive_fraction_of_float32": 0.1077199074074074,
+      "participants": [
+        {
+          "subject": 3,
+          "n": 24,
+          "accuracy": 1.0,
+          "original_accuracy": 1.0,
+          "flip_rate": 0.0,
+          "original_correct_count": 24,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 26528,
+          "payload_bytes_total": 36864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.2558025595172508,
+          "transitions": {
+            "correct_to_correct": 24,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 0
+          }
+        },
+        {
+          "subject": 4,
+          "n": 24,
+          "accuracy": 0.625,
+          "original_accuracy": 0.625,
+          "flip_rate": 0.0,
+          "original_correct_count": 15,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 32322,
+          "payload_bytes_total": 36864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.23710269559104158,
+          "transitions": {
+            "correct_to_correct": 15,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 9
+          }
+        },
+        {
+          "subject": 5,
+          "n": 24,
+          "accuracy": 1.0,
+          "original_accuracy": 1.0,
+          "flip_rate": 0.0,
+          "original_correct_count": 24,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 29541,
+          "payload_bytes_total": 36864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.23438264366936915,
+          "transitions": {
+            "correct_to_correct": 24,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 0
+          }
+        },
+        {
+          "subject": 6,
+          "n": 24,
+          "accuracy": 1.0,
+          "original_accuracy": 1.0,
+          "flip_rate": 0.0,
+          "original_correct_count": 24,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 31153,
+          "payload_bytes_total": 36864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.23532840395625357,
+          "transitions": {
+            "correct_to_correct": 24,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 0
+          }
+        },
+        {
+          "subject": 7,
+          "n": 24,
+          "accuracy": 0.625,
+          "original_accuracy": 0.625,
+          "flip_rate": 0.041666666666666664,
+          "original_correct_count": 15,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 32633,
+          "payload_bytes_total": 36864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.24677712017034523,
+          "transitions": {
+            "correct_to_correct": 15,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 9
+          }
+        },
+        {
+          "subject": 8,
+          "n": 24,
+          "accuracy": 1.0,
+          "original_accuracy": 1.0,
+          "flip_rate": 0.0,
+          "original_correct_count": 24,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 33963,
+          "payload_bytes_total": 36864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 0.23263285545193294,
+          "transitions": {
+            "correct_to_correct": 24,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 0
+          }
+        }
+      ]
+    },
+    {
+      "n": 144,
+      "accuracy": 0.875,
+      "original_accuracy": 0.875,
+      "flip_rate": 0.09027777777777778,
+      "original_correct_count": 126,
+      "correct_to_wrong_rate": 0.031746031746031744,
+      "archive_bytes_total": 105668,
+      "payload_bytes_total": 113184,
+      "raw_float32_bytes_total": 1728000,
+      "mean_nrmse": 1.6373260697781837,
+      "transitions": {
+        "correct_to_correct": 122,
+        "correct_to_wrong": 4,
+        "wrong_to_correct": 4,
+        "wrong_to_wrong": 14
+      },
+      "split": "evaluation",
+      "method": "mulaw",
+      "bits": 2,
+      "archive_bytes_per_second_channel": 61.15046296296296,
+      "archive_fraction_of_float32": 0.06115046296296296,
+      "participants": [
+        {
+          "subject": 3,
+          "n": 24,
+          "accuracy": 1.0,
+          "original_accuracy": 1.0,
+          "flip_rate": 0.0,
+          "original_correct_count": 24,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 14115,
+          "payload_bytes_total": 18864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 1.5354056343834694,
+          "transitions": {
+            "correct_to_correct": 24,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 0
+          }
+        },
+        {
+          "subject": 4,
+          "n": 24,
+          "accuracy": 0.625,
+          "original_accuracy": 0.625,
+          "flip_rate": 0.3333333333333333,
+          "original_correct_count": 15,
+          "correct_to_wrong_rate": 0.2,
+          "archive_bytes_total": 18387,
+          "payload_bytes_total": 18864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 1.6833848986539557,
+          "transitions": {
+            "correct_to_correct": 12,
+            "correct_to_wrong": 3,
+            "wrong_to_correct": 3,
+            "wrong_to_wrong": 6
+          }
+        },
+        {
+          "subject": 5,
+          "n": 24,
+          "accuracy": 1.0,
+          "original_accuracy": 1.0,
+          "flip_rate": 0.0,
+          "original_correct_count": 24,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 16414,
+          "payload_bytes_total": 18864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 1.5162975618762633,
+          "transitions": {
+            "correct_to_correct": 24,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 0
+          }
+        },
+        {
+          "subject": 6,
+          "n": 24,
+          "accuracy": 0.9583333333333334,
+          "original_accuracy": 1.0,
+          "flip_rate": 0.041666666666666664,
+          "original_correct_count": 24,
+          "correct_to_wrong_rate": 0.041666666666666664,
+          "archive_bytes_total": 17584,
+          "payload_bytes_total": 18864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 1.5233287500148656,
+          "transitions": {
+            "correct_to_correct": 23,
+            "correct_to_wrong": 1,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 0
+          }
+        },
+        {
+          "subject": 7,
+          "n": 24,
+          "accuracy": 0.6666666666666666,
+          "original_accuracy": 0.625,
+          "flip_rate": 0.16666666666666666,
+          "original_correct_count": 15,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 18852,
+          "payload_bytes_total": 18864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 1.8118515583766852,
+          "transitions": {
+            "correct_to_correct": 15,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 1,
+            "wrong_to_wrong": 8
+          }
+        },
+        {
+          "subject": 8,
+          "n": 24,
+          "accuracy": 1.0,
+          "original_accuracy": 1.0,
+          "flip_rate": 0.0,
+          "original_correct_count": 24,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 20316,
+          "payload_bytes_total": 18864,
+          "raw_float32_bytes_total": 288000,
+          "mean_nrmse": 1.7536880153638628,
+          "transitions": {
+            "correct_to_correct": 24,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 0
+          }
+        }
+      ]
+    }
+  ],
+  "gap_analysis": [
+    {
+      "bits": 16,
+      "method": "uniform",
+      "n": 144,
+      "failures": 0,
+      "groups": {
+        "low": {
+          "n": 23,
+          "accuracy": 0.43478260869565216,
+          "original_accuracy": 0.43478260869565216,
+          "flip_rate": 0.0,
+          "original_correct_count": 10,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 140507,
+          "payload_bytes_total": 138828,
+          "raw_float32_bytes_total": 276000,
+          "mean_nrmse": 2.876257642663386e-05,
+          "transitions": {
+            "correct_to_correct": 10,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 13
+          }
+        },
+        "middle": {
+          "n": 49,
+          "accuracy": 0.8979591836734694,
+          "original_accuracy": 0.8979591836734694,
+          "flip_rate": 0.0,
+          "original_correct_count": 44,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 299723,
+          "payload_bytes_total": 295764,
+          "raw_float32_bytes_total": 588000,
+          "mean_nrmse": 2.8246886649815217e-05,
+          "transitions": {
+            "correct_to_correct": 44,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 5
+          }
+        },
+        "high": {
+          "n": 72,
+          "accuracy": 1.0,
+          "original_accuracy": 1.0,
+          "flip_rate": 0.0,
+          "original_correct_count": 72,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 440445,
+          "payload_bytes_total": 434592,
+          "raw_float32_bytes_total": 864000,
+          "mean_nrmse": 2.6444427473116003e-05,
+          "transitions": {
+            "correct_to_correct": 72,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 0
+          }
+        }
+      },
+      "predictor_auc": {
+        "low_gap": null,
+        "range_over_rms": null,
+        "low_spectral_concentration": null
+      },
+      "shuffled_auc_mean": null,
+      "shuffled_auc_95_range": null,
+      "permutation_p_one_sided": null,
+      "participants": [
+        {
+          "subject": 3,
+          "groups": {
+            "low": {
+              "n": 0,
+              "accuracy": null,
+              "flip_rate": null,
+              "correct_to_wrong_rate": null
+            },
+            "middle": {
+              "n": 4,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 4,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 24463,
+              "payload_bytes_total": 24144,
+              "raw_float32_bytes_total": 48000,
+              "mean_nrmse": 2.6332335917348067e-05,
+              "transitions": {
+                "correct_to_correct": 4,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            },
+            "high": {
+              "n": 20,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 20,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 122149,
+              "payload_bytes_total": 120720,
+              "raw_float32_bytes_total": 240000,
+              "mean_nrmse": 2.6178105541401152e-05,
+              "transitions": {
+                "correct_to_correct": 20,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            }
+          }
+        },
+        {
+          "subject": 4,
+          "groups": {
+            "low": {
+              "n": 10,
+              "accuracy": 0.3,
+              "original_accuracy": 0.3,
+              "flip_rate": 0.0,
+              "original_correct_count": 3,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 61109,
+              "payload_bytes_total": 60360,
+              "raw_float32_bytes_total": 120000,
+              "mean_nrmse": 2.8618206010986837e-05,
+              "transitions": {
+                "correct_to_correct": 3,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 7
+              }
+            },
+            "middle": {
+              "n": 11,
+              "accuracy": 0.8181818181818182,
+              "original_accuracy": 0.8181818181818182,
+              "flip_rate": 0.0,
+              "original_correct_count": 9,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 67371,
+              "payload_bytes_total": 66396,
+              "raw_float32_bytes_total": 132000,
+              "mean_nrmse": 2.7422098838519765e-05,
+              "transitions": {
+                "correct_to_correct": 9,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 2
+              }
+            },
+            "high": {
+              "n": 3,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 3,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 18395,
+              "payload_bytes_total": 18108,
+              "raw_float32_bytes_total": 36000,
+              "mean_nrmse": 2.7553536827717535e-05,
+              "transitions": {
+                "correct_to_correct": 3,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            }
+          }
+        },
+        {
+          "subject": 5,
+          "groups": {
+            "low": {
+              "n": 0,
+              "accuracy": null,
+              "flip_rate": null,
+              "correct_to_wrong_rate": null
+            },
+            "middle": {
+              "n": 7,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 7,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 42895,
+              "payload_bytes_total": 42252,
+              "raw_float32_bytes_total": 84000,
+              "mean_nrmse": 2.5502463790403615e-05,
+              "transitions": {
+                "correct_to_correct": 7,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            },
+            "high": {
+              "n": 17,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 17,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 104225,
+              "payload_bytes_total": 102612,
+              "raw_float32_bytes_total": 204000,
+              "mean_nrmse": 2.559455076287614e-05,
+              "transitions": {
+                "correct_to_correct": 17,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            }
+          }
+        },
+        {
+          "subject": 6,
+          "groups": {
+            "low": {
+              "n": 0,
+              "accuracy": null,
+              "flip_rate": null,
+              "correct_to_wrong_rate": null
+            },
+            "middle": {
+              "n": 3,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 3,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 18358,
+              "payload_bytes_total": 18108,
+              "raw_float32_bytes_total": 36000,
+              "mean_nrmse": 2.6724600167072368e-05,
+              "transitions": {
+                "correct_to_correct": 3,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            },
+            "high": {
+              "n": 21,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 21,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 128532,
+              "payload_bytes_total": 126756,
+              "raw_float32_bytes_total": 252000,
+              "mean_nrmse": 2.5561546987459184e-05,
+              "transitions": {
+                "correct_to_correct": 21,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            }
+          }
+        },
+        {
+          "subject": 7,
+          "groups": {
+            "low": {
+              "n": 10,
+              "accuracy": 0.4,
+              "original_accuracy": 0.4,
+              "flip_rate": 0.0,
+              "original_correct_count": 4,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 61112,
+              "payload_bytes_total": 60360,
+              "raw_float32_bytes_total": 120000,
+              "mean_nrmse": 2.8639169905191785e-05,
+              "transitions": {
+                "correct_to_correct": 4,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 6
+              }
+            },
+            "middle": {
+              "n": 13,
+              "accuracy": 0.7692307692307693,
+              "original_accuracy": 0.7692307692307693,
+              "flip_rate": 0.0,
+              "original_correct_count": 10,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 79395,
+              "payload_bytes_total": 78468,
+              "raw_float32_bytes_total": 156000,
+              "mean_nrmse": 3.0654449092960677e-05,
+              "transitions": {
+                "correct_to_correct": 10,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 3
+              }
+            },
+            "high": {
+              "n": 1,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 1,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 6088,
+              "payload_bytes_total": 6036,
+              "raw_float32_bytes_total": 12000,
+              "mean_nrmse": 3.2293737023164386e-05,
+              "transitions": {
+                "correct_to_correct": 1,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            }
+          }
+        },
+        {
+          "subject": 8,
+          "groups": {
+            "low": {
+              "n": 3,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 3,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 18286,
+              "payload_bytes_total": 18108,
+              "raw_float32_bytes_total": 36000,
+              "mean_nrmse": 2.9655166216930874e-05,
+              "transitions": {
+                "correct_to_correct": 3,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            },
+            "middle": {
+              "n": 11,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 11,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 67241,
+              "payload_bytes_total": 66396,
+              "raw_float32_bytes_total": 132000,
+              "mean_nrmse": 2.908419360957317e-05,
+              "transitions": {
+                "correct_to_correct": 11,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            },
+            "high": {
+              "n": 10,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 10,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 61056,
+              "payload_bytes_total": 60360,
+              "raw_float32_bytes_total": 120000,
+              "mean_nrmse": 2.9358247002447466e-05,
+              "transitions": {
+                "correct_to_correct": 10,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "bits": 12,
+      "method": "uniform",
+      "n": 144,
+      "failures": 0,
+      "groups": {
+        "low": {
+          "n": 23,
+          "accuracy": 0.43478260869565216,
+          "original_accuracy": 0.43478260869565216,
+          "flip_rate": 0.0,
+          "original_correct_count": 10,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 106705,
+          "payload_bytes_total": 104328,
+          "raw_float32_bytes_total": 276000,
+          "mean_nrmse": 0.0004593278966690665,
+          "transitions": {
+            "correct_to_correct": 10,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 13
+          }
+        },
+        "middle": {
+          "n": 49,
+          "accuracy": 0.8979591836734694,
+          "original_accuracy": 0.8979591836734694,
+          "flip_rate": 0.0,
+          "original_correct_count": 44,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 227551,
+          "payload_bytes_total": 222264,
+          "raw_float32_bytes_total": 588000,
+          "mean_nrmse": 0.000452567386116691,
+          "transitions": {
+            "correct_to_correct": 44,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 5
+          }
+        },
+        "high": {
+          "n": 72,
+          "accuracy": 1.0,
+          "original_accuracy": 1.0,
+          "flip_rate": 0.0,
+          "original_correct_count": 72,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 334357,
+          "payload_bytes_total": 326592,
+          "raw_float32_bytes_total": 864000,
+          "mean_nrmse": 0.0004226010247399094,
+          "transitions": {
+            "correct_to_correct": 72,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 0
+          }
+        }
+      },
+      "predictor_auc": {
+        "low_gap": null,
+        "range_over_rms": null,
+        "low_spectral_concentration": null
+      },
+      "shuffled_auc_mean": null,
+      "shuffled_auc_95_range": null,
+      "permutation_p_one_sided": null,
+      "participants": [
+        {
+          "subject": 3,
+          "groups": {
+            "low": {
+              "n": 0,
+              "accuracy": null,
+              "flip_rate": null,
+              "correct_to_wrong_rate": null
+            },
+            "middle": {
+              "n": 4,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 4,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 18590,
+              "payload_bytes_total": 18144,
+              "raw_float32_bytes_total": 48000,
+              "mean_nrmse": 0.0004219209297763779,
+              "transitions": {
+                "correct_to_correct": 4,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            },
+            "high": {
+              "n": 20,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 20,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 92790,
+              "payload_bytes_total": 90720,
+              "raw_float32_bytes_total": 240000,
+              "mean_nrmse": 0.00041633306812419835,
+              "transitions": {
+                "correct_to_correct": 20,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            }
+          }
+        },
+        {
+          "subject": 4,
+          "groups": {
+            "low": {
+              "n": 10,
+              "accuracy": 0.3,
+              "original_accuracy": 0.3,
+              "flip_rate": 0.0,
+              "original_correct_count": 3,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 46389,
+              "payload_bytes_total": 45360,
+              "raw_float32_bytes_total": 120000,
+              "mean_nrmse": 0.00045606947346851594,
+              "transitions": {
+                "correct_to_correct": 3,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 7
+              }
+            },
+            "middle": {
+              "n": 11,
+              "accuracy": 0.8181818181818182,
+              "original_accuracy": 0.8181818181818182,
+              "flip_rate": 0.0,
+              "original_correct_count": 9,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 51129,
+              "payload_bytes_total": 49896,
+              "raw_float32_bytes_total": 132000,
+              "mean_nrmse": 0.00043877785217778955,
+              "transitions": {
+                "correct_to_correct": 9,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 2
+              }
+            },
+            "high": {
+              "n": 3,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 3,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 13959,
+              "payload_bytes_total": 13608,
+              "raw_float32_bytes_total": 36000,
+              "mean_nrmse": 0.0004403955748735872,
+              "transitions": {
+                "correct_to_correct": 3,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            }
+          }
+        },
+        {
+          "subject": 5,
+          "groups": {
+            "low": {
+              "n": 0,
+              "accuracy": null,
+              "flip_rate": null,
+              "correct_to_wrong_rate": null
+            },
+            "middle": {
+              "n": 7,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 7,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 32539,
+              "payload_bytes_total": 31752,
+              "raw_float32_bytes_total": 84000,
+              "mean_nrmse": 0.00040842109408026567,
+              "transitions": {
+                "correct_to_correct": 7,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            },
+            "high": {
+              "n": 17,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 17,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 79032,
+              "payload_bytes_total": 77112,
+              "raw_float32_bytes_total": 204000,
+              "mean_nrmse": 0.00040850328516326545,
+              "transitions": {
+                "correct_to_correct": 17,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            }
+          }
+        },
+        {
+          "subject": 6,
+          "groups": {
+            "low": {
+              "n": 0,
+              "accuracy": null,
+              "flip_rate": null,
+              "correct_to_wrong_rate": null
+            },
+            "middle": {
+              "n": 3,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 3,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 13934,
+              "payload_bytes_total": 13608,
+              "raw_float32_bytes_total": 36000,
+              "mean_nrmse": 0.0004283438819155547,
+              "transitions": {
+                "correct_to_correct": 3,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            },
+            "high": {
+              "n": 21,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 21,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 97533,
+              "payload_bytes_total": 95256,
+              "raw_float32_bytes_total": 252000,
+              "mean_nrmse": 0.0004102517306931626,
+              "transitions": {
+                "correct_to_correct": 21,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            }
+          }
+        },
+        {
+          "subject": 7,
+          "groups": {
+            "low": {
+              "n": 10,
+              "accuracy": 0.4,
+              "original_accuracy": 0.4,
+              "flip_rate": 0.0,
+              "original_correct_count": 4,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 46410,
+              "payload_bytes_total": 45360,
+              "raw_float32_bytes_total": 120000,
+              "mean_nrmse": 0.00045763051269463414,
+              "transitions": {
+                "correct_to_correct": 4,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 6
+              }
+            },
+            "middle": {
+              "n": 13,
+              "accuracy": 0.7692307692307693,
+              "original_accuracy": 0.7692307692307693,
+              "flip_rate": 0.0,
+              "original_correct_count": 10,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 60298,
+              "payload_bytes_total": 58968,
+              "raw_float32_bytes_total": 156000,
+              "mean_nrmse": 0.0004929536857621206,
+              "transitions": {
+                "correct_to_correct": 10,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 3
+              }
+            },
+            "high": {
+              "n": 1,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 1,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 4630,
+              "payload_bytes_total": 4536,
+              "raw_float32_bytes_total": 12000,
+              "mean_nrmse": 0.0005120840719209157,
+              "transitions": {
+                "correct_to_correct": 1,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            }
+          }
+        },
+        {
+          "subject": 8,
+          "groups": {
+            "low": {
+              "n": 3,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 3,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 13906,
+              "payload_bytes_total": 13608,
+              "raw_float32_bytes_total": 36000,
+              "mean_nrmse": 0.0004758472539190095,
+              "transitions": {
+                "correct_to_correct": 3,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            },
+            "middle": {
+              "n": 11,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 11,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 51061,
+              "payload_bytes_total": 49896,
+              "raw_float32_bytes_total": 132000,
+              "mean_nrmse": 0.00046447132794914277,
+              "transitions": {
+                "correct_to_correct": 11,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            },
+            "high": {
+              "n": 10,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 10,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 46413,
+              "payload_bytes_total": 45360,
+              "raw_float32_bytes_total": 120000,
+              "mean_nrmse": 0.0004707499429915902,
+              "transitions": {
+                "correct_to_correct": 10,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "bits": 8,
+      "method": "uniform",
+      "n": 144,
+      "failures": 0,
+      "groups": {
+        "low": {
+          "n": 23,
+          "accuracy": 0.43478260869565216,
+          "original_accuracy": 0.43478260869565216,
+          "flip_rate": 0.0,
+          "original_correct_count": 10,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 69016,
+          "payload_bytes_total": 69828,
+          "raw_float32_bytes_total": 276000,
+          "mean_nrmse": 0.0073969561089994125,
+          "transitions": {
+            "correct_to_correct": 10,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 13
+          }
+        },
+        "middle": {
+          "n": 49,
+          "accuracy": 0.8979591836734694,
+          "original_accuracy": 0.8979591836734694,
+          "flip_rate": 0.0,
+          "original_correct_count": 44,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 147589,
+          "payload_bytes_total": 148764,
+          "raw_float32_bytes_total": 588000,
+          "mean_nrmse": 0.007272302411241496,
+          "transitions": {
+            "correct_to_correct": 44,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 5
+          }
+        },
+        "high": {
+          "n": 72,
+          "accuracy": 1.0,
+          "original_accuracy": 1.0,
+          "flip_rate": 0.0,
+          "original_correct_count": 72,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 217726,
+          "payload_bytes_total": 218592,
+          "raw_float32_bytes_total": 864000,
+          "mean_nrmse": 0.0067817922548451615,
+          "transitions": {
+            "correct_to_correct": 72,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 0
+          }
+        }
+      },
+      "predictor_auc": {
+        "low_gap": null,
+        "range_over_rms": null,
+        "low_spectral_concentration": null
+      },
+      "shuffled_auc_mean": null,
+      "shuffled_auc_95_range": null,
+      "permutation_p_one_sided": null,
+      "participants": [
+        {
+          "subject": 3,
+          "groups": {
+            "low": {
+              "n": 0,
+              "accuracy": null,
+              "flip_rate": null,
+              "correct_to_wrong_rate": null
+            },
+            "middle": {
+              "n": 4,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 4,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 12103,
+              "payload_bytes_total": 12144,
+              "raw_float32_bytes_total": 48000,
+              "mean_nrmse": 0.006746210220570052,
+              "transitions": {
+                "correct_to_correct": 4,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            },
+            "high": {
+              "n": 20,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 20,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 60289,
+              "payload_bytes_total": 60720,
+              "raw_float32_bytes_total": 240000,
+              "mean_nrmse": 0.0066958207619046235,
+              "transitions": {
+                "correct_to_correct": 20,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            }
+          }
+        },
+        {
+          "subject": 4,
+          "groups": {
+            "low": {
+              "n": 10,
+              "accuracy": 0.3,
+              "original_accuracy": 0.3,
+              "flip_rate": 0.0,
+              "original_correct_count": 3,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 30037,
+              "payload_bytes_total": 30360,
+              "raw_float32_bytes_total": 120000,
+              "mean_nrmse": 0.007341959277944897,
+              "transitions": {
+                "correct_to_correct": 3,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 7
+              }
+            },
+            "middle": {
+              "n": 11,
+              "accuracy": 0.8181818181818182,
+              "original_accuracy": 0.8181818181818182,
+              "flip_rate": 0.0,
+              "original_correct_count": 9,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 33262,
+              "payload_bytes_total": 33396,
+              "raw_float32_bytes_total": 132000,
+              "mean_nrmse": 0.007035845260283704,
+              "transitions": {
+                "correct_to_correct": 9,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 2
+              }
+            },
+            "high": {
+              "n": 3,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 3,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 9079,
+              "payload_bytes_total": 9108,
+              "raw_float32_bytes_total": 36000,
+              "mean_nrmse": 0.0071366437498691015,
+              "transitions": {
+                "correct_to_correct": 3,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            }
+          }
+        },
+        {
+          "subject": 5,
+          "groups": {
+            "low": {
+              "n": 0,
+              "accuracy": null,
+              "flip_rate": null,
+              "correct_to_wrong_rate": null
+            },
+            "middle": {
+              "n": 7,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 7,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 21292,
+              "payload_bytes_total": 21252,
+              "raw_float32_bytes_total": 84000,
+              "mean_nrmse": 0.006550101523298014,
+              "transitions": {
+                "correct_to_correct": 7,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            },
+            "high": {
+              "n": 17,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 17,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 51783,
+              "payload_bytes_total": 51612,
+              "raw_float32_bytes_total": 204000,
+              "mean_nrmse": 0.006541424801950965,
+              "transitions": {
+                "correct_to_correct": 17,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            }
+          }
+        },
+        {
+          "subject": 6,
+          "groups": {
+            "low": {
+              "n": 0,
+              "accuracy": null,
+              "flip_rate": null,
+              "correct_to_wrong_rate": null
+            },
+            "middle": {
+              "n": 3,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 3,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 9076,
+              "payload_bytes_total": 9108,
+              "raw_float32_bytes_total": 36000,
+              "mean_nrmse": 0.00684336987059841,
+              "transitions": {
+                "correct_to_correct": 3,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            },
+            "high": {
+              "n": 21,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 21,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 63768,
+              "payload_bytes_total": 63756,
+              "raw_float32_bytes_total": 252000,
+              "mean_nrmse": 0.006562576671187045,
+              "transitions": {
+                "correct_to_correct": 21,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            }
+          }
+        },
+        {
+          "subject": 7,
+          "groups": {
+            "low": {
+              "n": 10,
+              "accuracy": 0.4,
+              "original_accuracy": 0.4,
+              "flip_rate": 0.0,
+              "original_correct_count": 4,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 30048,
+              "payload_bytes_total": 30360,
+              "raw_float32_bytes_total": 120000,
+              "mean_nrmse": 0.007382408587520329,
+              "transitions": {
+                "correct_to_correct": 4,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 6
+              }
+            },
+            "middle": {
+              "n": 13,
+              "accuracy": 0.7692307692307693,
+              "original_accuracy": 0.7692307692307693,
+              "flip_rate": 0.0,
+              "original_correct_count": 10,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 38864,
+              "payload_bytes_total": 39468,
+              "raw_float32_bytes_total": 156000,
+              "mean_nrmse": 0.007927467997085108,
+              "transitions": {
+                "correct_to_correct": 10,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 3
+              }
+            },
+            "high": {
+              "n": 1,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 1,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 2959,
+              "payload_bytes_total": 3036,
+              "raw_float32_bytes_total": 12000,
+              "mean_nrmse": 0.008231700825538889,
+              "transitions": {
+                "correct_to_correct": 1,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            }
+          }
+        },
+        {
+          "subject": 8,
+          "groups": {
+            "low": {
+              "n": 3,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 3,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 8931,
+              "payload_bytes_total": 9108,
+              "raw_float32_bytes_total": 36000,
+              "mean_nrmse": 0.007628770617444758,
+              "transitions": {
+                "correct_to_correct": 3,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            },
+            "middle": {
+              "n": 11,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 11,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 32992,
+              "payload_bytes_total": 33396,
+              "raw_float32_bytes_total": 132000,
+              "mean_nrmse": 0.007502343197131333,
+              "transitions": {
+                "correct_to_correct": 11,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            },
+            "high": {
+              "n": 10,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 10,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 29848,
+              "payload_bytes_total": 30360,
+              "raw_float32_bytes_total": 120000,
+              "mean_nrmse": 0.007571266330751859,
+              "transitions": {
+                "correct_to_correct": 10,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "bits": 6,
+      "method": "uniform",
+      "n": 144,
+      "failures": 1,
+      "groups": {
+        "low": {
+          "n": 23,
+          "accuracy": 0.391304347826087,
+          "original_accuracy": 0.43478260869565216,
+          "flip_rate": 0.043478260869565216,
+          "original_correct_count": 10,
+          "correct_to_wrong_rate": 0.1,
+          "archive_bytes_total": 54615,
+          "payload_bytes_total": 52578,
+          "raw_float32_bytes_total": 276000,
+          "mean_nrmse": 0.030004493765761312,
+          "transitions": {
+            "correct_to_correct": 9,
+            "correct_to_wrong": 1,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 13
+          }
+        },
+        "middle": {
+          "n": 49,
+          "accuracy": 0.8979591836734694,
+          "original_accuracy": 0.8979591836734694,
+          "flip_rate": 0.0,
+          "original_correct_count": 44,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 116297,
+          "payload_bytes_total": 112014,
+          "raw_float32_bytes_total": 588000,
+          "mean_nrmse": 0.029407505324366322,
+          "transitions": {
+            "correct_to_correct": 44,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 5
+          }
+        },
+        "high": {
+          "n": 72,
+          "accuracy": 1.0,
+          "original_accuracy": 1.0,
+          "flip_rate": 0.0,
+          "original_correct_count": 72,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 169764,
+          "payload_bytes_total": 164592,
+          "raw_float32_bytes_total": 864000,
+          "mean_nrmse": 0.027497219634146957,
+          "transitions": {
+            "correct_to_correct": 72,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 0
+          }
+        }
+      },
+      "predictor_auc": {
+        "low_gap": 1.0,
+        "range_over_rms": 0.8531468531468531,
+        "low_spectral_concentration": 0.8531468531468531
+      },
+      "shuffled_auc_mean": 0.6915244755244755,
+      "shuffled_auc_95_range": [
+        0.40559440559440557,
+        1.0
+      ],
+      "permutation_p_one_sided": 0.17165668662674652,
+      "participants": [
+        {
+          "subject": 3,
+          "groups": {
+            "low": {
+              "n": 0,
+              "accuracy": null,
+              "flip_rate": null,
+              "correct_to_wrong_rate": null
+            },
+            "middle": {
+              "n": 4,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 4,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 9400,
+              "payload_bytes_total": 9144,
+              "raw_float32_bytes_total": 48000,
+              "mean_nrmse": 0.027597623088655616,
+              "transitions": {
+                "correct_to_correct": 4,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            },
+            "high": {
+              "n": 20,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 20,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 46321,
+              "payload_bytes_total": 45720,
+              "raw_float32_bytes_total": 240000,
+              "mean_nrmse": 0.0271191710700245,
+              "transitions": {
+                "correct_to_correct": 20,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            }
+          }
+        },
+        {
+          "subject": 4,
+          "groups": {
+            "low": {
+              "n": 10,
+              "accuracy": 0.2,
+              "original_accuracy": 0.3,
+              "flip_rate": 0.1,
+              "original_correct_count": 3,
+              "correct_to_wrong_rate": 0.3333333333333333,
+              "archive_bytes_total": 23759,
+              "payload_bytes_total": 22860,
+              "raw_float32_bytes_total": 120000,
+              "mean_nrmse": 0.029743763616482177,
+              "transitions": {
+                "correct_to_correct": 2,
+                "correct_to_wrong": 1,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 7
+              }
+            },
+            "middle": {
+              "n": 11,
+              "accuracy": 0.8181818181818182,
+              "original_accuracy": 0.8181818181818182,
+              "flip_rate": 0.0,
+              "original_correct_count": 9,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 26193,
+              "payload_bytes_total": 25146,
+              "raw_float32_bytes_total": 132000,
+              "mean_nrmse": 0.028533794317706893,
+              "transitions": {
+                "correct_to_correct": 9,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 2
+              }
+            },
+            "high": {
+              "n": 3,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 3,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 7159,
+              "payload_bytes_total": 6858,
+              "raw_float32_bytes_total": 36000,
+              "mean_nrmse": 0.028961234863343538,
+              "transitions": {
+                "correct_to_correct": 3,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            }
+          }
+        },
+        {
+          "subject": 5,
+          "groups": {
+            "low": {
+              "n": 0,
+              "accuracy": null,
+              "flip_rate": null,
+              "correct_to_wrong_rate": null
+            },
+            "middle": {
+              "n": 7,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 7,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 16567,
+              "payload_bytes_total": 16002,
+              "raw_float32_bytes_total": 84000,
+              "mean_nrmse": 0.026405363061082165,
+              "transitions": {
+                "correct_to_correct": 7,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            },
+            "high": {
+              "n": 17,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 17,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 40263,
+              "payload_bytes_total": 38862,
+              "raw_float32_bytes_total": 204000,
+              "mean_nrmse": 0.02652427728707397,
+              "transitions": {
+                "correct_to_correct": 17,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            }
+          }
+        },
+        {
+          "subject": 6,
+          "groups": {
+            "low": {
+              "n": 0,
+              "accuracy": null,
+              "flip_rate": null,
+              "correct_to_wrong_rate": null
+            },
+            "middle": {
+              "n": 3,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 3,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 7151,
+              "payload_bytes_total": 6858,
+              "raw_float32_bytes_total": 36000,
+              "mean_nrmse": 0.027909779081932345,
+              "transitions": {
+                "correct_to_correct": 3,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            },
+            "high": {
+              "n": 21,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 21,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 49947,
+              "payload_bytes_total": 48006,
+              "raw_float32_bytes_total": 252000,
+              "mean_nrmse": 0.026723431938854864,
+              "transitions": {
+                "correct_to_correct": 21,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            }
+          }
+        },
+        {
+          "subject": 7,
+          "groups": {
+            "low": {
+              "n": 10,
+              "accuracy": 0.4,
+              "original_accuracy": 0.4,
+              "flip_rate": 0.0,
+              "original_correct_count": 4,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 23749,
+              "payload_bytes_total": 22860,
+              "raw_float32_bytes_total": 120000,
+              "mean_nrmse": 0.029924457598843924,
+              "transitions": {
+                "correct_to_correct": 4,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 6
+              }
+            },
+            "middle": {
+              "n": 13,
+              "accuracy": 0.7692307692307693,
+              "original_accuracy": 0.7692307692307693,
+              "flip_rate": 0.0,
+              "original_correct_count": 10,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 30807,
+              "payload_bytes_total": 29718,
+              "raw_float32_bytes_total": 156000,
+              "mean_nrmse": 0.032015076105266126,
+              "transitions": {
+                "correct_to_correct": 10,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 3
+              }
+            },
+            "high": {
+              "n": 1,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 1,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 2362,
+              "payload_bytes_total": 2286,
+              "raw_float32_bytes_total": 12000,
+              "mean_nrmse": 0.03285421434058182,
+              "transitions": {
+                "correct_to_correct": 1,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            }
+          }
+        },
+        {
+          "subject": 8,
+          "groups": {
+            "low": {
+              "n": 3,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 3,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 7107,
+              "payload_bytes_total": 6858,
+              "raw_float32_bytes_total": 36000,
+              "mean_nrmse": 0.031140381486416416,
+              "transitions": {
+                "correct_to_correct": 3,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            },
+            "middle": {
+              "n": 11,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 11,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 26179,
+              "payload_bytes_total": 25146,
+              "raw_float32_bytes_total": 132000,
+              "mean_nrmse": 0.030176605727519977,
+              "transitions": {
+                "correct_to_correct": 11,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            },
+            "high": {
+              "n": 10,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 10,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 23712,
+              "payload_bytes_total": 22860,
+              "raw_float32_bytes_total": 120000,
+              "mean_nrmse": 0.030557368873126878,
+              "transitions": {
+                "correct_to_correct": 10,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "bits": 4,
+      "method": "uniform",
+      "n": 144,
+      "failures": 2,
+      "groups": {
+        "low": {
+          "n": 23,
+          "accuracy": 0.391304347826087,
+          "original_accuracy": 0.43478260869565216,
+          "flip_rate": 0.08695652173913043,
+          "original_correct_count": 10,
+          "correct_to_wrong_rate": 0.1,
+          "archive_bytes_total": 31442,
+          "payload_bytes_total": 35328,
+          "raw_float32_bytes_total": 276000,
+          "mean_nrmse": 0.12599864178343417,
+          "transitions": {
+            "correct_to_correct": 9,
+            "correct_to_wrong": 1,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 13
+          }
+        },
+        "middle": {
+          "n": 49,
+          "accuracy": 0.8979591836734694,
+          "original_accuracy": 0.8979591836734694,
+          "flip_rate": 0.0,
+          "original_correct_count": 44,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 66021,
+          "payload_bytes_total": 75264,
+          "raw_float32_bytes_total": 588000,
+          "mean_nrmse": 0.12337828253495903,
+          "transitions": {
+            "correct_to_correct": 44,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 5
+          }
+        },
+        "high": {
+          "n": 72,
+          "accuracy": 1.0,
+          "original_accuracy": 1.0,
+          "flip_rate": 0.0,
+          "original_correct_count": 72,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 91956,
+          "payload_bytes_total": 110592,
+          "raw_float32_bytes_total": 864000,
+          "mean_nrmse": 0.11552119217644519,
+          "transitions": {
+            "correct_to_correct": 72,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 0
+          }
+        }
+      },
+      "predictor_auc": {
+        "low_gap": 0.9753521126760564,
+        "range_over_rms": 0.5211267605633803,
+        "low_spectral_concentration": 0.9049295774647887
+      },
+      "shuffled_auc_mean": 0.7826760563380281,
+      "shuffled_auc_95_range": [
+        0.6126760563380281,
+        0.9753521126760564
+      ],
+      "permutation_p_one_sided": 0.03992015968063872,
+      "participants": [
+        {
+          "subject": 3,
+          "groups": {
+            "low": {
+              "n": 0,
+              "accuracy": null,
+              "flip_rate": null,
+              "correct_to_wrong_rate": null
+            },
+            "middle": {
+              "n": 4,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 4,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 4946,
+              "payload_bytes_total": 6144,
+              "raw_float32_bytes_total": 48000,
+              "mean_nrmse": 0.11467662001826638,
+              "transitions": {
+                "correct_to_correct": 4,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            },
+            "high": {
+              "n": 20,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 20,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 23041,
+              "payload_bytes_total": 30720,
+              "raw_float32_bytes_total": 240000,
+              "mean_nrmse": 0.11374504537843769,
+              "transitions": {
+                "correct_to_correct": 20,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            }
+          }
+        },
+        {
+          "subject": 4,
+          "groups": {
+            "low": {
+              "n": 10,
+              "accuracy": 0.2,
+              "original_accuracy": 0.3,
+              "flip_rate": 0.1,
+              "original_correct_count": 3,
+              "correct_to_wrong_rate": 0.3333333333333333,
+              "archive_bytes_total": 13606,
+              "payload_bytes_total": 15360,
+              "raw_float32_bytes_total": 120000,
+              "mean_nrmse": 0.12506892557891594,
+              "transitions": {
+                "correct_to_correct": 2,
+                "correct_to_wrong": 1,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 7
+              }
+            },
+            "middle": {
+              "n": 11,
+              "accuracy": 0.8181818181818182,
+              "original_accuracy": 0.8181818181818182,
+              "flip_rate": 0.0,
+              "original_correct_count": 9,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 15072,
+              "payload_bytes_total": 16896,
+              "raw_float32_bytes_total": 132000,
+              "mean_nrmse": 0.11965351496902894,
+              "transitions": {
+                "correct_to_correct": 9,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 2
+              }
+            },
+            "high": {
+              "n": 3,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 3,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 4112,
+              "payload_bytes_total": 4608,
+              "raw_float32_bytes_total": 36000,
+              "mean_nrmse": 0.12153433122130818,
+              "transitions": {
+                "correct_to_correct": 3,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            }
+          }
+        },
+        {
+          "subject": 5,
+          "groups": {
+            "low": {
+              "n": 0,
+              "accuracy": null,
+              "flip_rate": null,
+              "correct_to_wrong_rate": null
+            },
+            "middle": {
+              "n": 7,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 7,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 8874,
+              "payload_bytes_total": 10752,
+              "raw_float32_bytes_total": 84000,
+              "mean_nrmse": 0.11166094170169243,
+              "transitions": {
+                "correct_to_correct": 7,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            },
+            "high": {
+              "n": 17,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 17,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 21600,
+              "payload_bytes_total": 26112,
+              "raw_float32_bytes_total": 204000,
+              "mean_nrmse": 0.11173808053433384,
+              "transitions": {
+                "correct_to_correct": 17,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            }
+          }
+        },
+        {
+          "subject": 6,
+          "groups": {
+            "low": {
+              "n": 0,
+              "accuracy": null,
+              "flip_rate": null,
+              "correct_to_wrong_rate": null
+            },
+            "middle": {
+              "n": 3,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 3,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 4173,
+              "payload_bytes_total": 4608,
+              "raw_float32_bytes_total": 36000,
+              "mean_nrmse": 0.11541506332729888,
+              "transitions": {
+                "correct_to_correct": 3,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            },
+            "high": {
+              "n": 21,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 21,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 28192,
+              "payload_bytes_total": 32256,
+              "raw_float32_bytes_total": 252000,
+              "mean_nrmse": 0.11192092750155533,
+              "transitions": {
+                "correct_to_correct": 21,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            }
+          }
+        },
+        {
+          "subject": 7,
+          "groups": {
+            "low": {
+              "n": 10,
+              "accuracy": 0.4,
+              "original_accuracy": 0.4,
+              "flip_rate": 0.1,
+              "original_correct_count": 4,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 13731,
+              "payload_bytes_total": 15360,
+              "raw_float32_bytes_total": 120000,
+              "mean_nrmse": 0.12570165708309547,
+              "transitions": {
+                "correct_to_correct": 4,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 6
+              }
+            },
+            "middle": {
+              "n": 13,
+              "accuracy": 0.7692307692307693,
+              "original_accuracy": 0.7692307692307693,
+              "flip_rate": 0.0,
+              "original_correct_count": 10,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 17618,
+              "payload_bytes_total": 19968,
+              "raw_float32_bytes_total": 156000,
+              "mean_nrmse": 0.13416272844733423,
+              "transitions": {
+                "correct_to_correct": 10,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 3
+              }
+            },
+            "high": {
+              "n": 1,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 1,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 1361,
+              "payload_bytes_total": 1536,
+              "raw_float32_bytes_total": 12000,
+              "mean_nrmse": 0.13838786755936813,
+              "transitions": {
+                "correct_to_correct": 1,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            }
+          }
+        },
+        {
+          "subject": 8,
+          "groups": {
+            "low": {
+              "n": 3,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 3,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 4105,
+              "payload_bytes_total": 4608,
+              "raw_float32_bytes_total": 36000,
+              "mean_nrmse": 0.1300876447996239,
+              "transitions": {
+                "correct_to_correct": 3,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            },
+            "middle": {
+              "n": 11,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 11,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 15338,
+              "payload_bytes_total": 16896,
+              "raw_float32_bytes_total": 132000,
+              "mean_nrmse": 0.12715031343377453,
+              "transitions": {
+                "correct_to_correct": 11,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            },
+            "high": {
+              "n": 10,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 10,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 13650,
+              "payload_bytes_total": 15360,
+              "raw_float32_bytes_total": 120000,
+              "mean_nrmse": 0.128974722129567,
+              "transitions": {
+                "correct_to_correct": 10,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "bits": 2,
+      "method": "uniform",
+      "n": 144,
+      "failures": 12,
+      "groups": {
+        "low": {
+          "n": 23,
+          "accuracy": 0.43478260869565216,
+          "original_accuracy": 0.43478260869565216,
+          "flip_rate": 0.4782608695652174,
+          "original_correct_count": 10,
+          "correct_to_wrong_rate": 0.4,
+          "archive_bytes_total": 13724,
+          "payload_bytes_total": 18078,
+          "raw_float32_bytes_total": 276000,
+          "mean_nrmse": 0.6285844397415531,
+          "transitions": {
+            "correct_to_correct": 6,
+            "correct_to_wrong": 4,
+            "wrong_to_correct": 4,
+            "wrong_to_wrong": 9
+          }
+        },
+        "middle": {
+          "n": 49,
+          "accuracy": 0.8775510204081632,
+          "original_accuracy": 0.8979591836734694,
+          "flip_rate": 0.02040816326530612,
+          "original_correct_count": 44,
+          "correct_to_wrong_rate": 0.022727272727272728,
+          "archive_bytes_total": 28677,
+          "payload_bytes_total": 38514,
+          "raw_float32_bytes_total": 588000,
+          "mean_nrmse": 0.6152675244709569,
+          "transitions": {
+            "correct_to_correct": 43,
+            "correct_to_wrong": 1,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 5
+          }
+        },
+        "high": {
+          "n": 72,
+          "accuracy": 1.0,
+          "original_accuracy": 1.0,
+          "flip_rate": 0.0,
+          "original_correct_count": 72,
+          "correct_to_wrong_rate": 0.0,
+          "archive_bytes_total": 39473,
+          "payload_bytes_total": 56592,
+          "raw_float32_bytes_total": 864000,
+          "mean_nrmse": 0.5791245139322763,
+          "transitions": {
+            "correct_to_correct": 72,
+            "correct_to_wrong": 0,
+            "wrong_to_correct": 0,
+            "wrong_to_wrong": 0
+          }
+        }
+      },
+      "predictor_auc": {
+        "low_gap": 0.9633838383838383,
+        "range_over_rms": 0.6856060606060606,
+        "low_spectral_concentration": 0.9160353535353535
+      },
+      "shuffled_auc_mean": 0.8724835858585859,
+      "shuffled_auc_95_range": [
+        0.7995422979797979,
+        0.942282196969697
+      ],
+      "permutation_p_one_sided": 0.001996007984031936,
+      "participants": [
+        {
+          "subject": 3,
+          "groups": {
+            "low": {
+              "n": 0,
+              "accuracy": null,
+              "flip_rate": null,
+              "correct_to_wrong_rate": null
+            },
+            "middle": {
+              "n": 4,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 4,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 2112,
+              "payload_bytes_total": 3144,
+              "raw_float32_bytes_total": 48000,
+              "mean_nrmse": 0.5846634751904388,
+              "transitions": {
+                "correct_to_correct": 4,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            },
+            "high": {
+              "n": 20,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 20,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 9495,
+              "payload_bytes_total": 15720,
+              "raw_float32_bytes_total": 240000,
+              "mean_nrmse": 0.5727958917152537,
+              "transitions": {
+                "correct_to_correct": 20,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            }
+          }
+        },
+        {
+          "subject": 4,
+          "groups": {
+            "low": {
+              "n": 10,
+              "accuracy": 0.3,
+              "original_accuracy": 0.3,
+              "flip_rate": 0.7,
+              "original_correct_count": 3,
+              "correct_to_wrong_rate": 1.0,
+              "archive_bytes_total": 5871,
+              "payload_bytes_total": 7860,
+              "raw_float32_bytes_total": 120000,
+              "mean_nrmse": 0.6187723697657057,
+              "transitions": {
+                "correct_to_correct": 0,
+                "correct_to_wrong": 3,
+                "wrong_to_correct": 3,
+                "wrong_to_wrong": 4
+              }
+            },
+            "middle": {
+              "n": 11,
+              "accuracy": 0.8181818181818182,
+              "original_accuracy": 0.8181818181818182,
+              "flip_rate": 0.0,
+              "original_correct_count": 9,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 6521,
+              "payload_bytes_total": 8646,
+              "raw_float32_bytes_total": 132000,
+              "mean_nrmse": 0.5952997258186559,
+              "transitions": {
+                "correct_to_correct": 9,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 2
+              }
+            },
+            "high": {
+              "n": 3,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 3,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 1758,
+              "payload_bytes_total": 2358,
+              "raw_float32_bytes_total": 36000,
+              "mean_nrmse": 0.5993107784103696,
+              "transitions": {
+                "correct_to_correct": 3,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            }
+          }
+        },
+        {
+          "subject": 5,
+          "groups": {
+            "low": {
+              "n": 0,
+              "accuracy": null,
+              "flip_rate": null,
+              "correct_to_wrong_rate": null
+            },
+            "middle": {
+              "n": 7,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 7,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 3774,
+              "payload_bytes_total": 5502,
+              "raw_float32_bytes_total": 84000,
+              "mean_nrmse": 0.558666470635782,
+              "transitions": {
+                "correct_to_correct": 7,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            },
+            "high": {
+              "n": 17,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 17,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 9238,
+              "payload_bytes_total": 13362,
+              "raw_float32_bytes_total": 204000,
+              "mean_nrmse": 0.5581030745544224,
+              "transitions": {
+                "correct_to_correct": 17,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            }
+          }
+        },
+        {
+          "subject": 6,
+          "groups": {
+            "low": {
+              "n": 0,
+              "accuracy": null,
+              "flip_rate": null,
+              "correct_to_wrong_rate": null
+            },
+            "middle": {
+              "n": 3,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 3,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 1817,
+              "payload_bytes_total": 2358,
+              "raw_float32_bytes_total": 36000,
+              "mean_nrmse": 0.5813128772987667,
+              "transitions": {
+                "correct_to_correct": 3,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            },
+            "high": {
+              "n": 21,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 21,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 12228,
+              "payload_bytes_total": 16506,
+              "raw_float32_bytes_total": 252000,
+              "mean_nrmse": 0.5623992315753561,
+              "transitions": {
+                "correct_to_correct": 21,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            }
+          }
+        },
+        {
+          "subject": 7,
+          "groups": {
+            "low": {
+              "n": 10,
+              "accuracy": 0.4,
+              "original_accuracy": 0.4,
+              "flip_rate": 0.4,
+              "original_correct_count": 4,
+              "correct_to_wrong_rate": 0.25,
+              "archive_bytes_total": 6005,
+              "payload_bytes_total": 7860,
+              "raw_float32_bytes_total": 120000,
+              "mean_nrmse": 0.6296269698963779,
+              "transitions": {
+                "correct_to_correct": 3,
+                "correct_to_wrong": 1,
+                "wrong_to_correct": 1,
+                "wrong_to_wrong": 5
+              }
+            },
+            "middle": {
+              "n": 13,
+              "accuracy": 0.6923076923076923,
+              "original_accuracy": 0.7692307692307693,
+              "flip_rate": 0.07692307692307693,
+              "original_correct_count": 10,
+              "correct_to_wrong_rate": 0.1,
+              "archive_bytes_total": 7584,
+              "payload_bytes_total": 10218,
+              "raw_float32_bytes_total": 156000,
+              "mean_nrmse": 0.6627116970100706,
+              "transitions": {
+                "correct_to_correct": 9,
+                "correct_to_wrong": 1,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 3
+              }
+            },
+            "high": {
+              "n": 1,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 1,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 602,
+              "payload_bytes_total": 786,
+              "raw_float32_bytes_total": 12000,
+              "mean_nrmse": 0.6715469390829358,
+              "transitions": {
+                "correct_to_correct": 1,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            }
+          }
+        },
+        {
+          "subject": 8,
+          "groups": {
+            "low": {
+              "n": 3,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 3,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 1848,
+              "payload_bytes_total": 2358,
+              "raw_float32_bytes_total": 36000,
+              "mean_nrmse": 0.6578162391449605,
+              "transitions": {
+                "correct_to_correct": 3,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            },
+            "middle": {
+              "n": 11,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 11,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 6869,
+              "payload_bytes_total": 8646,
+              "raw_float32_bytes_total": 132000,
+              "mean_nrmse": 0.635572893348384,
+              "transitions": {
+                "correct_to_correct": 11,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            },
+            "high": {
+              "n": 10,
+              "accuracy": 1.0,
+              "original_accuracy": 1.0,
+              "flip_rate": 0.0,
+              "original_correct_count": 10,
+              "correct_to_wrong_rate": 0.0,
+              "archive_bytes_total": 6152,
+              "payload_bytes_total": 7860,
+              "raw_float32_bytes_total": 120000,
+              "mean_nrmse": 0.6473431763997108,
+              "transitions": {
+                "correct_to_correct": 10,
+                "correct_to_wrong": 0,
+                "wrong_to_correct": 0,
+                "wrong_to_wrong": 0
+              }
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "evaluation_trials": 144,
+  "development_trials": 48
+}

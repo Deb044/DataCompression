@@ -1,11 +1,99 @@
 // Curated summaries. Full verified metadata is in content/references.json.
 export const papers = [
-  { year: 1999, family: 'classical', authors: 'Memon, Kong & Cinkler', status: 'Published · abstract assessed', title: 'Context-based lossless and near-lossless EEG compression', url: 'https://doi.org/10.1109/4233.788586', finding: 'Compares general-purpose and predictive lossless methods, then explores bounded-error near-lossless coding.', lesson: 'Exact recovery and controlled loss have a long history. ZIP is a baseline, not a new EEG method.' },
-  { year: 2013, family: 'classical', authors: 'Higgins, McGinley, Jones & Glavin', status: 'Published · abstract assessed', title: 'Wavelet coefficient quantisation in EEG compression', url: 'https://doi.org/10.1016/j.compbiomed.2013.02.011', finding: 'Compares coefficient quantization with thresholding within wavelet-based SPIHT compression.', lesson: 'Reducing precision before entropy coding is established. Our sample-domain quantizer is a simpler teaching baseline.' },
-  { year: 2022, family: 'task', authors: 'Zhang, Ma, Yin, Ren & Liu', status: 'Published · open full text', title: 'Personalized compression of SSVEP EEG signals', url: 'https://www.mdpi.com/2078-2489/13/4/186', finding: 'Combines a transform, personalized neural reconstruction and nonuniform residual quantization, evaluated through SSVEP recognition.', lesson: 'Compression versus recognition accuracy is already studied. We build on its evaluation principle, not a claim of being first.' },
-  { year: 2023, family: 'task', authors: 'Strypsteen & Bertrand', status: 'Published · author manuscript', title: 'Neural source coding for bandwidth-efficient BCI', url: 'https://homes.esat.kuleuven.be/~abertran/reports/Strypsteen_ICASSP2023.pdf', finding: 'Jointly learns coding and inference for motor execution in an emulated wireless EEG network; compares low-bit quantization.', lesson: 'Task-specific coding and bit allocation are established. Jointly training the decoder differs from our frozen-decoder test.' },
-  { year: 2024, family: 'neural', authors: 'Wang, Zhang & Wu', status: 'Published · abstract assessed', title: 'Feature-enhanced EEG compression with asymmetric encoding–decoding', url: 'https://doi.org/10.1088/1741-2552/ad48ba', finding: 'Uses a lightweight neural encoder and a richer decoder, evaluating reconstructed EEG on ERP and motor-imagery tasks.', lesson: 'Multiple tasks and preserving discriminative information are existing directions, not sufficient novelty claims.' },
-  { year: 2025, family: 'neural', authors: 'Carzaniga, Hoppeler, Hersche, Schindler & Rahimi', status: 'ICLR · open conference paper', title: 'The Case for Cleaner Biosignals / BrainCodec', url: 'https://proceedings.iclr.cc/paper_files/paper/2025/file/28c9ce39a89c03f0bdd9725907d5abbc-Paper-Conference.pdf', finding: 'Explores EEG/iEEG training transfer and evaluates reconstruction, downstream tasks and expert assessment.', lesson: 'Training distribution and signal domain matter. A reported ratio is not a universal safe setting.' },
-  { year: 2025, family: 'neural', authors: 'Kastrati et al.', status: 'Preprint · abstract assessed', title: 'Adapting Neural Audio Codecs to EEG', url: 'https://arxiv.org/abs/2511.23142', finding: 'Adapts pretrained neural audio coding to EEG, exploring framing, channel structure, sampling and quantization.', lesson: 'Audio-to-EEG adaptation is already explored. This does not establish that ordinary MP3 preserves EEG.' },
-  { year: 2026, family: 'neural', authors: 'Xie', status: 'Preprint · full text available', title: 'Adaptive Data Compression and Reconstruction / ADaCoRe', url: 'https://arxiv.org/abs/2605.03085', finding: 'Combines resampling, protected timepoints and confidence-based replay-example selection for continual learning.', lesson: 'Confidence and compression already coexist. Example selection differs from choosing each trial’s bit depth.' },
+  {
+    year: 1999,
+    family: "classical",
+    authors: "Memon, Kong & Cinkler",
+    status: "Published · abstract assessed",
+    title: "Context-based lossless and near-lossless EEG compression",
+    url: "https://doi.org/10.1109/4233.788586",
+    finding:
+      "Compares general-purpose and predictive lossless methods, then explores bounded-error near-lossless coding.",
+    lesson:
+      "Exact recovery and controlled loss have a long history. ZIP is a baseline, not a new EEG method.",
+  },
+  {
+    year: 2013,
+    family: "classical",
+    authors: "Higgins, McGinley, Jones & Glavin",
+    status: "Published · abstract assessed",
+    title: "Wavelet coefficient quantisation in EEG compression",
+    url: "https://doi.org/10.1016/j.compbiomed.2013.02.011",
+    finding:
+      "Compares coefficient quantization with thresholding within wavelet-based SPIHT compression.",
+    lesson:
+      "Reducing precision before entropy coding is established. Our sample-domain quantizer is a simpler teaching baseline.",
+  },
+  {
+    year: 2022,
+    family: "task",
+    authors: "Zhang, Ma, Yin, Ren & Liu",
+    status: "Published · open full text",
+    title: "Personalized compression of SSVEP EEG signals",
+    url: "https://www.mdpi.com/2078-2489/13/4/186",
+    finding:
+      "Combines a transform, personalized neural reconstruction and nonuniform residual quantization, evaluated through SSVEP recognition.",
+    lesson:
+      "Compression versus recognition accuracy is already studied. We build on its evaluation principle, not a claim of being first.",
+  },
+  {
+    year: 2023,
+    family: "task",
+    authors: "Strypsteen & Bertrand",
+    status: "Published · author manuscript",
+    title: "Neural source coding for bandwidth-efficient BCI",
+    url: "https://homes.esat.kuleuven.be/~abertran/reports/Strypsteen_ICASSP2023.pdf",
+    finding:
+      "Jointly learns coding and inference for motor execution in an emulated wireless EEG network; compares low-bit quantization.",
+    lesson:
+      "Task-specific coding and bit allocation are established. Jointly training the decoder differs from our frozen-decoder test.",
+  },
+  {
+    year: 2024,
+    family: "neural",
+    authors: "Wang, Zhang & Wu",
+    status: "Published · abstract assessed",
+    title: "Feature-enhanced EEG compression with asymmetric encoding–decoding",
+    url: "https://doi.org/10.1088/1741-2552/ad48ba",
+    finding:
+      "Uses a lightweight neural encoder and a richer decoder, evaluating reconstructed EEG on ERP and motor-imagery tasks.",
+    lesson:
+      "Multiple tasks and preserving discriminative information are existing directions, not sufficient novelty claims.",
+  },
+  {
+    year: 2025,
+    family: "neural",
+    authors: "Carzaniga, Hoppeler, Hersche, Schindler & Rahimi",
+    status: "ICLR · open conference paper",
+    title: "The Case for Cleaner Biosignals / BrainCodec",
+    url: "https://proceedings.iclr.cc/paper_files/paper/2025/file/28c9ce39a89c03f0bdd9725907d5abbc-Paper-Conference.pdf",
+    finding:
+      "Explores EEG/iEEG training transfer and evaluates reconstruction, downstream tasks and expert assessment.",
+    lesson:
+      "Training distribution and signal domain matter. A reported ratio is not a universal safe setting.",
+  },
+  {
+    year: 2025,
+    family: "neural",
+    authors: "Kastrati et al.",
+    status: "Preprint · abstract assessed",
+    title: "Adapting Neural Audio Codecs to EEG",
+    url: "https://arxiv.org/abs/2511.23142",
+    finding:
+      "Adapts pretrained neural audio coding to EEG, exploring framing, channel structure, sampling and quantization.",
+    lesson:
+      "Audio-to-EEG adaptation is already explored. This does not establish that ordinary MP3 preserves EEG.",
+  },
+  {
+    year: 2026,
+    family: "neural",
+    authors: "Xie",
+    status: "Preprint · full text available",
+    title: "Adaptive Data Compression and Reconstruction / ADaCoRe",
+    url: "https://arxiv.org/abs/2605.03085",
+    finding:
+      "Combines resampling, protected timepoints and confidence-based replay-example selection for continual learning.",
+    lesson:
+      "Confidence and compression already coexist. Example selection differs from choosing each trial’s bit depth.",
+  },
 ];

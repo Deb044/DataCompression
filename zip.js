@@ -3,7 +3,7 @@
 const LOCAL_HEADER = 30;
 const CENTRAL_HEADER = 46;
 const END_RECORD = 22;
-const ENTRY_NAME = new TextEncoder().encode('payload.bin');
+const ENTRY_NAME = new TextEncoder().encode("payload.bin");
 const CRC_TABLE = Uint32Array.from({ length: 256 }, (_, value) => {
   for (let bit = 0; bit < 8; bit++) {
     value = (value >>> 1) ^ (value & 1 ? 0xedb88320 : 0);
@@ -24,8 +24,7 @@ async function readStream(bytes, transform) {
 
 export function supportsZipLab() {
   try {
-    new CompressionStream('deflate-raw');
-    new DecompressionStream('deflate-raw');
+    new CompressionStream("deflate-raw");
     return true;
   } catch {
     return false;
@@ -33,7 +32,10 @@ export function supportsZipLab() {
 }
 
 export async function makeZip(input) {
-  const compressed = await readStream(input, new CompressionStream('deflate-raw'));
+  const compressed = await readStream(
+    input,
+    new CompressionStream("deflate-raw"),
+  );
   const checksum = crc32(input);
   const dataOffset = LOCAL_HEADER + ENTRY_NAME.length;
   const centralOffset = dataOffset + compressed.length;
@@ -73,36 +75,4 @@ export async function makeZip(input) {
   header.setUint32(endOffset + 12, centralSize, true);
   header.setUint32(endOffset + 16, centralOffset, true);
   return archive;
-}
-
-async function extractLabEntry(archive) {
-  const header = new DataView(archive.buffer, archive.byteOffset, archive.byteLength);
-  const start = LOCAL_HEADER + header.getUint16(26, true) + header.getUint16(28, true);
-  const end = start + header.getUint32(18, true);
-  const input = await readStream(archive.subarray(start, end), new DecompressionStream('deflate-raw'));
-  if (input.length !== header.getUint32(22, true) || crc32(input) !== header.getUint32(14, true)) {
-    throw new Error('ZIP integrity check failed.');
-  }
-  return input;
-}
-
-export async function measureNestedZip(input, maxPasses) {
-  const sizes = [input.length];
-  let archive = input;
-  let stopped = false;
-  for (let pass = 1; pass <= maxPasses; pass++) {
-    archive = await makeZip(archive);
-    sizes.push(archive.length);
-    if (sizes[pass] >= sizes[pass - 1]) {
-      stopped = true;
-      break;
-    }
-  }
-
-  let recovered = archive;
-  for (let pass = 1; pass < sizes.length; pass++) recovered = await extractLabEntry(recovered);
-  if (recovered.length !== input.length || !recovered.every((byte, index) => byte === input[index])) {
-    throw new Error('The recovered bytes did not match the original.');
-  }
-  return { archive, sizes, stopped };
 }
