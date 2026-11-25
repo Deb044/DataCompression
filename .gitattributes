@@ -1,1 +1,4 @@
 *.pdf binary
+# Preserve the exact bytes used in scientific provenance hashes on every OS.
+benchmark/** -text
+results/** -text
