@@ -25,9 +25,29 @@
 .reading-section a {
   color: var(--teal);
 }
-.literature-story h2 {
+.literature-story h2,
+.experiment-story h2 {
   margin-top: 48px;
   font-size: clamp(1.7rem, 3vw, 2.4rem);
+}
+.experiment-story h3 {
+  margin-top: 30px;
+  font-size: 1.3rem;
+}
+.experiment-story .note {
+  margin-block: 24px;
+}
+.experiment-story .story-experiment > .eyebrow {
+  margin-top: 48px;
+  margin-bottom: -24px;
+  color: var(--teal);
+  font: 700 0.8rem/1.55 var(--mono);
+}
+.experiment-story .table-scroll {
+  margin-bottom: 24px;
+}
+.experiment-downloads {
+  margin-block: 32px 60px;
 }
 .article-figure {
   margin: 36px -40px;

@@ -139,6 +139,12 @@ function baselines(data) {
   });
   byId("baseline-results").replaceChildren(
     makeTable(
+      ["Application", "Original balanced accuracy", "Chance"],
+      rows.map((row) => row.slice(0, 3)),
+    ),
+  );
+  byId("baseline-detail-results").replaceChildren(
+    makeTable(
       [
         "Application",
         "Original balanced accuracy",
@@ -148,6 +154,28 @@ function baselines(data) {
       rows,
     ),
   );
+}
+
+function renderStoryTables(data) {
+  for (const method of data.config.methods) {
+    const rows = data.config.budgets_bytes_per_second_channel.map((budget) => [
+      `${budget} bytes/s/channel`,
+      ...data.config.tasks.map((task) => {
+        const group = data.groups.find(
+          (g) => g.task === task && g.method === method && g.budget === budget,
+        );
+        return group?.complete
+          ? loss(group.balanced_accuracy_drop)
+          : "Unavailable";
+      }),
+    ]);
+    byId(`${method}-story-table`).replaceChildren(
+      makeTable(
+        ["Storage allowance", "SSVEP loss", "Motor-imagery loss", "P300 loss"],
+        rows,
+      ),
+    );
+  }
 }
 
 function renderTask(data) {
@@ -269,6 +297,7 @@ export async function loadExperimentResults() {
         "The benchmark is still incomplete. No final cross-task ranking is shown.",
       );
     baselines(data);
+    renderStoryTables(data);
     renderTask(data);
     renderRanking(data);
     byId("benchmark-method").addEventListener("change", () => renderTask(data));
@@ -276,7 +305,7 @@ export async function loadExperimentResults() {
       renderRanking(data),
     );
     byId("experiment-status").textContent =
-      `Measured OpenBMI benchmark: ${data.config.evaluation_subjects.length} evaluation participants, three applications, three compression pipelines and four storage caps. Exact float32 recovery was verified with the lossless control. Development participants are excluded from these means.`;
+      `These are measured results from ${data.config.evaluation_subjects.length} evaluation participants. Each person has equal weight in the averages; the two development participants are not included.`;
   } catch (error) {
     byId("experiment-status").textContent =
       `${error.message} The protocol and implementation are available in the repository; no placeholder results are displayed.`;
