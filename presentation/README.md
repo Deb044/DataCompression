@@ -4,9 +4,10 @@ The presentation is titled **Every Bit of the Brain**, with the subtitle
 **How much EEG data can we afford to lose?** It contains sixteen slides.
 The opening separates data growth from the need for compression, and the
 results table has its own slide. A final Thank You slide after the references
-links to the website and repository. The references include a full OpenBMI
-dataset citation. Every slide uses text on the left and visual
-evidence or illustrations on the right. Headings and subheadings are turquoise,
+links to the website and repository. The OpenBMI dataset citation uses the same style as the other
+references, with full bibliographic details in the notes. Content slides place
+text on the left and visual evidence on the right. The references use two
+uniform columns. The final slide contains only centered thanks and two links. Headings and subheadings are turquoise,
 with grey/black body text and a consistent Arial size hierarchy.
 Author: Debarghya Das, 240150049. Date: 25 November 2026.
 
@@ -49,7 +50,7 @@ Primary and alternative losses are relative to each reader's own baseline.
 The results curves show means and connect only tested storage settings.
 The summary plot retains paired participant-bootstrap 95% intervals. Complete
 pointwise intervals and individual measurements remain on the project website.
-The references slide includes the full OpenBMI citation and ChatGPT 6 attribution.
+The references slide includes the OpenBMI dataset and ChatGPT 6 attribution.
 The following Thank You slide contains clickable website and repository links.
 
 The data-growth graph uses selected IDC report editions: 33 ZB estimated for
@@ -77,3 +78,13 @@ Design references: [Coswara presentation](https://www.youtube.com/watch?v=qjDDt1
 and the user-supplied neural signal capture PDF, especially pp. 165-173.
 The full research bibliography remains in `ref.bib`; slide-specific citations
 are in the presenter notes.
+
+The experiment slides call the primary reader **Model 1** and the alternative
+reader **Model 2**, explain score loss in percentage points, and retain the
+original measurements. Exact algorithm names and protocol details remain in
+the presenter notes.
+
+The lossless/lossy research slide contrasts LPC and AR prediction with
+transform coding using DCT and DWT. It explains exact residual coding and
+coefficient quantization without claiming that a predictor alone is lossless
+or that the transforms themselves discard information.

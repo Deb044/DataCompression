@@ -61,15 +61,17 @@ function caption(s, value) {
   const box = text(s, value, 64, 649, 1110, 42, style.caption);
   box.text.color = style.grey;
 }
-function slide(title) {
+function slide(title, showNumber = true) {
   const s = deck.slides.add();
   s.background.fill = '#FFFFFF';
   if (title) {
     const box = text(s, title, 64, 40, 1152, 70, style.heading, true);
     box.text.color = style.turquoise;
   }
-  const number = text(s, String(deck.slides.items.length), 1190, 680, 36, 24, 16);
-  number.text.color = '#888888';
+  if (showNumber) {
+    const number = text(s, String(deck.slides.items.length), 1190, 680, 36, 24, 16);
+    number.text.color = '#888888';
+  }
   s.speakerNotes.text = notes[deck.slides.items.length - 1];
   return s;
 }
@@ -243,24 +245,24 @@ function plot(s, type, config) {
   caption(s,'Illustrative raw 16-bit recording, decimal GB, metadata excluded. Our experiment uses 12 channels and float32 samples.');
 }
 
-// 7. Literature on reversible coding and waveform distortion.
+// 7. Two established families: reversible prediction and lossy transform coding.
 {
   const s = slide('Existing research: lossless and lossy EEG');
-  heading(s,'Reducing storage and distortion');
-  bullets(s,[
-    'Lossless predictors encode the difference between a sample and its prediction.',
-    'Lossy methods transform the signal, then reduce coefficient precision.',
-    'Compression ratio measures storage. PRD or NRMSE measure waveform error.',
-    'Published ratios depend on the recording and how distortion is defined.',
-  ],218,385);
-  heading(s,'Representative work',147,style.visualX,style.visualWidth);
-  table(s,[
-    ['Study','Approach'],
-    ['Memon et al. (1999)','Context-based lossless and near-lossless coding'],
-    ['Higgins et al. (2013)','Wavelet coefficient quantization and thresholding'],
-    ['Dao et al. (2015)','Survey of lossy methods and storage–distortion trade-offs'],
-  ],249,[240,406],23,310);
-  caption(s,'These papers use different data and measurement conventions. Their compression ratios are not a common leaderboard.');
+  heading(s,'Lossless: predictive coding');
+  body(s,'Linear predictive coding (LPC) predicts each sample from earlier samples. An autoregressive (AR) model uses a weighted sum of those past values.',210,165);
+  heading(s,'Lossy: transform coding',405);
+  body(s,'DCT and DWT turn the signal into coefficients. Quantizing or discarding some coefficients saves bits, but changes the reconstructed signal.',470,165);
+  heading(s,'How the two pipelines work',147,style.visualX,style.visualWidth);
+  const pipelines=table(s,[
+    ['Stage','Lossless prediction','Lossy transform coding'],
+    ['Model','AR / linear prediction','DCT: cosine terms\nDWT: wavelets'],
+    ['Code','Store exact residuals\n(prediction errors) and\nmodel settings','Quantize or discard coefficients, then encode'],
+    ['Recover','Exact samples with reversible prediction','Inverse transform gives an approximation'],
+  ],225,[118,264,264],22,350);
+  pipelines.cells.block({row:0,column:0,rowCount:4,columnCount:3}).assign({
+    margins:{left:10,right:10,top:4,bottom:4},
+  });
+  caption(s,'Memon et al. (1999), Higgins et al. (2013), Dao et al. (2015). Lossless recovery needs reversible prediction. Quantization introduces loss.');
 }
 
 // 8. Established task-aware work leads to our narrower controlled comparison.
@@ -307,36 +309,36 @@ function plot(s, type, config) {
 // 10. The protocol and baseline table introduce the controlled benchmark.
 {
   const s = slide('Experimental setup');
-  heading(s,'A paired comparison');
+  heading(s,'What we tested');
   bullets(s,[
-    '20 new participants, 3 tasks, 12 channels and 128 samples/s.',
-    'Earlier 60% of events calibrate the readers. Later events test them.',
-    'Readers stay frozen. Compression settings do not use task labels.',
-    'Uniform, μ-law or DCT, then packing and ZIP.',
+    'EEG from 20 people: 3 tasks, 12 channels, 128 samples per second.',
+    'Use the first 60% of events for model setup. Test on later EEG.',
+    'Compare uniform quantization, μ-law and DCT, each followed by ZIP.',
+    'Keep the model unchanged, then measure how its score changes after compression.',
   ],216,385);
-  heading(s,'Readers and original balanced accuracy',147,style.visualX,style.visualWidth);
+  heading(s,'Starting scores and task models',147,style.visualX,style.visualWidth);
   const baseline=task=>(100*data.primary.baselines.find(g=>g.task===task).mean).toFixed(1)+'%';
   table(s,[
-    ['Task','Primary / alternative reader','Original BA'],
-    ['SSVEP','CCA / spectral peaks',baseline('SSVEP')],
-    ['Motor imagery','CSP + LDA / band power + LDA',baseline('MI')],
-    ['P300','Time bins + LDA / logistic regression',baseline('ERP')],
+    ['Task','Model 1 / Model 2','Model 1 score'],
+    ['SSVEP','Match flicker frequencies / find spectral peaks',baseline('SSVEP')],
+    ['Motor imagery','Spatial patterns / power in frequency bands',baseline('MI')],
+    ['P300','Two classifiers using timed response averages',baseline('ERP')],
   ],248,[152,357,137],22,280);
-  text(s,'Caps: 32, 64, 128, 256 B/s/channel\nRaw selected float32: 512 B/s/channel',584,563,625,73,24);
-  caption(s,'OpenBMI, first recording day only. Caps include reconstruction metadata. BA = balanced accuracy. A 2-second guard surrounds the split.');
+  text(s,'Same byte limits for every compressor:\n32, 64, 128 or 256 bytes/s/channel',584,563,625,73,24);
+  caption(s,'OpenBMI, first day. Score = balanced accuracy: each class counts equally. Original float32 EEG needs 512 bytes/s/channel.');
 }
 
 // 11. Three plots share the right column, with the same scales and color mapping.
 {
-  const s=slide('Storage allowance and recognition loss');
-  heading(s,'How to read the plots');
+  const s=slide('How storage affects task performance');
+  heading(s,'Reading the graphs');
   bullets(s,[
-    'The score loss is original balanced accuracy minus compressed-data accuracy.',
-    'Lower loss is better. A small negative value means a slightly higher score.',
-    'Losses shrink as the byte allowance increases.',
-    'The DCT curve is especially low for this P300 reader.',
+    'Moving right allows a larger compressed file.',
+    'The height shows how many accuracy points were lost. Lower is better.',
+    'For example, a drop from 80% to 70% is a loss of 10 percentage points.',
+    'At larger budgets, scores stay closer to their original values.',
   ],216,355);
-  text(s,'SSVEP     Motor imagery     P300\nTurquoise      Orange              Blue',64,579,465,63,19);
+  text(s,'Lines: SSVEP (turquoise),\nmotor imagery (orange), P300 (blue)',64,579,465,63,20);
   methods.forEach(([method,label],i)=>{
     const y=134+i*164;
     heading(s,label,y,style.visualX,style.visualWidth);
@@ -350,39 +352,39 @@ function plot(s, type, config) {
       yAxis:{min:-5,max:15,majorUnit:5,textStyle:axisText(16),majorGridlines:{fill:'#E3E3E3',width:1}},
     });
   });
-  caption(s,'Primary readers, mean of 20 participants. x: B/s/channel. y: percentage-point loss. Lines join tested settings. Intervals are on the site.');
+  caption(s,'Model 1, average of 20 people. x: bytes/s/channel. y: accuracy points lost. Small negative values mean a slight score increase.');
 }
 
 // 12. Preserve every table value without squeezing the curves.
 {
-  const s=slide('The tightest budget: does the reader matter?');
-  heading(s,'32 bytes per second per channel');
+  const s=slide('Changing the model changes the answer');
+  heading(s,'The smallest storage budget');
   bullets(s,[
-    'Each cell shows loss for the primary / alternative reader.',
-    'Primary readers put SSVEP highest in mean loss for all three compressors.',
-    'Alternative readers put P300 highest for uniform and μ-law.',
-    'Changing the reader can change the task ordering.',
+    'We also tried a second model for each task.',
+    'Each cell shows two losses: Model 1 first, then Model 2.',
+    'With Model 1, SSVEP has the largest average loss for each compressor.',
+    'With Model 2, P300 has the largest loss for uniform and μ-law.',
   ],216,385);
-  heading(s,'Balanced accuracy loss (percentage points)',147,style.visualX,style.visualWidth);
+  heading(s,'Score loss at 32 bytes/s/channel',147,style.visualX,style.visualWidth);
   const values=[['Task','Uniform','μ-law','DCT']];
   for(const [task,label] of tasks) values.push([label,...methods.map(([method])=>
     ['primary','alternative'].map(f=>(100*estimate(f,task,method,32).mean).toFixed(2)).join(' / '))]);
   table(s,values,253,[182,155,155,154],22,260);
-  text(s,'Primary / alternative reader\nLower values mean less performance lost.',585,557,615,77,24);
-  caption(s,'Every loss uses that reader’s own original-data baseline. These are sensitivities of the tested pipelines, not a universal ranking.');
+  text(s,'Model 1 loss / Model 2 loss\nSmaller numbers mean less performance lost.',585,557,615,77,24);
+  caption(s,'Each loss is measured against that model’s own score before compression. A different model can change which task looks most affected.');
 }
 
 // 13. Paired intervals preserve the strongest repeated finding and its limits.
 {
   const s=slide('Summary and findings');
-  heading(s,'No single task ranking');
+  heading(s,'What we learned');
   bullets(s,[
-    'The reader changes which task appears most affected.',
-    'Primary SSVEP versus motor imagery has no clear separation at the tightest cap.',
-    'P300 loses fewer points with DCT than uniform for both readers and all 20 people.',
+    'Which task looks most affected changes when we change the model.',
+    'With Model 1, the SSVEP–motor imagery difference is too uncertain to call at the smallest budget.',
+    'For P300, DCT beats uniform quantization for all 20 people with both models.',
   ],216,345);
-  body(s,'This is evidence about these pipelines,\nnot an intrinsic ranking of EEG tasks.',570,69);
-  heading(s,'P300: DCT advantage over uniform',147,style.visualX,style.visualWidth);
+  body(s,'These findings apply to the recordings\nand methods we tested.',570,69);
+  heading(s,'P300: DCT keeps more of the score',147,style.visualX,style.visualWidth);
   const advantages=['primary','alternative'].map(f=>data[f].method_differences.find(
     g=>g.task==='ERP'&&g.budget===32&&g.first==='uniform'&&g.second==='dct'));
   plot(s,'scatter',{
@@ -394,10 +396,10 @@ function plot(s, type, config) {
     xAxis:{min:0,max:12.5,majorUnit:5,textStyle:axisText(20),majorGridlines:{fill:'#DDDDDD',width:1},line:{fill:'#AAAAAA',width:1}},
     yAxis:{visible:false,min:-0.5,max:1.5,majorGridlines:null},
   });
-  text(s,'Primary',584,321,150,40,25);
-  text(s,'Alternative',584,416,160,40,25);
-  text(s,'8.87 pp / 10.05 pp\nPaired means and 95% intervals',584,557,630,80,25);
-  caption(s,'32 B/s/channel. Both P300 readers use the same low-frequency features. Participant-bootstrap intervals describe these data only.');
+  text(s,'Model 1',584,321,150,40,25);
+  text(s,'Model 2',584,416,160,40,25);
+  text(s,'DCT loses 8.87 / 10.05 fewer points\nthan uniform, on average.',584,557,630,80,25);
+  caption(s,'32 bytes/s/channel. Both P300 models use the same features. Dots show means. Bars show 95% uncertainty intervals.');
 }
 
 // 14. Body text remains neutral on both sides. The right table is a visual map
@@ -422,7 +424,7 @@ function plot(s, type, config) {
   caption(s,'The goal is to preserve information needed for the intended use. Offline filtering and shared P300 features remain important limitations.');
 }
 
-// 15. The dataset receives a complete, explicit citation alongside the references.
+// 15. All references, including the dataset, use the same compact style.
 {
   const s=slide('References');
   const refs=[
@@ -440,33 +442,25 @@ function plot(s, type, config) {
     ['Lee et al. (2019): OpenBMI dataset','https://doi.org/10.1093/gigascience/giz002'],
     ['OpenAI (2026): ChatGPT 6, AI assistance','https://chatgpt.com/'],
   ];
-  refs.forEach(([label,url],i)=>link(s,label,url,64,139+i*38,478,19,34));
-  heading(s,'Dataset used: OpenBMI',147,style.visualX,style.visualWidth);
-  text(s,'Lee, M.-H. et al. (2019)',584,249,615,50,25,true);
-  text(s,'EEG dataset and OpenBMI toolbox for three BCI paradigms: an investigation into BCI illiteracy.',584,316,615,145,25);
-  text(s,'GigaScience, 8(5), giz002',584,474,615,46,25);
-  link(s,'doi.org/10.1093/gigascience/giz002','https://doi.org/10.1093/gigascience/giz002',584,534,615,23,47);
-  text(s,'Our analysis uses first-day recordings\nfrom the same participants across all three tasks.',584,592,615,60,21);
+  refs.forEach(([label,url],i)=>{
+    const column=i<7?0:1;
+    link(s,label,url,64+column*596,149+(i%7)*70,552,21,60);
+  });
 }
 
 // 16. Project links and thanks have their own closing slide after the references.
 {
-  const s=slide('Thank You');
-  heading(s,'Every Bit of the Brain',160);
-  body(s,'How much EEG data\ncan we afford to lose?',237,100);
-  heading(s,'Project website',370);
-  link(s,'da3021-compression-lab-deb044.\nsolidflask.chatgpt.site',
-    'https://da3021-compression-lab-deb044.solidflask.chatgpt.site/',64,438,470,22,75);
-  heading(s,'GitHub repository',548);
-  link(s,'github.com/Deb044/DataCompression',
-    'https://github.com/Deb044/DataCompression',64,613,480,22,43);
-  heading(s,'Explore the project',147,style.visualX,style.visualWidth);
-  table(s,[
-    ['On the website','In the repository'],
-    ['Interactive explanations','Compression and decoding code'],
-    ['Plots and individual results','Measured exports and protocol'],
-    ['Study limitations','Reproducible presentation sources'],
-  ],249,[323,323],23,285);
+  const s=slide(undefined,false);
+  const thanks=text(s,'Thank You',64,265,1152,110,64,true);
+  thanks.text.color=style.turquoise;
+  thanks.text.alignment='center';
+  thanks.text.verticalAlignment='middle';
+  const website=link(s,'Project website',
+    'https://da3021-compression-lab-deb044.solidflask.chatgpt.site/',64,411,1152,25,48);
+  website.text.alignment='center';
+  const repository=link(s,'GitHub repository',
+    'https://github.com/Deb044/DataCompression',64,475,1152,25,48);
+  repository.text.alignment='center';
 }
 
 if(deck.slides.items.length!==notes.length) throw new Error('Slide and presenter-note counts differ.');
