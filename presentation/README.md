@@ -1,7 +1,7 @@
 # Every Bit of the Brain
 
 The presentation is titled **Every Bit of the Brain**, with the subtitle
-**How much EEG data can we afford to lose?** It contains sixteen slides.
+**How much EEG data can be lost?** It contains sixteen slides.
 The opening separates data growth from the need for compression, and the
 results table has its own slide. A final Thank You slide after the references
 links to the website and repository. The OpenBMI dataset citation uses the same style as the other
@@ -79,8 +79,8 @@ and the user-supplied neural signal capture PDF, especially pp. 165-173.
 The full research bibliography remains in `ref.bib`; slide-specific citations
 are in the presenter notes.
 
-The experiment slides call the primary reader **Model 1** and the alternative
-reader **Model 2**, explain score loss in percentage points, and retain the
+The experiment slides call the primary decoder **Decoder 1** and the alternative
+decoder **Decoder 2**, explain score loss in percentage points, and retain the
 original measurements. Exact algorithm names and protocol details remain in
 the presenter notes.
 

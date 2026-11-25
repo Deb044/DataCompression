@@ -114,7 +114,7 @@ function plot(s, type, config) {
   const s = slide();
   const title = text(s, 'Every Bit\nof the Brain', 64, 145, 550, 200, 64, true);
   title.text.color = style.turquoise;
-  text(s, 'How much EEG data\ncan we afford to lose?', 64, 371, 530, 115, 32);
+  text(s, 'How much EEG data\ncan be lost?', 64, 371, 530, 115, 32);
   text(s, 'Debarghya Das\n240150049', 64, 521, 500, 75, 25);
   text(s, 'DSAI, IIT Guwahati\n25 November 2026', 64, 611, 500, 60, 20);
   await image(s, 'images/eeg-cap-white.jpg', {left: 710, top: 140, width: 390, height: 440},
@@ -218,7 +218,7 @@ function plot(s, type, config) {
   heading(s,'Many channels, recorded together',147,style.visualX,style.visualWidth);
   await image(s,'images/eeg-traces-reference.jpg',{left:690,top:221,width:387,height:396},
     'Illustrative multichannel traces from page 172 of the supplied neural signal capture reference');
-  caption(s,'Trace illustration: supplied neural signal capture reference, p. 172. This is not a recording from our experiment.');
+  caption(s,'Trace illustration: supplied neural signal capture reference, p. 172. This is not a recording from this experiment.');
 }
 
 // 6. Reproducible arithmetic, explicitly distinct from the benchmark representation.
@@ -242,21 +242,21 @@ function plot(s, type, config) {
     yAxis:{min:0,max:3,majorUnit:1,title:{text:'GB',textStyle:axisText(19)},textStyle:axisText(18),majorGridlines:{fill:'#E3E3E3',width:1}},
   });
   text(s,'2.83 GB per day before compression',590,574,610,66,29,true);
-  caption(s,'Illustrative raw 16-bit recording, decimal GB, metadata excluded. Our experiment uses 12 channels and float32 samples.');
+  caption(s,'Illustrative raw 16-bit recording, decimal GB, metadata excluded. The experiment uses 12 channels and float32 samples.');
 }
 
 // 7. Two established families: reversible prediction and lossy transform coding.
 {
   const s = slide('Existing research: lossless and lossy EEG');
   heading(s,'Lossless: predictive coding');
-  body(s,'Linear predictive coding (LPC) predicts each sample from earlier samples. An autoregressive (AR) model uses a weighted sum of those past values.',210,165);
+  body(s,'Linear predictive coding (LPC) predicts each sample from earlier samples. Autoregressive (AR) prediction uses a weighted sum of those past values.',210,165);
   heading(s,'Lossy: transform coding',405);
   body(s,'DCT and DWT turn the signal into coefficients. Quantizing or discarding some coefficients saves bits, but changes the reconstructed signal.',470,165);
   heading(s,'How the two pipelines work',147,style.visualX,style.visualWidth);
   const pipelines=table(s,[
     ['Stage','Lossless prediction','Lossy transform coding'],
-    ['Model','AR / linear prediction','DCT: cosine terms\nDWT: wavelets'],
-    ['Code','Store exact residuals\n(prediction errors) and\nmodel settings','Quantize or discard coefficients, then encode'],
+    ['Basis','AR / linear prediction','DCT: cosine terms\nDWT: wavelets'],
+    ['Code','Store exact residuals\n(prediction errors) and\npredictor settings','Quantize or discard coefficients, then encode'],
     ['Recover','Exact samples with reversible prediction','Inverse transform gives an approximation'],
   ],225,[118,264,264],22,350);
   pipelines.cells.block({row:0,column:0,rowCount:4,columnCount:3}).assign({
@@ -265,16 +265,16 @@ function plot(s, type, config) {
   caption(s,'Memon et al. (1999), Higgins et al. (2013), Dao et al. (2015). Lossless recovery needs reversible prediction. Quantization introduces loss.');
 }
 
-// 8. Established task-aware work leads to our narrower controlled comparison.
+// 8. Established task-aware work leads to the narrower controlled comparison.
 {
   const s = slide('Existing research: preserving the task');
   heading(s,'Preserving useful information');
   bullets(s,[
-    'A close-looking waveform may still lead to different decisions.',
-    'Existing work evaluates recognition or jointly optimizes coding and inference.',
-    'We keep each reader fixed after calibration, then vary the compressor and budget.',
-  ],218,340);
-  body(s,'Our question is about the tested\ntask-and-reader combinations.',565,74);
+    'Task-aware compression optimizes task performance under a storage budget, rather than only compression ratio or waveform error (PRD).',
+    'A small waveform error does not guarantee the same task decisions.',
+    'Existing work evaluates recognition or learns coding and decoding together.',
+    'This comparison measures task performance with each decoder kept fixed.',
+  ],218,410);
   heading(s,'Task performance enters the evaluation',147,style.visualX,style.visualWidth);
   table(s,[
     ['Study','Task-related evaluation'],
@@ -282,7 +282,7 @@ function plot(s, type, config) {
     ['Strypsteen & Bertrand (2023)','Jointly learned source coding and inference'],
     ['Carzaniga et al. (2025)','BrainCodec: reconstruction and downstream evaluations'],
   ],249,[253,393],23,310);
-  caption(s,'Task preservation is established research. Our project compares simple compressors under a fixed-reader protocol.');
+  caption(s,'Task preservation is established research. This project compares simple compressors with each decoder kept fixed.');
 }
 
 // 9. The three tasks rely on meaningfully different features.
@@ -303,23 +303,23 @@ function plot(s, type, config) {
     ['P300','Target or non-target?','A brief event response'],
   ],253,[175,236,235],23,300);
   text(s,'Sustained visual responses, imagined actions,\nand detection of discrete target events.',584,578,632,65,23);
-  caption(s,'The eventual conclusion must stay local to the recordings, methods, budgets and readers tested.');
+  caption(s,'The eventual conclusion must stay local to the recordings, methods, budgets and decoders tested.');
 }
 
 // 10. The protocol and baseline table introduce the controlled benchmark.
 {
   const s = slide('Experimental setup');
-  heading(s,'What we tested');
+  heading(s,'What was tested');
   bullets(s,[
     'EEG from 20 people: 3 tasks, 12 channels, 128 samples per second.',
-    'Use the first 60% of events for model setup. Test on later EEG.',
+    'A decoder turns EEG into a task decision. Use the first 60% of events to set it up.',
     'Compare uniform quantization, μ-law and DCT, each followed by ZIP.',
-    'Keep the model unchanged, then measure how its score changes after compression.',
+    'Keep the decoder unchanged. Test later EEG before and after compression.',
   ],216,385);
-  heading(s,'Starting scores and task models',147,style.visualX,style.visualWidth);
+  heading(s,'Starting scores and decoders',147,style.visualX,style.visualWidth);
   const baseline=task=>(100*data.primary.baselines.find(g=>g.task===task).mean).toFixed(1)+'%';
   table(s,[
-    ['Task','Model 1 / Model 2','Model 1 score'],
+    ['Task','Decoder 1 / Decoder 2','Decoder 1 score'],
     ['SSVEP','Match flicker frequencies / find spectral peaks',baseline('SSVEP')],
     ['Motor imagery','Spatial patterns / power in frequency bands',baseline('MI')],
     ['P300','Two classifiers using timed response averages',baseline('ERP')],
@@ -352,38 +352,38 @@ function plot(s, type, config) {
       yAxis:{min:-5,max:15,majorUnit:5,textStyle:axisText(16),majorGridlines:{fill:'#E3E3E3',width:1}},
     });
   });
-  caption(s,'Model 1, average of 20 people. x: bytes/s/channel. y: accuracy points lost. Small negative values mean a slight score increase.');
+  caption(s,'Decoder 1, average of 20 people. x: bytes/s/channel. y: accuracy points lost. Small negative values mean a slight score increase.');
 }
 
 // 12. Preserve every table value without squeezing the curves.
 {
-  const s=slide('Changing the model changes the answer');
+  const s=slide('Changing the decoder changes the answer');
   heading(s,'The smallest storage budget');
   bullets(s,[
-    'We also tried a second model for each task.',
-    'Each cell shows two losses: Model 1 first, then Model 2.',
-    'With Model 1, SSVEP has the largest average loss for each compressor.',
-    'With Model 2, P300 has the largest loss for uniform and μ-law.',
+    'A second decoder was also tested for each task.',
+    'Each cell shows two losses: Decoder 1 first, then Decoder 2.',
+    'With Decoder 1, SSVEP has the largest average loss for each compressor.',
+    'With Decoder 2, P300 has the largest loss for uniform and μ-law.',
   ],216,385);
   heading(s,'Score loss at 32 bytes/s/channel',147,style.visualX,style.visualWidth);
   const values=[['Task','Uniform','μ-law','DCT']];
   for(const [task,label] of tasks) values.push([label,...methods.map(([method])=>
     ['primary','alternative'].map(f=>(100*estimate(f,task,method,32).mean).toFixed(2)).join(' / '))]);
   table(s,values,253,[182,155,155,154],22,260);
-  text(s,'Model 1 loss / Model 2 loss\nSmaller numbers mean less performance lost.',585,557,615,77,24);
-  caption(s,'Each loss is measured against that model’s own score before compression. A different model can change which task looks most affected.');
+  text(s,'Decoder 1 loss / Decoder 2 loss\nSmaller numbers mean less performance lost.',585,557,615,77,24);
+  caption(s,'Each loss is measured against that decoder’s own score before compression. A different decoder can change which task looks most affected.');
 }
 
 // 13. Paired intervals preserve the strongest repeated finding and its limits.
 {
   const s=slide('Summary and findings');
-  heading(s,'What we learned');
+  heading(s,'What was learned');
   bullets(s,[
-    'Which task looks most affected changes when we change the model.',
-    'With Model 1, the SSVEP–motor imagery difference is too uncertain to call at the smallest budget.',
-    'For P300, DCT beats uniform quantization for all 20 people with both models.',
+    'Which task looks most affected changes with the decoder.',
+    'With Decoder 1, the SSVEP–motor imagery difference is too uncertain to call at the smallest budget.',
+    'For P300, DCT beats uniform quantization for all 20 people with both decoders.',
   ],216,345);
-  body(s,'These findings apply to the recordings\nand methods we tested.',570,69);
+  body(s,'These findings apply to the recordings\nand methods tested.',570,69);
   heading(s,'P300: DCT keeps more of the score',147,style.visualX,style.visualWidth);
   const advantages=['primary','alternative'].map(f=>data[f].method_differences.find(
     g=>g.task==='ERP'&&g.budget===32&&g.first==='uniform'&&g.second==='dct'));
@@ -396,10 +396,10 @@ function plot(s, type, config) {
     xAxis:{min:0,max:12.5,majorUnit:5,textStyle:axisText(20),majorGridlines:{fill:'#DDDDDD',width:1},line:{fill:'#AAAAAA',width:1}},
     yAxis:{visible:false,min:-0.5,max:1.5,majorGridlines:null},
   });
-  text(s,'Model 1',584,321,150,40,25);
-  text(s,'Model 2',584,416,160,40,25);
+  text(s,'Decoder 1',584,321,150,40,25);
+  text(s,'Decoder 2',584,416,160,40,25);
   text(s,'DCT loses 8.87 / 10.05 fewer points\nthan uniform, on average.',584,557,630,80,25);
-  caption(s,'32 bytes/s/channel. Both P300 models use the same features. Dots show means. Bars show 95% uncertainty intervals.');
+  caption(s,'32 bytes/s/channel. Both P300 decoders use the same features. Dots show means. Bars show 95% uncertainty intervals.');
 }
 
 // 14. Body text remains neutral on both sides. The right table is a visual map
@@ -409,17 +409,17 @@ function plot(s, type, config) {
   heading(s,'Limits of this study');
   bullets(s,[
     '20 people from one acquisition study do not represent every EEG setting.',
-    'Two readers per task leave many feature choices unexplored.',
+    'Two decoders per task leave many feature choices unexplored.',
     'Equal maximum caps do not give exactly equal achieved file sizes.',
-    'We did not measure device energy, latency or clinical usefulness.',
+    'Not tested with state of the art codecs and compressors.',
   ],216,385);
   heading(s,'The next checks',147,style.visualX,style.visualWidth);
   table(s,[
     ['Current limit','Next step'],
     ['One dataset','More datasets and task families'],
-    ['Few readers and features','Independent feature extractors and stronger EEG codecs'],
+    ['Few decoders and features','More decoders and feature extractors'],
     ['Equal maximum caps','Match achieved storage rates more closely'],
-    ['Offline evaluation','Measure streaming latency and device energy'],
+    ['Simple compressors','Compare state of the art EEG codecs and compressors'],
   ],238,[230,416],22,365);
   caption(s,'The goal is to preserve information needed for the intended use. Offline filtering and shared P300 features remain important limitations.');
 }
@@ -469,7 +469,7 @@ await (await PresentationFile.exportPptx(deck)).save(path.join(out,'candidate.pp
 // High-resolution PDF companion. The PPTX retains native editable evidence.
 const pdf=await PDFDocument.create();
 pdf.setTitle('Every Bit of the Brain');
-pdf.setSubject('How much EEG data can we afford to lose?');
+pdf.setSubject('How much EEG data can be lost?');
 pdf.setAuthor('Debarghya Das (240150049)');
 for(const [index,s] of deck.slides.items.entries()){
   const render=await deck.export({slide:s,format:'png',scale:2});
