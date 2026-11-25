@@ -285,14 +285,14 @@ function plot(s, type, config) {
 
 // 9. The three tasks rely on meaningfully different features.
 {
-  const s = slide('Our central question');
-  heading(s,'Equal storage allowance');
-  body(s,'Which EEG tasks lose useful\nperformance fastest?',222,115);
+  const s = slide('The central question');
+  body(s,'At the same storage allowance, which EEG tasks lose useful performance fastest across several compressors?',145,160);
+  heading(s,'Three EEG paradigms',321);
   bullets(s,[
-    'Compare three task families.',
-    'Give several compressors the same maximum byte allowance.',
-    'Check whether the ordering changes with the reader.',
-  ],376,260);
+    'SSVEP: a viewed flickering target drives a rhythm at its frequency.',
+    'Motor imagery: imagined movement changes rhythms over motor areas.',
+    'P300: detecting a rare target evokes a brief response after the event.',
+  ],392,245);
   heading(s,'Different tasks use different features',147,style.visualX,style.visualWidth);
   table(s,[
     ['Task','Decision','Main feature'],
@@ -300,6 +300,7 @@ function plot(s, type, config) {
     ['Motor imagery','Left or right hand?','Spatial power patterns'],
     ['P300','Target or non-target?','A brief event response'],
   ],253,[175,236,235],23,300);
+  text(s,'Sustained visual responses, imagined actions,\nand detection of discrete target events.',584,578,632,65,23);
   caption(s,'The eventual conclusion must stay local to the recordings, methods, budgets and readers tested.');
 }
 
@@ -421,8 +422,7 @@ function plot(s, type, config) {
   caption(s,'The goal is to preserve information needed for the intended use. Offline filtering and shared P300 features remain important limitations.');
 }
 
-// 15. Compact references stay on the left. Project links and an evidence summary
-// form the right-hand visual rather than a second column of bibliography text.
+// 15. The dataset receives a complete, explicit citation alongside the references.
 {
   const s=slide('References');
   const refs=[
@@ -441,6 +441,25 @@ function plot(s, type, config) {
     ['OpenAI (2026): ChatGPT 6, AI assistance','https://chatgpt.com/'],
   ];
   refs.forEach(([label,url],i)=>link(s,label,url,64,139+i*38,478,19,34));
+  heading(s,'Dataset used: OpenBMI',147,style.visualX,style.visualWidth);
+  text(s,'Lee, M.-H. et al. (2019)',584,249,615,50,25,true);
+  text(s,'EEG dataset and OpenBMI toolbox for three BCI paradigms: an investigation into BCI illiteracy.',584,316,615,145,25);
+  text(s,'GigaScience, 8(5), giz002',584,474,615,46,25);
+  link(s,'doi.org/10.1093/gigascience/giz002','https://doi.org/10.1093/gigascience/giz002',584,534,615,23,47);
+  text(s,'Our analysis uses first-day recordings\nfrom the same participants across all three tasks.',584,592,615,60,21);
+}
+
+// 16. Project links and thanks have their own closing slide after the references.
+{
+  const s=slide('Thank You');
+  heading(s,'Every Bit of the Brain',160);
+  body(s,'How much EEG data\ncan we afford to lose?',237,100);
+  heading(s,'Project website',370);
+  link(s,'da3021-compression-lab-deb044.\nsolidflask.chatgpt.site',
+    'https://da3021-compression-lab-deb044.solidflask.chatgpt.site/',64,438,470,22,75);
+  heading(s,'GitHub repository',548);
+  link(s,'github.com/Deb044/DataCompression',
+    'https://github.com/Deb044/DataCompression',64,613,480,22,43);
   heading(s,'Explore the project',147,style.visualX,style.visualWidth);
   table(s,[
     ['On the website','In the repository'],
@@ -448,8 +467,6 @@ function plot(s, type, config) {
     ['Plots and individual results','Measured exports and protocol'],
     ['Study limitations','Reproducible presentation sources'],
   ],249,[323,323],23,285);
-  link(s,'Open the project website','https://da3021-compression-lab-deb044.solidflask.chatgpt.site/',584,568,600,25,42);
-  link(s,'github.com/Deb044/DataCompression','https://github.com/Deb044/DataCompression',584,621,600,21,40);
 }
 
 if(deck.slides.items.length!==notes.length) throw new Error('Slide and presenter-note counts differ.');

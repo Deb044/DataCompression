@@ -1,9 +1,11 @@
 # Every Bit of the Brain
 
 The presentation is titled **Every Bit of the Brain**, with the subtitle
-**How much EEG data can we afford to lose?** It contains fifteen slides.
+**How much EEG data can we afford to lose?** It contains sixteen slides.
 The opening separates data growth from the need for compression, and the
-results table has its own slide. Every slide uses text on the left and visual
+results table has its own slide. A final Thank You slide after the references
+links to the website and repository. The references include a full OpenBMI
+dataset citation. Every slide uses text on the left and visual
 evidence or illustrations on the right. Headings and subheadings are turquoise,
 with grey/black body text and a consistent Arial size hierarchy.
 Author: Debarghya Das, 240150049. Date: 25 November 2026.
@@ -47,7 +49,8 @@ Primary and alternative losses are relative to each reader's own baseline.
 The results curves show means and connect only tested storage settings.
 The summary plot retains paired participant-bootstrap 95% intervals. Complete
 pointwise intervals and individual measurements remain on the project website.
-The references slide includes the website and ChatGPT 6 attribution.
+The references slide includes the full OpenBMI citation and ChatGPT 6 attribution.
+The following Thank You slide contains clickable website and repository links.
 
 The data-growth graph uses selected IDC report editions: 33 ZB estimated for
 2018, 64.2 ZB estimated for 2020 (as reported by UNCTAD), and a 393.9 ZB forecast
