@@ -117,8 +117,13 @@ def load_recording(subject, task, config, cache=CACHE):
     # MATLAB t indexes samples from one. Convert explicitly before resampling.
     onsets = (np.asarray(data['t']).ravel().astype(float) - 1) / source_rate
     labels = np.asarray(data['y_dec']).ravel().astype(int)
-    if len(onsets) != len(labels) or np.any(np.diff(onsets) <= 0):
-        raise ValueError('Invalid or unsorted source events')
+    if len(onsets) != len(labels) or len(np.unique(onsets)) != len(onsets):
+        raise ValueError('Invalid or duplicate source events')
+    # ERP stores the first flashes of some sequences out of time order. Sort
+    # onset-label pairs together; never reorder the labels independently.
+    order = np.argsort(onsets, kind='stable')
+    reordered = int(np.sum(order != np.arange(len(order))))
+    onsets, labels = onsets[order], labels[order]
     mappings = np.asarray(data['class'], dtype=object).tolist()
     expected = {'SSVEP': [['1', 'up'], ['2', 'left'], ['3', 'right'], ['4', 'down']],
                 'MI': [['1', 'right'], ['2', 'left']],
@@ -136,7 +141,8 @@ def load_recording(subject, task, config, cache=CACHE):
     events = np.rint(onsets * rate).astype(int)
     if not np.isfinite(signal).all() or np.any(events < 0):
         raise ValueError('Invalid signal or events')
-    source = dict(record, source_sample_rate=source_rate, source_mapping=mappings, channel_names=names)
+    source = dict(record, source_sample_rate=source_rate, source_mapping=mappings,
+                  channel_names=names, source_events_reordered=reordered)
     np.savez(prepared, signal=signal, events=events, labels=labels)
     metadata.write_text(json.dumps(source, indent=2))
     return signal, events, labels, source
