@@ -1,4 +1,4 @@
-% Slide 7: central question and the distinct information each task uses.
+% Slide 8: central question and the distinct information each task uses.
 \begin{frame}[t]{Our central question}
   \vspace{0.35cm}
   \begin{center}
@@ -26,7 +26,7 @@
   \note{We chose three broad paradigms rather than several variants of one task. SSVEP identifies one of four visual flicker targets. Motor imagery distinguishes imagined left/right hand movements. P300 detects a target flash using the brief response after a stimulus; this is single-flash detection, not complete spelling accuracy. Different features may react differently to quantization or removal of frequency components. Comparing the same people and stored montage reduces confounds, while baseline difficulty and decoder design still differ.}
 \end{frame}
 
-% Slide 8: the full setup, with technical details in presenter notes.
+% Slide 9: the full setup, with technical details in presenter notes.
 \begin{frame}[t]{Experimental setup}
   \small\textbf{20 new people}\quad 3 tasks\quad 12 channels\quad 128 samples/s
   \vspace{0.25cm}
@@ -69,7 +69,7 @@
   \note{Evaluation subjects are S07--S26, selected in advance. S03--S06 remain the separate pilot and S01--S02 are development checks. The input has the same twelve channels for every task. Continuous recordings are resampled to 128 Hz and filtered from 0.5 to 40 Hz. The split is chronological at 60 percent of events. Training epochs finish two seconds before the boundary, and test epochs begin two seconds after it. Filtering is offline and noncausal, which remains a limitation. SSVEP and MI epochs last four seconds; P300 epochs last one second. Overlapping P300 test epochs share a single encoded continuous recording. One-second codec frames choose the least waveform MSE among a predefined candidate grid that fits each cap, without labels or classifier outcomes. Models and event annotations are outside EEG payload for every method. Raw selected float32 requires 512 bytes/s/channel. Balanced accuracy averages recall across classes; chance is 25 percent for SSVEP and 50 percent for MI/P300. Each person's score receives equal weight. CCA uses known frequency templates. CSP is a learned spatial filter; LDA is linear discriminant analysis. Alternative readers are fixed in advance, calibrated on original early data and never adapted to compression. Both P300 readers share the same low-frequency time-bin features. A float32+ZIP control must recover exact samples and preserve predictions.}
 \end{frame}
 
-% Slide 9: native vector plots and a native table from verified exports.
+% Slide 10: native vector plots and a native table from verified exports.
 \begin{frame}[t]{Storage allowance and recognition loss}
   \smalltext{Primary readers: mean loss across 20 new participants}
   {\centering
@@ -107,7 +107,7 @@
   \note{These are measured observations, not simulated curves. Lower loss is better; negative loss means a slightly higher reconstructed-data score. At the tightest cap the primary readers put SSVEP highest for every method. The alternative readers put P300 highest for uniform and mu-law, and SSVEP highest for DCT. The original baselines differ between readers, so this is sensitivity to the readout, not a contest to declare one universally better. Intervals are pointwise percentile intervals from participant-level resampling, not trial-level intervals or multiplicity-adjusted tests. Equal caps do not produce exactly equal achieved rates; those rates are exported on the site. Three primary motor-imagery baselines are weak and remain included. The four-person pilot's uniform and mu-law task ordering does not repeat in the larger primary cohort.}
 \end{frame}
 
-% Slide 10: emphasize the strongest repeated local result and the uncertainty.
+% Slide 11: emphasize the strongest repeated local result and the uncertainty.
 \begin{frame}[t]{Summary and findings}
   \begin{columns}[T,onlytextwidth]
     \column{0.43\textwidth}

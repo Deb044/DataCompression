@@ -16,6 +16,20 @@
 \definecolor{eegblue}{HTML}{4968B1}
 \definecolor{muted}{HTML}{526071}
 \setbeamertemplate{navigation symbols}{}
+% Retain the Boadilla footer's title/date/page areas without its author block.
+\setbeamertemplate{footline}{%
+  \leavevmode\hbox{%
+    \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex]{author in head/foot}
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}
+      \usebeamerfont{title in head/foot}\insertshorttitle
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}
+      \usebeamerfont{date in head/foot}\insertshortdate{}\hspace*{2em}
+      \insertframenumber{} / \inserttotalframenumber\hspace*{2ex}
+    \end{beamercolorbox}%
+  }\vskip0pt
+}
 \setbeamercolor{alerted text}{fg=eegteal}
 \setbeamerfont{frametitle}{size=\Large}
 \hypersetup{colorlinks=true,urlcolor=eegblue,linkcolor=black,citecolor=eegblue}
@@ -29,7 +43,7 @@ Indian Institute of Technology, Guwahati}
 \titlegraphic{\includegraphics[width=2cm]{images/logo/IITG.jpg}}
 
 % Keep Beamer's default 4:3 canvas and the supplied theme. The requested
-% twelve content slides replace the template's title-only and outline frames.
+% title frame precedes twelve content slides. No outline frames are inserted.
 \setbeameroption{hide notes}
 \newcommand{\credit}[1]{\vfill{\raggedright\fontsize{6.5}{8}\selectfont\color{muted}#1\par}}
 \newcommand{\smalltext}[1]{{\fontsize{8}{10}\selectfont #1\par}}
@@ -49,6 +63,9 @@ Indian Institute of Technology, Guwahati}
 \input{data/numbers}
 
 \begin{document}
+\begin{frame}
+  \titlepage
+\end{frame}
 \input{segments/1_intro}
 \input{segments/2_build}
 \input{segments/3_argue}

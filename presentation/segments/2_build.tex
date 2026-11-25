@@ -1,4 +1,4 @@
-% Slide 5: representative classical work; no cross-paper leaderboard.
+% Slide 6: representative classical work; no cross-paper leaderboard.
 \begin{frame}[t]{Lossless and lossy EEG compression}
   \textbf{Lossless: recover the original samples}\par\smallskip
   \begin{center}
@@ -34,7 +34,7 @@
   \note{Lossless predictors exploit repeated or predictable structure and encode what the predictor missed, without discarding sample values. Near-lossless coding permits bounded error. Transform-based lossy methods instead represent the waveform using coefficients and reduce their precision or discard some. Higgins studies quantization and thresholding within wavelet compression; our experiment uses a simpler DCT method, not their wavelet codec. Dao provides a survey and motivates compression ratio and waveform-distortion measures. Compression ratio is original bytes divided by stored bytes. PRD and NRMSE depend on the chosen normalization, so papers with different definitions or raw sample precision are not directly comparable. We do not put their compression ratios on a common performance leaderboard.}
 \end{frame}
 
-% Slide 6: connect task-aware literature to a fixed-reader comparison.
+% Slide 7: connect task-aware literature to a fixed-reader comparison.
 \begin{frame}[t]{Task-preserving EEG compression}
   \begin{center}
     \begin{tikzpicture}[node distance=0.5cm]

@@ -16,7 +16,7 @@ For local use, run `python -m http.server 8000` and open http://localhost:8000. 
 
 ## Presentation
 
-The twelve-slide Beamer presentation follows the supplied Boadilla/seahorse/serif template. Download the [PDF](output/presentation/eeg-compression.pdf) or the [standalone LaTeX source archive](output/presentation/eeg-compression-latex.zip). Editable source, presenter notes and measured chart inputs are in [presentation/](presentation/README.md).
+The thirteen-slide Beamer presentation (title plus twelve content slides) follows the supplied Boadilla/seahorse/serif template. Download the [PDF](output/presentation/eeg-compression.pdf) or the [standalone LaTeX source archive](output/presentation/eeg-compression-latex.zip). Editable source, presenter notes and measured chart inputs are in [presentation/](presentation/README.md).
 
 ## Reproduce
 

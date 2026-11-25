@@ -1,8 +1,9 @@
 # EEG Compression presentation
 
-Twelve content slides in the supplied Beamer Boadilla/seahorse/serif style,
-with the template's default 4:3 aspect ratio. There is no separate title or
-outline slide. Author: Debarghya Das, 240150049. Date: 25 November 2026.
+Thirteen slides: the template title slide followed by twelve content slides in
+the supplied Beamer Boadilla/seahorse/serif style and default 4:3 aspect ratio.
+No outline slide is included. Author: Debarghya Das, 240150049.
+Date: 25 November 2026. The footer omits the author and institute block.
 
 Build from this directory:
 
@@ -12,7 +13,7 @@ tectonic main.tex
 
 Alternatively, run `pdflatex main.tex` twice with Beamer, TikZ, PGFPlots and
 booktabs installed. No shell escape or bibliography run is required. The last
-slide uses a concise linked bibliography so the requested twelve-slide count
+slide uses a concise linked bibliography so the thirteen-slide count
 stays fixed; full reusable entries are in `ref.bib`.
 
 Text, diagrams, tables and the PGFPlots charts remain editable in LaTeX.

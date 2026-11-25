@@ -1,12 +1,5 @@
-% Slide 1: introduction, rather than a separate title slide.
+% Data introduction follows the template's dedicated title slide.
 \begin{frame}[t]{Why compression matters}
-  \begin{columns}[T,onlytextwidth]
-    \column{0.76\textwidth}
-      {\Large EEG Compression}\par\smallskip
-      \small Debarghya Das \enspace/\enspace 240150049
-    \column{0.19\textwidth}
-      \raggedleft\includegraphics[width=\linewidth]{images/logo/IITG.jpg}
-  \end{columns}
   \vspace{0.5cm}
   \begin{columns}[T,onlytextwidth]
     \column{0.40\textwidth}
@@ -30,26 +23,26 @@
   \note{Compression matters because recording, storage and communication all consume resources. The ITU reports 18.2 percent average annual growth in mobile broadband traffic since 2021. Its 2026 estimate is 1.7 zettabytes. These figures describe network traffic, not the entire amount of data created worldwide. LLMs and robots give intuitive examples of systems that handle multiple data types. The question becomes more delicate when the data are brain recordings.}
 \end{frame}
 
-% Slide 2: all technique families from the website.
+% Slide 3: all technique families from the website.
 \begin{frame}[t]{Compression across modalities}
   \begin{columns}[T,onlytextwidth]
     \column{0.46\textwidth}
       \textbf{Recover every value}\par\medskip
-      \textcolor{eegblue}{Huffman coding}\\
+      \textcolor{eegblue}{1. Huffman coding}\\
       \small Frequent symbols get shorter codes.\par\medskip
-      \normalsize\textcolor{eegblue}{ZIP / DEFLATE}\\
+      \normalsize\textcolor{eegblue}{2. ZIP / DEFLATE}\\
       \small Repeated strings + Huffman coding.\par\medskip
-      \normalsize\textcolor{eegblue}{PNG}\\
+      \normalsize\textcolor{eegblue}{3. PNG}\\
       \small Pixel prediction + lossless coding.
     \column{0.49\textwidth}
       \textbf{Allow some information loss}\par\medskip
-      \textcolor{eegcoral}{MP3}\\
+      \textcolor{eegcoral}{4. MP3}\\
       \small Spend bits using a hearing model.\par\smallskip
-      \normalsize\textcolor{eegcoral}{Uniform / $\mu$-law quantization}\\
+      \normalsize\textcolor{eegcoral}{5. Uniform / $\mu$-law quantization}\\
       \small Fewer amplitude levels.\par\smallskip
-      \normalsize\textcolor{eegcoral}{JPEG}\\
+      \normalsize\textcolor{eegcoral}{6. JPEG}\\
       \small Transform + quantize image detail.\par\smallskip
-      \normalsize\textcolor{eegcoral}{Thresholding / dithering}\\
+      \normalsize\textcolor{eegcoral}{7. Thresholding / dithering}\\
       \small Reduce pixel precision; retain tone differently.
   \end{columns}
   \vfill
@@ -58,7 +51,7 @@
   \note{These are the technique families in the website. Huffman coding and ZIP are general-purpose lossless ideas; PNG applies lossless coding to images. DEFLATE combines LZ77 string matching with Huffman coding. MP3 is perceptual audio coding, not an EEG compressor. Mu-law companding is invertible before quantization: the loss comes from subsequently using finitely many levels. PNG is lossless; JPEG is normally lossy. Thresholding and dithering can map grayscale to one bit per pixel; bit packing and file coding are still needed to store it compactly.}
 \end{frame}
 
-% Slide 3: a licensed illustration plus a technical acquisition diagram.
+% Slide 4: a licensed illustration plus a technical acquisition diagram.
 \begin{frame}[t]{Neural signal capture: EEG}
   \begin{columns}[c,onlytextwidth]
     \column{0.35\textwidth}
@@ -83,7 +76,7 @@
   \note{EEG is non-invasive scalp recording. Each channel measures voltage relative to another location or reference; it is not an isolated neuron's output or a direct reading of thoughts. Amplification, filtering and analog-to-digital conversion produce sampled multichannel time series. Scalp position and reference affect the measurements. Frequency content, changes across channels and responses aligned to stimuli provide different analysis features. The icon is a generic illustration, not a photograph of OpenBMI participants or equipment.}
 \end{frame}
 
-% Slide 4: explicit illustrative arithmetic, not a measured study result.
+% Slide 5: explicit illustrative arithmetic, not a measured study result.
 \begin{frame}[t]{Why EEG needs compression}
   \begin{center}
     \large Many channels $\times$ continuous recording
