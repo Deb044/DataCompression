@@ -18,13 +18,28 @@ from .run import implementation_hash, split_recording
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--replay', action='store_true', help='Refit originals and decode every stored evaluation corpus')
+    parser.add_argument('--alternative', action='store_true', help='Verify the alternative-decoder export')
     args = parser.parse_args()
-    output = ROOT/'results'/'benchmark'
+    output = ROOT/'results'/('robustness' if args.alternative else 'benchmark')
     result = json.loads((output/'summary.json').read_text())
     config = result['config']
     assert result['complete']
-    assert config == json.loads((ROOT/'benchmark'/'config.json').read_text())
+    expected_config = json.loads((ROOT/'benchmark'/'config.json').read_text())
+    decoder_factory = make_decoder
+    if args.alternative:
+        from .alternative_decoders import make_alternative_decoder
+        from .robustness import decoder_hash
+        expected_config['development_subjects'] = []
+        decoder_factory = make_alternative_decoder
+        assert result['decoder_implementation_sha256'] == decoder_hash()
+        assert result['primary_summary_sha256'] == digest(ROOT/'results'/'benchmark'/'summary.json')
+    assert config == expected_config
     assert result['implementation_sha256'] == implementation_hash()
+    expected_keys = {(s, t, m, b) for s in config['development_subjects']+config['evaluation_subjects']
+                     for t in config['tasks'] for m in config['methods']
+                     for b in config['budgets_bytes_per_second_channel']}
+    actual_keys = [(p['subject'], p['task'], p['method'], p['budget']) for p in result['points']]
+    assert set(actual_keys) == expected_keys and len(actual_keys) == len(expected_keys)
     predictions = defaultdict(list)
     with (output/'predictions.csv').open(newline='') as stream:
         for row in csv.DictReader(stream):
@@ -37,6 +52,7 @@ def main():
             assert key not in predictions
             continue
         rows = predictions[key]
+        assert [int(r['trial']) for r in rows] == list(range(len(rows)))
         truth = [int(r['truth']) for r in rows]
         before = [int(r['original']) for r in rows]
         after = [int(r['reconstructed']) for r in rows]
@@ -66,7 +82,7 @@ def main():
             for task in config['tasks']:
                 signal, events, labels, _ = load_recording(subject, task, config)
                 training, y_train, testing, truth, offsets, original, _ = split_recording(signal, events, labels, task, config)
-                decoder = make_decoder(task, config).fit(training, y_train)
+                decoder = decoder_factory(task, config).fit(training, y_train)
                 np.testing.assert_array_equal(original, read_corpus(CACHE/'encoded'/f'S{subject:02d}_{task}'/'lossless.eegpack'))
                 for point in result['points']:
                     if point['subject']!=subject or point['task']!=task or not point['feasible']:
