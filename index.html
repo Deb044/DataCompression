@@ -439,12 +439,12 @@
             </p>
           </div>
         </section>
-        <section class="lesson split">
+        <section class="lesson" id="mp3-compression">
           <div>
             <span class="pill coral-pill">Lossy</span>
             <h2>MP3 encoding</h2>
           </div>
-          <div class="prose">
+          <div class="prose wide">
             <p>
               Digital sound is a sequence of measurements of a sound wave,
               called samples. MP3 aims to store that sound using fewer bits
@@ -499,6 +499,66 @@
               >. This is a brief explanation, not an MP3 encoder demonstration.
             </p>
           </div>
+        </section>
+        <section class="lesson" id="quantization">
+          <div class="section-heading">
+            <div>
+              <span class="pill coral-pill">Lossy</span>
+              <h2>Uniform &amp; μ-law quantization</h2>
+            </div>
+            <p>
+              Try fewer amplitude levels. Which parts of the signal lose detail?
+            </p>
+          </div>
+          <div class="prose wide">
+            <p>
+              Uniform quantization places equally spaced levels across a chosen
+              amplitude range. With <em>b</em> bits there are 2<sup>b</sup>
+              levels. μ-law first applies a logarithmic compander: it gives
+              relatively finer resolution near zero and coarser resolution at
+              larger magnitudes, then quantizes.
+            </p>
+          </div>
+          <div class="lab-panel">
+            <div class="controls">
+              <label for="quant-bits"
+                >Precision
+                <output id="quant-bits-value">4 bits · 16 levels</output></label
+              ><input
+                id="quant-bits"
+                type="range"
+                min="2"
+                max="10"
+                value="4"
+              /><label for="quant-method">Method</label
+              ><select id="quant-method">
+                <option value="uniform">Uniform</option>
+                <option value="mulaw">μ-law (μ = 255)</option>
+              </select>
+            </div>
+            <svg
+              id="quant-chart"
+              class="plot"
+              viewBox="0 0 1000 260"
+              role="img"
+              aria-label="Synthetic signal and its quantized reconstruction"
+            ></svg>
+            <div class="legend">
+              <span><i class="key"></i>Original synthetic signal</span
+              ><span><i class="key coral"></i>Reconstruction</span>
+            </div>
+            <p id="quant-error" class="result-callout" aria-live="polite"></p>
+            <p class="small">
+              Illustrative samples normalized to [−1, 1]. The error is computed
+              from these samples. This continuous μ-law model is not a bit-exact
+              G.711 codec and does not establish the best method for EEG.
+            </p>
+          </div>
+          <p class="source-note">
+            <a href="https://www.itu.int/rec/T-REC-G.711-198811-I/en"
+              >Voice-coding context: ITU-T G.711</a
+            >
+          </p>
         </section>
         <section class="lesson" id="image-compression">
           <p class="eyebrow">THE IMAGE MODALITY</p>
@@ -686,66 +746,6 @@
             Course connection: the image lectures introduce Floyd–Steinberg
             dithering. The default cutoff of 128 gives the usual midpoint binary
             quantizer; moving the control explores a different cutoff.
-          </p>
-        </section>
-        <section class="lesson">
-          <div class="section-heading">
-            <div>
-              <span class="pill coral-pill">Lossy</span>
-              <h2>Uniform &amp; μ-law quantization</h2>
-            </div>
-            <p>
-              Try fewer amplitude levels. Which parts of the signal lose detail?
-            </p>
-          </div>
-          <div class="prose wide">
-            <p>
-              Uniform quantization places equally spaced levels across a chosen
-              amplitude range. With <em>b</em> bits there are 2<sup>b</sup>
-              levels. μ-law first applies a logarithmic compander: it gives
-              relatively finer resolution near zero and coarser resolution at
-              larger magnitudes, then quantizes.
-            </p>
-          </div>
-          <div class="lab-panel">
-            <div class="controls">
-              <label for="quant-bits"
-                >Precision
-                <output id="quant-bits-value">4 bits · 16 levels</output></label
-              ><input
-                id="quant-bits"
-                type="range"
-                min="2"
-                max="10"
-                value="4"
-              /><label for="quant-method">Method</label
-              ><select id="quant-method">
-                <option value="uniform">Uniform</option>
-                <option value="mulaw">μ-law (μ = 255)</option>
-              </select>
-            </div>
-            <svg
-              id="quant-chart"
-              class="plot"
-              viewBox="0 0 1000 260"
-              role="img"
-              aria-label="Synthetic signal and its quantized reconstruction"
-            ></svg>
-            <div class="legend">
-              <span><i class="key"></i>Original synthetic signal</span
-              ><span><i class="key coral"></i>Reconstruction</span>
-            </div>
-            <p id="quant-error" class="result-callout" aria-live="polite"></p>
-            <p class="small">
-              Illustrative samples normalized to [−1, 1]. The error is computed
-              from these samples. This continuous μ-law model is not a bit-exact
-              G.711 codec and does not establish the best method for EEG.
-            </p>
-          </div>
-          <p class="source-note">
-            <a href="https://www.itu.int/rec/T-REC-G.711-198811-I/en"
-              >Voice-coding context: ITU-T G.711</a
-            >
           </p>
         </section>
         <div class="chapter-end">
