@@ -1554,6 +1554,13 @@
             <div id="dct-story-table"></div>
             <p id="dct-story"></p>
             <p>
+              DCT's preference for slower variations fits the information used
+              by our P300 readers, which focus on low-frequency response
+              features. That is a plausible explanation for the small P300
+              losses here. We have not isolated it as the cause, and other P300
+              analyses may need different information.
+            </p>
+            <p>
               Tables report mean loss in percentage points, with a 95%
               uncertainty interval in brackets. The intervals are estimates from
               this cohort, not guarantees about everyone who might use an EEG
@@ -1636,6 +1643,12 @@
             hardest.
           </p>
           <div id="winner-results"></div>
+          <p>
+            At the tightest allowance with uniform quantization, SSVEP has the
+            largest group-average loss, but it is the most affected task for
+            only eight of the twenty people. An average ordering is not a rule
+            that describes every participant.
+          </p>
 
           <h2>Did the four-person pilot repeat?</h2>
           <p>
@@ -1700,6 +1713,14 @@
             </div>
             <div id="robustness-results"></div>
             <p id="robustness-story"></p>
+            <p>
+              Uniform quantization gives a clear example of the change. With the
+              primary decoders, SSVEP loses 12.13 points and P300 loses 9.47.
+              With the alternatives, SSVEP loses 4.92 and P300 loses 12.30. The
+              compressed files have not changed; the way we read them has. This
+              does not make one decoder universally better: their original
+              scores differ too.
+            </p>
           </section>
 
           <h2>A similar score can hide different answers.</h2>
@@ -1714,6 +1735,32 @@
 
           <h2>What can we conclude now?</h2>
           <p id="extension-findings"></p>
+          <p>
+            SSVEP has the largest mean loss under all three primary pipelines at
+            the tightest allowance, but the uncertainty does not clearly
+            separate it from motor imagery. At this allowance, the paired intervals for their
+            differences cross zero under every method. We therefore cannot turn
+            the order of these averages into a confident general ranking.
+          </p>
+          <p>
+            The clearest repeated finding is more specific: DCT preserves our
+            P300 decisions much better than uniform quantization at the tightest
+            allowance. Its mean loss is 0.61 rather than 9.47 points with the
+            first reader, and 2.25 rather than 12.30 with the second. The
+            within-person advantage is 8.87 points [95% interval: 7.95 to 9.83]
+            and 10.05 points [9.00 to 11.20], respectively. Every new
+            participant shows that direction with both readers. Both P300
+            readers share the same low-frequency features, so this is evidence
+            about those two pipelines, not all possible P300 analyses.
+          </p>
+          <p>
+            Starting difficulty matters as well. Under uniform quantization at
+            the tightest allowance, SSVEP still scores about 81%, while motor
+            imagery scores about 61% against a 50% chance level. Losing fewer
+            points does not automatically mean that motor imagery retains more
+            useful performance. The full measurements also show how much of each
+            task's original advantage over chance remains.
+          </p>
           <p>
             Twenty new participants give a firmer view than the pilot, but this
             is still one acquisition study, one shared montage, one recording

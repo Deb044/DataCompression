@@ -201,7 +201,7 @@ export function renderExtension(
         "; ",
       )}. The individual results and second-decoder check show why an average ordering must be read together with the analysis system and its starting performance. The question is which task–decoder combinations survive these compressors, rather than which brain task is intrinsically hardest.`;
   byId("verification-story").textContent =
-    `All ${verification.measured_points} primary conditions, including development runs, and ${alternateVerification.measured_points} alternative-decoder conditions fit their byte caps. The lossless control recovers the selected float32 samples exactly. Independent checks recomputed metrics from exported predictions and replayed ${verification.evaluation_reconstructions + alternateVerification.evaluation_reconstructions} evaluation reconstructions through their frozen decoders. No clinical, real-time or battery-life claim is made.`;
+    `All ${verification.measured_points} primary conditions, including development runs, and ${alternateVerification.measured_points} alternative-decoder conditions fit their byte caps. The lossless control recovers the selected float32 samples exactly. Independent checks recomputed metrics from exported predictions and decoded all ${verification.evaluation_reconstructions} evaluation corpora through both decoder families (${verification.evaluation_reconstructions + alternateVerification.evaluation_reconstructions} decoder evaluations). No clinical, real-time or battery-life claim is made.`;
   renderPairedTables(primary, statistics);
   renderRobustness(primary, statistics);
   byId("robustness-budget").addEventListener("change", () =>

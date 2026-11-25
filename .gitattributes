@@ -1,4 +1,4 @@
 *.pdf binary
 # Preserve the exact bytes used in scientific provenance hashes on every OS.
-benchmark/** -text
-results/** -text
+benchmark/** -text whitespace=trailing-space,space-before-tab,cr-at-eol
+results/** -text whitespace=trailing-space,space-before-tab,cr-at-eol

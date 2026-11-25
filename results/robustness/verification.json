@@ -1,0 +1,10 @@
+{
+  "summary_sha256": "e29b35249b5befbc2fb19fc6e6f4f6f14a9d8f00ab97f3bb5ede0648f3163c36",
+  "predictions_sha256": "e5355e7e29554a57182eb8417e9f633487f372690888cbb117f163dcd6adfb02",
+  "measured_points": 720,
+  "evaluation_reconstructions": 720,
+  "prediction_rows": 206400,
+  "byte_caps_checked": true,
+  "replayed": true,
+  "bootstrap_intervals_checked": true
+}

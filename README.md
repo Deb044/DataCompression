@@ -76,6 +76,10 @@ Primary score: balanced accuracy; primary comparison: its absolute drop from the
 
 The interface flags baselines within five percentage points of chance as weak; this is a descriptive warning and does not exclude participants. Participants, especially low-baseline MI users, remain visible individually. Twenty evaluation participants from one acquisition study and two particular decoders per task do not establish a universal or clinically validated task ranking. Pointwise 95% uncertainty intervals use 10,000 percentile bootstrap resamples of whole participants with seed 321. Every condition for a person travels together, preserving paired task/method comparisons. These intervals are not multiplicity-adjusted tests. Largest-loss shares split credit over exact task ties. Individual ranges are also reported and are not uncertainty intervals. Lines between tested budgets are guides only. Method-specific ranks are descriptive, including ties, not significance tests. No superiority over optimized codecs is claimed.
 
+## First-day extension observations
+
+At 32 bytes/s/channel, SSVEP has the largest mean primary-decoder loss under all three methods, but its paired differences from motor imagery remain uncertain. The alternative decoders put P300 highest under uniform and mu-law, showing that the readout matters. DCT's smaller P300 loss repeats for all twenty people with both P300 classifiers: 0.61 versus 9.47 pp for the primary reader, and 2.25 versus 12.30 pp for the alternative. Both P300 classifiers share the same low-frequency features. See `results/benchmark/statistics.json` for intervals and `research/benchmark_audit.md` for interpretation and checks.
+
 ## Files
 
 - `benchmark/config.json`: frozen protocol and finite codec grids.
