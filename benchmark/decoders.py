@@ -37,8 +37,13 @@ class SSVEPDecoder:
         scores = []
         for trial in x[:, self.channels, :]:
             centered = trial.T - trial.T.mean(axis=0)
-            q = np.linalg.qr(centered, mode='reduced')[0]
-            scores.append([np.linalg.svd(q.T @ r, compute_uv=False)[0] for r in self.references])
+            # Quantization can produce constant or linearly dependent channels.
+            # Keep only the actual signal subspace, not arbitrary QR completion.
+            u, singular, _ = np.linalg.svd(centered, full_matrices=False)
+            rank = int(np.sum(singular > max(centered.shape)*np.finfo(float).eps*singular[0])) if singular[0] else 0
+            q = u[:, :rank]
+            scores.append([float(np.linalg.svd(q.T @ r, compute_uv=False)[0]) if rank else 0.0
+                           for r in self.references])
         return np.argmax(scores, axis=1) + 1, np.asarray(scores)
 
 

@@ -66,6 +66,8 @@ class BenchmarkTests(unittest.TestCase):
         decoder = SSVEPDecoder(CONFIG).fit(examples, np.array([4, 3, 2, 1]))
         predictions, _ = decoder.predict(examples)
         np.testing.assert_array_equal(predictions, [1, 2, 3, 4])
+        _, scores = decoder.predict(np.zeros_like(examples))
+        np.testing.assert_array_equal(scores, np.zeros((4, 4)))
 
 
 if __name__ == '__main__':
