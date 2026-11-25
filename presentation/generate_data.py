@@ -32,6 +32,10 @@ def main():
     assert primary['complete'] and alternative['complete']
     assert primary['config']['evaluation_subjects'] == list(range(7, 27))
     (HERE / 'data').mkdir(exist_ok=True)
+    # The white-background PowerPoint reads the same verified estimates as LaTeX.
+    deck_data = {family: statistics[family] for family in ['primary', 'alternative']}
+    (HERE / 'data' / 'study.json').write_text(
+        json.dumps(deck_data, indent=2) + '\n', encoding='utf-8')
 
     def estimate(family, task, method, budget):
         return next(g for g in statistics[family]['groups']
