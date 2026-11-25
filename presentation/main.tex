@@ -1,0 +1,56 @@
+\RequirePackage{fix-cm}
+\documentclass{beamer}
+\usetheme{Boadilla}
+\usecolortheme{seahorse}
+\usefonttheme{serif}
+
+\usepackage{graphicx,xcolor}
+\usepackage{amsmath,amssymb,amsfonts,booktabs}
+\usepackage{tikz,pgfplots}
+\usetikzlibrary{arrows.meta,positioning}
+\usepgfplotslibrary{groupplots,fillbetween}
+\pgfplotsset{compat=1.18}
+
+\definecolor{eegteal}{HTML}{267C72}
+\definecolor{eegcoral}{HTML}{C2603B}
+\definecolor{eegblue}{HTML}{4968B1}
+\definecolor{muted}{HTML}{526071}
+\setbeamertemplate{navigation symbols}{}
+\setbeamercolor{alerted text}{fg=eegteal}
+\setbeamerfont{frametitle}{size=\Large}
+\hypersetup{colorlinks=true,urlcolor=eegblue,linkcolor=black,citecolor=eegblue}
+
+\title[EEG Compression]{EEG Compression}
+\subtitle{Multi Modal Data Processing and Learning}
+\author[D. Das / 240150049]{\texorpdfstring{Debarghya Das\\240150049}{Debarghya Das (240150049)}}
+\institute[DSAI, IITG]{Mehta Family School of Data Science and Artificial Intelligence\\
+Indian Institute of Technology, Guwahati}
+\date{25 November 2026}
+\titlegraphic{\includegraphics[width=2cm]{images/logo/IITG.jpg}}
+
+% Keep Beamer's default 4:3 canvas and the supplied theme. The requested
+% twelve content slides replace the template's title-only and outline frames.
+\setbeameroption{hide notes}
+\newcommand{\credit}[1]{\vfill{\raggedright\fontsize{6.5}{8}\selectfont\color{muted}#1\par}}
+\newcommand{\smalltext}[1]{{\fontsize{8}{10}\selectfont #1\par}}
+\newcommand{\refentry}[3]{\textbf{#1}\\\href{#3}{#2}\par\vspace{0.6em}}
+\newcommand{\taskcurve}[3]{%
+  \addplot[name path=#3-#1-low,draw=none,forget plot]
+    table[x=budget,y=#1lo,col sep=comma]{data/#3.csv};
+  \addplot[name path=#3-#1-high,draw=none,forget plot]
+    table[x=budget,y=#1hi,col sep=comma]{data/#3.csv};
+  \addplot[#2,fill opacity=0.13,forget plot]
+    fill between[of=#3-#1-low and #3-#1-high];
+  \addplot[#2,thick,mark=*,mark size=1.2pt]
+    table[x=budget,y=#1,col sep=comma]{data/#3.csv};
+}
+\tikzset{stage/.style={draw=eegblue!65,fill=eegblue!5,align=center,
+  minimum height=0.72cm,font=\small},link/.style={-{Stealth[length=2mm]},thick,eegblue}}
+\input{data/numbers}
+
+\begin{document}
+\input{segments/1_intro}
+\input{segments/2_build}
+\input{segments/3_argue}
+\input{segments/4_conclude}
+\end{document}

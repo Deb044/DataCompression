@@ -1,0 +1,55 @@
+% Slide 11: limitations are tied to concrete next experiments.
+\begin{frame}[t]{Limitations and future work}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.46\textwidth}
+      \textbf{What limits this study?}\par\medskip
+      20 new people, one acquisition study.\par\medskip
+      One recording day; offline filtering.\par\medskip
+      Two readers per task; shared P300 features.\par\medskip
+      Simple codecs; equal caps, different actual sizes.
+    \column{0.48\textwidth}
+      \textbf{What should come next?}\par\medskip
+      More datasets and task families.\par\medskip
+      More features, readers and EEG codecs.\par\medskip
+      Match achieved storage rates more closely.\par\medskip
+      Measure streaming latency and device energy.
+  \end{columns}
+  \vspace{0.55cm}
+  \large\alert{Preserve the information needed for the intended use.}
+  \credit{The benchmark does not establish a universal task ranking or clinical safety. More data alone cannot remove decoder and feature-design differences.}
+  \note{The extension improves the sample size but still uses a fixed, nonrandom subset of one acquisition study. We have not tested a new day, real-time deployment, clinical interpretation or device power. The continuous noncausal filter can couple neighboring samples across the split despite the epoch guard. Original task difficulty differs, and weak baselines are retained. Each task has only two chosen readers. The alternative P300 reader changes the classifier but not the features, so a broader feature comparison is still needed. All codec settings were selected using waveform MSE, not task labels, but their search grids differ. Equal maximum byte caps leave different unused space. Future work should test more datasets and tasks, independently varied feature extractors, stronger EEG codecs and more closely matched achieved rates. Streaming and hardware experiments would be needed for latency or battery claims.}
+\end{frame}
+
+% Slide 12: selected linked references. Full BibTeX metadata is in ref.bib.
+\begin{frame}[t]{References}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.48\textwidth}
+      \fontsize{8}{9.5}\selectfont
+      \refentry{ITU (2026)}{Facts and Figures, p. 16.}
+        {https://www.itu.int/itu-d/reports/statistics/wp-content/uploads/sites/5/2026/11/ITUFactsAndFigures2026.pdf}
+      \refentry{Deutsch (1996)}{DEFLATE format specification. RFC 1951.}
+        {https://www.rfc-editor.org/rfc/rfc1951}
+      \refentry{Memon, Kong \& Cinkler (1999)}{Context-based lossless and near-lossless EEG compression.}
+        {https://doi.org/10.1109/4233.788586}
+      \refentry{Higgins et al. (2013)}{Wavelet coefficient quantization in EEG compression.}
+        {https://doi.org/10.1016/j.compbiomed.2013.02.011}
+      \refentry{Dao, Li \& Do (2015)}{Lossy Compression Techniques for EEG Signals.}
+        {https://doi.org/10.1109/ATC.2015.7388309}
+    \column{0.48\textwidth}
+      \fontsize{8}{9.5}\selectfont
+      \refentry{Zhang et al. (2022)}{Personalized SSVEP EEG compression. Information 13, 186.}
+        {https://doi.org/10.3390/info13040186}
+      \refentry{Strypsteen \& Bertrand (2023)}{Neural source coding for wireless brain--computer interfacing. ICASSP.}
+        {https://homes.esat.kuleuven.be/~abertran/reports/Strypsteen_ICASSP2023.pdf}
+      \refentry{Carzaniga et al. (2025)}{The Case for Cleaner Biosignals (BrainCodec). ICLR.}
+        {https://proceedings.iclr.cc/paper_files/paper/2025/file/28c9ce39a89c03f0bdd9725907d5abbc-Paper-Conference.pdf}
+      \refentry{Lee et al. (2019)}{OpenBMI: EEG dataset for three BCI paradigms. GigaScience 8, giz002.}
+        {https://doi.org/10.1093/gigascience/giz002}
+  \end{columns}
+  \vfill
+  \small\textbf{Project website, demonstrations and measured results}\par\smallskip
+  \fontsize{7.8}{9.5}\selectfont
+  \url{https://da3021-compression-lab-deb044.solidflask.chatgpt.site/}\par\medskip
+  \small\href{https://github.com/Deb044/DataCompression}{github.com/Deb044/DataCompression}
+  \note{These are selected references supporting the narrative, not an exhaustive systematic review. The full bibliography is in ref.bib. Paper-specific compression ratios are intentionally not compared because recordings, precision, metadata accounting, allowed distortion and downstream models differ. All experimental values in this presentation are from this repository's first-day extension and verified exports. The website links the full measurements, individual predictions, uncertainty intervals, protocol and implementation. Image credits: IIT Guwahati logo from its official website; generic EEG-cap icon by CIV / The Noun Project, public domain under CC0 via Wikimedia Commons.}
+\end{frame}

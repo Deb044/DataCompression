@@ -1,0 +1,58 @@
+% Slide 5: representative classical work; no cross-paper leaderboard.
+\begin{frame}[t]{Lossless and lossy EEG compression}
+  \textbf{Lossless: recover the original samples}\par\smallskip
+  \begin{center}
+    \begin{tikzpicture}[node distance=0.45cm]
+      \node[stage,text width=2.3cm] (predict) {Predict samples};
+      \node[stage,text width=2.3cm,right=of predict] (residual) {Encode residuals};
+      \node[stage,text width=2.3cm,right=of residual] (exact) {Exact recovery};
+      \draw[link] (predict)--(residual);\draw[link] (residual)--(exact);
+    \end{tikzpicture}
+  \end{center}
+  \small Memon et al. (1999): context-based lossless / near-lossless coding.
+  \vspace{0.4cm}
+
+  \normalsize\textbf{Lossy: trade precision for fewer bytes}\par\smallskip
+  \begin{center}
+    \begin{tikzpicture}[node distance=0.4cm]
+      \node[stage,text width=1.7cm] (transform) {Transform};
+      \node[stage,text width=1.7cm,right=of transform] (quantize) {Quantize};
+      \node[stage,text width=1.9cm,right=of quantize] (code) {Entropy code};
+      \node[stage,text width=1.9cm,right=of code] (recover) {Recover\\signal};
+      \draw[link] (transform)--(quantize);\draw[link] (quantize)--(code);
+      \draw[link] (code)--(recover);
+      \draw[eegcoral,very thick] (quantize.south west)--(quantize.south east);
+    \end{tikzpicture}
+  \end{center}
+  \small Higgins et al. (2013): wavelet coefficient quantization / thresholding.\par\smallskip
+  Dao et al. (2015): classical methods and storage--distortion trade-offs.\par
+  \vspace{0.25cm}
+  \small\alert{Smaller file size and smaller waveform error are different goals.}
+  \credit{\href{https://doi.org/10.1109/4233.788586}{Memon et al., 1999};
+    \href{https://doi.org/10.1016/j.compbiomed.2013.02.011}{Higgins et al., 2013};
+    \href{https://doi.org/10.1109/ATC.2015.7388309}{Dao et al., 2015}. Diagrams summarize method families, not a reproduction of any paper.}
+  \note{Lossless predictors exploit repeated or predictable structure and encode what the predictor missed, without discarding sample values. Near-lossless coding permits bounded error. Transform-based lossy methods instead represent the waveform using coefficients and reduce their precision or discard some. Higgins studies quantization and thresholding within wavelet compression; our experiment uses a simpler DCT method, not their wavelet codec. Dao provides a survey and motivates compression ratio and waveform-distortion measures. Compression ratio is original bytes divided by stored bytes. PRD and NRMSE depend on the chosen normalization, so papers with different definitions or raw sample precision are not directly comparable. We do not put their compression ratios on a common performance leaderboard.}
+\end{frame}
+
+% Slide 6: connect task-aware literature to a fixed-reader comparison.
+\begin{frame}[t]{Task-preserving EEG compression}
+  \begin{center}
+    \begin{tikzpicture}[node distance=0.5cm]
+      \node[stage,text width=2.3cm] (signal) {Reconstructed EEG};
+      \node[stage,text width=2.7cm,right=of signal] (error) {Waveform error};
+      \node[stage,text width=2.7cm,below=0.45cm of error] (task) {Task\\performance};
+      \draw[link] (signal.east)--(error.west);
+      \draw[link] (signal.south)|-(task.west);
+    \end{tikzpicture}
+  \end{center}
+  \small
+  \textbf{Zhang et al. (2022)}\quad Personalized SSVEP compression; test recognition.\par\medskip
+  \textbf{Strypsteen \& Bertrand (2023)}\quad Jointly learn coding and inference.\par\medskip
+  \textbf{Carzaniga et al. (2025)}\quad Learned codec; reconstruction and task evaluations.\par
+  \vspace{0.35cm}
+  \normalsize\alert{Our comparison keeps the reader fixed after calibration.}
+  \credit{\href{https://doi.org/10.3390/info13040186}{Zhang et al., Information 2022};
+    \href{https://homes.esat.kuleuven.be/~abertran/reports/Strypsteen_ICASSP2023.pdf}{Strypsteen \& Bertrand, ICASSP 2023};
+    \href{https://proceedings.iclr.cc/paper_files/paper/2025/file/28c9ce39a89c03f0bdd9725907d5abbc-Paper-Conference.pdf}{Carzaniga et al., ICLR 2025}.}
+  \note{Preserving downstream recognition after compression is established work, not a novelty claim for this project. Zhang and colleagues combine DCT, personalized neural reconstruction and nonuniform quantization, and evaluate SSVEP recognition after reconstruction. Strypsteen and Bertrand jointly optimize source coding and an inference network for motor execution in an emulated wireless sensor network; this is not the same motor-imagery task used here. BrainCodec studies learned EEG/iEEG compression, including downstream and expert evaluations. Our narrower question asks how several simple compressors affect three tasks when the existing original-data reader remains frozen. We do not reproduce these neural codecs or claim to outperform them.}
+\end{frame}

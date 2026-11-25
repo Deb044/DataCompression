@@ -14,6 +14,10 @@ Public site: https://da3021-compression-lab-deb044.solidflask.chatgpt.site/
 
 For local use, run `python -m http.server 8000` and open http://localhost:8000. The default Contents page links to Overview, Techniques, EEG, Literature and Experiments. There is no frontend build or runtime package dependency. Synthetic demonstrations are labeled separately from measured EEG results.
 
+## Presentation
+
+The twelve-slide Beamer presentation follows the supplied Boadilla/seahorse/serif template. Download the [PDF](output/presentation/eeg-compression.pdf) or the [standalone LaTeX source archive](output/presentation/eeg-compression-latex.zip). Editable source, presenter notes and measured chart inputs are in [presentation/](presentation/README.md).
+
 ## Reproduce
 
 Python, a CPU and 16 GB RAM are sufficient for the implemented sequential loader. Downloads and the full run can take substantial time depending on the connection and CPU; there is no GPU requirement.

@@ -1,0 +1,138 @@
+% Slide 7: central question and the distinct information each task uses.
+\begin{frame}[t]{Our central question}
+  \vspace{0.35cm}
+  \begin{center}
+    \Large At the same storage allowance,\\[0.15cm]
+    \alert{which EEG tasks lose performance fastest?}
+  \end{center}
+  \vspace{0.6cm}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.31\textwidth}\centering
+      \textcolor{eegteal}{\Large SSVEP}\par\medskip
+      Which flickering target?\par\smallskip
+      \small A sustained rhythm
+    \column{0.32\textwidth}\centering
+      \textcolor{eegcoral}{\Large Motor imagery}\par\medskip
+      Left or right hand?\par\smallskip
+      \small A spatial power pattern
+    \column{0.30\textwidth}\centering
+      \textcolor{eegblue}{\Large P300}\par\medskip
+      Target or non-target?\par\smallskip
+      \small A brief event response
+  \end{columns}
+  \vfill
+  \begin{center}\small Does the answer survive a change of compressor or reader?\end{center}
+  \credit{Motivation: different tasks use different features. This is a controlled comparison of task--reader pipelines, not a proposed universal ranking.}
+  \note{We chose three broad paradigms rather than several variants of one task. SSVEP identifies one of four visual flicker targets. Motor imagery distinguishes imagined left/right hand movements. P300 detects a target flash using the brief response after a stimulus; this is single-flash detection, not complete spelling accuracy. Different features may react differently to quantization or removal of frequency components. Comparing the same people and stored montage reduces confounds, while baseline difficulty and decoder design still differ.}
+\end{frame}
+
+% Slide 8: the full setup, with technical details in presenter notes.
+\begin{frame}[t]{Experimental setup}
+  \small\textbf{20 new people}\quad 3 tasks\quad 12 channels\quad 128 samples/s
+  \vspace{0.25cm}
+  \begin{center}
+    \begin{tikzpicture}
+      \fill[eegteal!16] (0,0) rectangle (5.7,0.55);
+      \fill[eegcoral!16] (5.95,0) rectangle (9.6,0.55);
+      \node[font=\small] at (2.85,0.275) {Earlier 60\%: calibrate reader};
+      \node[font=\small] at (7.775,0.275) {Later events: test};
+      \node[font=\tiny,muted,below] at (5.825,0) {2 s / side};
+    \end{tikzpicture}
+  \end{center}
+  \vspace{0.1cm}
+  \begin{center}
+    \begin{tikzpicture}[node distance=0.35cm]
+      \node[stage,text width=2.0cm] (input) {Test EEG};
+      \node[stage,text width=2.0cm,right=of input] (codec) {Compress};
+      \node[stage,text width=2.0cm,right=of codec] (restore) {Reconstruct};
+      \node[stage,text width=2.0cm,right=of restore] (reader) {Frozen reader};
+      \draw[link] (input)--(codec);\draw[link] (codec)--(restore);\draw[link] (restore)--(reader);
+    \end{tikzpicture}
+  \end{center}
+  \smalltext{Uniform, $\mu$-law or DCT; each followed by bit packing and ZIP.}
+  \medskip
+  \centering
+  {\fontsize{8.5}{10.5}\selectfont
+  \begin{tabular}{@{}lll r@{}}
+    \toprule
+    Task & Primary reader & Alternative & Original BA\\
+    \midrule
+    SSVEP & CCA & Spectral peaks & \BaselineSSVEP\%\\
+    Motor imagery & CSP + LDA & Band power + LDA & \BaselineMI\%\\
+    P300 & Time bins + LDA & Logistic regression & \BaselineERP\%\\
+    \bottomrule
+  \end{tabular}}\par
+  \medskip
+  \smalltext{Caps: \textbf{32 / 64 / 128 / 256 B/s/channel}, including reconstruction metadata.}
+  \smalltext{Score loss = original $-$ reconstructed balanced accuracy (percentage points).}
+  \credit{\href{https://doi.org/10.1093/gigascience/giz002}{OpenBMI, Lee et al. (2019)}; first recording day only. Pilot: 4 people, kept separate; development: 2, excluded from means.}
+  \note{Evaluation subjects are S07--S26, selected in advance. S03--S06 remain the separate pilot and S01--S02 are development checks. The input has the same twelve channels for every task. Continuous recordings are resampled to 128 Hz and filtered from 0.5 to 40 Hz. The split is chronological at 60 percent of events. Training epochs finish two seconds before the boundary, and test epochs begin two seconds after it. Filtering is offline and noncausal, which remains a limitation. SSVEP and MI epochs last four seconds; P300 epochs last one second. Overlapping P300 test epochs share a single encoded continuous recording. One-second codec frames choose the least waveform MSE among a predefined candidate grid that fits each cap, without labels or classifier outcomes. Models and event annotations are outside EEG payload for every method. Raw selected float32 requires 512 bytes/s/channel. Balanced accuracy averages recall across classes; chance is 25 percent for SSVEP and 50 percent for MI/P300. Each person's score receives equal weight. CCA uses known frequency templates. CSP is a learned spatial filter; LDA is linear discriminant analysis. Alternative readers are fixed in advance, calibrated on original early data and never adapted to compression. Both P300 readers share the same low-frequency time-bin features. A float32+ZIP control must recover exact samples and preserve predictions.}
+\end{frame}
+
+% Slide 9: native vector plots and a native table from verified exports.
+\begin{frame}[t]{Storage allowance and recognition loss}
+  \smalltext{Primary readers: mean loss across 20 new participants}
+  {\centering
+    \begin{tikzpicture}
+      \begin{groupplot}[
+        group style={group size=3 by 1,horizontal sep=0.33cm},
+        scale only axis,width=3.0cm,height=2.15cm,
+        xmin=29,xmax=282,xmode=log,log basis x=2,
+        xtick={32,64,128,256},xticklabels={32,64,128,256},
+        ymin=-3,ymax=22,ytick={0,10,20},
+        tick label style={font=\fontsize{7}{8}\selectfont},
+        title style={font=\small},label style={font=\scriptsize},
+        grid=major,grid style={gray!15},axis line style={gray!45},
+        legend style={draw=none,font=\scriptsize,legend columns=3}]
+        \nextgroupplot[title={Uniform + ZIP},ylabel={Loss (pp)}]
+          \taskcurve{SSVEP}{eegteal}{uniform}
+          \taskcurve{MI}{eegcoral}{uniform}
+          \taskcurve{ERP}{eegblue}{uniform}
+        \nextgroupplot[title={$\mu$-law + ZIP},yticklabels=\empty]
+          \taskcurve{SSVEP}{eegteal}{mulaw}
+          \taskcurve{MI}{eegcoral}{mulaw}
+          \taskcurve{ERP}{eegblue}{mulaw}
+        \nextgroupplot[title={DCT + ZIP},yticklabels=\empty]
+          \taskcurve{SSVEP}{eegteal}{dct}
+          \taskcurve{MI}{eegcoral}{dct}
+          \taskcurve{ERP}{eegblue}{dct}
+      \end{groupplot}
+    \end{tikzpicture}\par
+    \smalltext{\textcolor{eegteal}{SSVEP}\qquad\textcolor{eegcoral}{Motor imagery}\qquad\textcolor{eegblue}{P300}}
+    \smalltext{Storage allowance (B/s/channel); shading: pointwise 95\% intervals.}
+  }\smallskip
+  \smalltext{At 32 B/s/channel: \textcolor{eegteal}{primary} / \textcolor{eegcoral}{alternative} reader loss (pp)}
+  {\centering\input{data/tight-table.tex}\par}
+  \credit{Measured exports: results/benchmark and results/robustness. Bootstrap: 10,000 resamples of whole participants, all conditions paired. Lines join tested settings only.}
+  \note{These are measured observations, not simulated curves. Lower loss is better; negative loss means a slightly higher reconstructed-data score. At the tightest cap the primary readers put SSVEP highest for every method. The alternative readers put P300 highest for uniform and mu-law, and SSVEP highest for DCT. The original baselines differ between readers, so this is sensitivity to the readout, not a contest to declare one universally better. Intervals are pointwise percentile intervals from participant-level resampling, not trial-level intervals or multiplicity-adjusted tests. Equal caps do not produce exactly equal achieved rates; those rates are exported on the site. Three primary motor-imagery baselines are weak and remain included. The four-person pilot's uniform and mu-law task ordering does not repeat in the larger primary cohort.}
+\end{frame}
+
+% Slide 10: emphasize the strongest repeated local result and the uncertainty.
+\begin{frame}[t]{Summary and findings}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.43\textwidth}
+      \textbf{The reader changes the ordering.}\par\medskip
+      Primary SSVEP vs MI:\\no clear separation at the tightest cap.\par\medskip
+      \alert{P300 + DCT repeats across both readers and all 20 people.}
+    \column{0.54\textwidth}
+      \smalltext{P300: fewer points lost with DCT than uniform}
+      \begin{tikzpicture}
+        \begin{axis}[width=5.9cm,height=3.6cm,
+          xmin=0,xmax=12.5,ymin=-0.6,ymax=1.6,
+          ytick={0,1},yticklabels={Alternative,Primary},
+          xtick={0,5,10},xlabel={Advantage (pp)},
+          tick label style={font=\scriptsize},label style={font=\scriptsize},
+          axis line style={gray!40},xmajorgrids,grid style={gray!15}]
+          \addplot[only marks,mark=*,mark size=2.4pt,color=eegteal,
+            error bars/.cd,x dir=both,x explicit]
+            table[x=mean,y=row,x error minus=minus,x error plus=plus,col sep=comma]{data/p300-advantage.csv};
+        \end{axis}
+      \end{tikzpicture}
+      \smalltext{\PrimaryAdvantage\ pp / \AlternativeAdvantage\ pp\par
+        Paired means; 95\% intervals.}
+  \end{columns}
+  \vspace{0.4cm}
+  \small\textbf{A close waveform, a similar score and identical decisions are different promises.}
+  \credit{32 B/s/channel. Both P300 readers use the same low-frequency features. These results describe the tested pipelines, not an intrinsic or clinical ranking of EEG tasks.}
+  \note{At 32 bytes/s/channel, primary mean losses are 12.13/9.22/9.47 pp for uniform, 12.95/10.91/9.60 for mu-law, and 8.82/4.10/0.61 for DCT, ordered SSVEP/MI/P300. All primary SSVEP-minus-MI paired intervals cross zero at this cap. SSVEP is the largest-loss task for only eight of twenty people under uniform, despite its largest group mean. Changing readers changes the task ordering. The strongest repeated local result is P300's DCT advantage over uniform: 8.87 pp with interval 7.95--9.83 for the primary reader, and 10.05 pp with interval 9.00--11.20 for the alternative. Every new participant shows that direction. Both P300 readers use the same low-frequency features, so this does not test all P300 analysis methods. P300 DCT changes about 5.9 percent of primary predictions despite only 0.61 pp mean score loss; correct-to-incorrect and incorrect-to-correct changes can partly cancel. Baseline difficulty matters: primary SSVEP still scores about 81 percent under tight-cap uniform while MI is about 61 percent against a 50 percent chance level.}
+\end{frame}
