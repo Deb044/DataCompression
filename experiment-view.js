@@ -1,5 +1,11 @@
 // Display recorded exports only. No simulated research metrics.
 import { makeTable } from "./table.js";
+import {
+  interval,
+  readResults,
+  renderExtension,
+  renderPairedTables,
+} from "./extension-view.js?v=openbmi-extension-1";
 const byId = (id) => document.getElementById(id);
 const tasks = { SSVEP: "SSVEP", MI: "Motor imagery", ERP: "P300 detection" };
 const methods = {
@@ -119,7 +125,7 @@ function curves(groups, config) {
   return chart;
 }
 
-function baselines(data) {
+function baselines(data, statistics) {
   const rows = data.config.tasks.map((task) => {
     const subjects = data.baselines.filter(
       (b) => b.task === task && b.split === "evaluation",
@@ -139,24 +145,41 @@ function baselines(data) {
   });
   byId("baseline-results").replaceChildren(
     makeTable(
-      ["Application", "Original balanced accuracy", "Chance"],
-      rows.map((row) => row.slice(0, 3)),
+      [
+        "Application",
+        "Original balanced accuracy",
+        "95% mean interval",
+        "Chance",
+      ],
+      rows.map((row, index) => [
+        row[0],
+        row[1],
+        statistics.primary.baselines
+          .find((g) => g.task === data.config.tasks[index])
+          .ci95.map(percent)
+          .join(" to "),
+        row[2],
+      ]),
     ),
   );
   byId("baseline-detail-results").replaceChildren(
     makeTable(
-      [
-        "Application",
-        "Original balanced accuracy",
-        "Chance",
-        "Participant baselines",
-      ],
-      rows,
+      ["Participant", ...data.config.tasks.map((t) => tasks[t])],
+      data.config.evaluation_subjects.map((subject) => [
+        `S${String(subject).padStart(2, "0")}`,
+        ...data.config.tasks.map((task) => {
+          const baseline = data.baselines.find(
+            (b) => b.subject === subject && b.task === task,
+          );
+          const chance = task === "SSVEP" ? 0.25 : 0.5;
+          return `${percent(baseline.balanced_accuracy)}${baseline.balanced_accuracy <= chance + 0.05 ? " (weak baseline)" : ""}`;
+        }),
+      ]),
     ),
   );
 }
 
-function renderStoryTables(data) {
+function renderStoryTables(data, statistics) {
   for (const method of data.config.methods) {
     const rows = data.config.budgets_bytes_per_second_channel.map((budget) => [
       `${budget} bytes/s/channel`,
@@ -164,9 +187,10 @@ function renderStoryTables(data) {
         const group = data.groups.find(
           (g) => g.task === task && g.method === method && g.budget === budget,
         );
-        return group?.complete
-          ? loss(group.balanced_accuracy_drop)
-          : "Unavailable";
+        const estimate = statistics.primary.groups.find(
+          (g) => g.task === task && g.method === method && g.budget === budget,
+        );
+        return group?.complete ? interval(estimate) : "Unavailable";
       }),
     ]);
     byId(`${method}-story-table`).replaceChildren(
@@ -248,7 +272,7 @@ function renderRanking(data) {
         return `${methods[method]}: ${tied.map((g) => tasks[g.task]).join(" / ")}${tied.length > 1 ? " tied" : " had the largest mean loss"} (${loss(max)})`;
       })
       .join(". ") +
-    ". These are descriptive orders in four evaluation participants, not a statistically established general ranking.";
+    `. These are descriptive mean orders in ${data.config.evaluation_subjects.length} new participants. The paired intervals below show uncertainty in task differences.`;
   byId("ranking-results").replaceChildren(
     makeTable(
       [
@@ -288,24 +312,53 @@ function renderRanking(data) {
 
 export async function loadExperimentResults() {
   try {
-    const response = await fetch("results/benchmark/summary.json");
-    if (!response.ok)
-      throw new Error("The benchmark exports are not available yet.");
-    const data = await response.json();
-    if (!data.complete)
+    const [
+      data,
+      alternative,
+      statistics,
+      pilot,
+      verification,
+      alternateVerification,
+    ] = await Promise.all(
+      [
+        "results/benchmark/summary.json",
+        "results/robustness/summary.json",
+        "results/benchmark/statistics.json",
+        "results/pilot/summary.json",
+        "results/benchmark/verification.json",
+        "results/robustness/verification.json",
+      ].map(readResults),
+    );
+    if (!data.complete || !alternative.complete)
       throw new Error(
         "The benchmark is still incomplete. No final cross-task ranking is shown.",
       );
-    baselines(data);
-    renderStoryTables(data);
+    if (!verification.replayed || !alternateVerification.replayed)
+      throw new Error("Full reconstruction checks have not finished.");
+    if (
+      JSON.stringify(data.config.evaluation_subjects) !==
+      JSON.stringify(statistics.participants)
+    )
+      throw new Error("The uncertainty export belongs to another cohort.");
+    baselines(data, statistics);
+    renderStoryTables(data, statistics);
     renderTask(data);
     renderRanking(data);
-    byId("benchmark-method").addEventListener("change", () => renderTask(data));
-    byId("benchmark-budget").addEventListener("change", () =>
-      renderRanking(data),
+    renderExtension(
+      data,
+      alternative,
+      statistics,
+      pilot,
+      verification,
+      alternateVerification,
     );
+    byId("benchmark-method").addEventListener("change", () => renderTask(data));
+    byId("benchmark-budget").addEventListener("change", () => {
+      renderRanking(data);
+      renderPairedTables(data, statistics);
+    });
     byId("experiment-status").textContent =
-      `These are measured results from ${data.config.evaluation_subjects.length} evaluation participants. Each person has equal weight in the averages; the two development participants are not included.`;
+      `Measured first-day extension: ${data.config.evaluation_subjects.length} new evaluation participants, three tasks, three compression methods and four allowances. Each person has equal weight. The four pilot participants and two development participants are excluded from these averages.`;
   } catch (error) {
     byId("experiment-status").textContent =
       `${error.message} The protocol and implementation are available in the repository; no placeholder results are displayed.`;

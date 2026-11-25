@@ -9,8 +9,8 @@
       content="EEG compression: interactive foundations, a literature review and controlled experiments."
     />
     <title>EEG Compresion</title>
-    <link rel="stylesheet" href="styles.css?v=openbmi-story-1" />
-    <script type="module" src="app.js?v=openbmi-story-1"></script>
+    <link rel="stylesheet" href="styles.css?v=openbmi-extension-1" />
+    <script type="module" src="app.js?v=openbmi-extension-1"></script>
   </head>
   <body>
     <a class="skip" href="#main">Skip to content</a>
@@ -1254,14 +1254,14 @@
             change from the original baseline let us inspect the
             storage–performance trade-off.
           </p>
-          <h3>Experiment 2: Does the ranking depend on the compressor?</h3>
+          <h3>Experiment 2: Does the decoder change the story?</h3>
           <p>
-            At a fixed budget, we compare the performance loss across all three
-            applications and compression pipelines. If the order changes, a task
-            cannot simply be called compression-resistant or
-            compression-sensitive: the method matters too. Participant-level
-            results reveal whether an average ordering is consistent or driven
-            by one recording.
+            We repeat the analysis with another lightweight decoder for each
+            task, using the exact same compressed recordings. This checks
+            whether a finding survives a different way of reading the signal.
+            The main study evaluates 20 new participants, keeps the four-person
+            pilot separate, and shows individual changes with participant-level
+            uncertainty intervals. Only the first recording day is used.
           </p>
           <p>
             This is a small controlled benchmark, not an established universal
@@ -1294,8 +1294,8 @@
           <p class="intro">
             Can we shrink a brain recording without changing the answer we get
             from it? We tried three kinds of EEG tasks and three ways of
-            compressing them. The interesting part is that the task which
-            suffered most changed with the method.
+            compressing them. We then checked whether the findings repeated in
+            more people and with different decision systems.
           </p>
         </section>
         <div class="reading-section experiment-story">
@@ -1344,9 +1344,21 @@
             We used existing recordings from the
             <a href="https://doi.org/10.1093/gigascience/giz002"
               >OpenBMI dataset</a
-            >. The same six participants completed all three tasks using the
-            same recording setup. Two participants were used for development
-            checks; the results below come from the other four.
+            >. We began with two development participants and a four-person
+            pilot. We then fixed the methods and selected the next
+            <strong>20 new participants, S07–S26</strong>, before measuring
+            their results. Everyone completed all three tasks using the same
+            recording setup. All recordings here come from the first recording
+            day.
+          </p>
+          <p>
+            The twenty-person extension is the main result below. The original
+            four remain a separate pilot, rather than being mixed into the new
+            average. We did not choose people because their recordings gave good
+            scores. The
+            <a href="benchmark/extension_protocol.md">extension protocol</a> and
+            <a href="results/pilot/summary.json">original pilot results</a>
+            are available alongside the new measurements.
           </p>
           <p>
             For each person, we used an earlier part of the original recording
@@ -1452,22 +1464,17 @@
 
           <h2>First check how well the original recordings work.</h2>
           <p>
-            We use <strong>balanced accuracy</strong>: calculate the recognition
-            score separately for each class, then give those scores equal
-            weight. This matters for P300 because non-target flashes are more
-            common. Repeatedly guessing “non-target” should not produce a
-            misleadingly impressive score.
+            We use <strong>balanced accuracy</strong>: score each class
+            separately, then give the classes equal weight. For P300, non-target
+            flashes are much more common. Always guessing “non-target” should
+            not earn an impressive score. Chance is 25% for the four flickering
+            targets and 50% for the two-choice tasks.
           </p>
           <div id="experiment-status" class="note" role="status">
-            Loading the measured experiment results…
+            Loading measured results…
           </div>
           <div id="baseline-results"></div>
-          <p>
-            The starting points are different. SSVEP begins near 89%, while
-            motor imagery begins near 62% against a 50% chance level. A small
-            change therefore need not have the same practical importance in both
-            tasks. We keep these baselines visible throughout the comparison.
-          </p>
+          <p id="baseline-story"></p>
           <details>
             <summary>See each participant's starting score</summary>
             <div id="baseline-detail-results"></div>
@@ -1477,133 +1484,87 @@
             <p class="eyebrow">EXPERIMENT 1</p>
             <h2>What happens as the storage box gets smaller?</h2>
             <p>
-              We measure the difference between the original and compressed
-              scores. Falling from 80% to 75% is a loss of
+              Falling from 80% to 75% is a loss of
               <strong>five percentage points</strong>, written as 5 pp. Lower
-              loss is better. A negative loss means the compressed recording
-              produced a slightly better score.
+              loss is better. Below zero means the compressed recording gave a
+              slightly better score; it does not by itself prove that
+              compression improves recognition.
             </p>
             <p>
-              In every plot, the left side is the tightest allowance and the
-              right side is the most generous. The lines show the four-person
-              average; they connect measured settings and do not represent extra
-              experiments. All three plots use the same vertical scale.
+              Each line below is the average across the 20 new participants. The
+              left side is the tightest allowance. The shaded bands show
+              uncertainty in the average, estimated by repeatedly resampling
+              people. They are not the range containing 95% of individual
+              participants. All three plots share the same vertical scale. Lines
+              only connect the four settings we actually measured.
             </p>
 
-            <h3>
-              Rounding evenly: all three tasks struggle at the tightest setting.
-            </h3>
+            <h3>Rounding samples evenly: uniform quantization</h3>
             <figure class="article-figure">
               <a href="results/benchmark/story_uniform.png"
                 ><img
                   src="results/benchmark/story_uniform.png"
                   width="1440"
-                  height="848"
+                  height="896"
                   loading="lazy"
-                  alt="Uniform quantization: all three tasks lose about eight to nine and a half percentage points at the smallest budget, with smaller losses at larger budgets"
+                  alt="Uniform quantization: mean task-score losses and participant-bootstrap uncertainty at four storage allowances"
               /></a>
               <figcaption>
-                Uniform quantization + ZIP. Lower lines mean less performance
-                lost. Open the plot for a larger view.
+                Uniform quantization + ZIP. Lower lines mean less score lost.
+                Open any plot for a larger view.
               </figcaption>
             </figure>
             <div id="uniform-story-table"></div>
-            <p>
-              At 32 bytes/s/channel, the losses are fairly close: 8.48 pp for
-              SSVEP, 9.48 pp for motor imagery and 8.92 pp for P300. Motor
-              imagery falls from 62.41% to 52.94%, only a little above chance.
-              SSVEP loses a similar number of points but still scores 80.47%.
-            </p>
-            <p>
-              Giving the file more room helps. At the 64-byte allowance, P300 is
-              already close to its original score, while the other two tasks
-              still lose several points. At 256 bytes, the losses are zero or
-              tiny.
-            </p>
+            <p id="uniform-story"></p>
 
-            <h3>
-              Changing the precision: μ-law helps some tasks more than others.
-            </h3>
+            <h3>Changing where precision goes: μ-law quantization</h3>
             <figure class="article-figure">
               <a href="results/benchmark/story_mulaw.png"
                 ><img
                   src="results/benchmark/story_mulaw.png"
                   width="1440"
-                  height="848"
+                  height="896"
                   loading="lazy"
-                  alt="Mu-law quantization: P300 has the largest mean loss at the smallest budget, while SSVEP and motor imagery lose less"
+                  alt="Mu-law quantization: mean task-score losses and participant-bootstrap uncertainty"
               /></a>
               <figcaption>
-                μ-law quantization + ZIP. Values below zero are small
-                improvements over the original score.
+                μ-law quantization + ZIP. Precision is finer near zero and
+                coarser at larger amplitudes.
               </figcaption>
             </figure>
             <div id="mulaw-story-table"></div>
-            <p>
-              The tightest setting now hurts P300 most: it loses 9.18 pp, while
-              SSVEP loses 5.17 pp and motor imagery loses 3.30 pp. The
-              application with the largest loss has changed, even though the
-              people and storage allowance are the same.
-            </p>
-            <p>
-              At 128 bytes, motor imagery and P300 improve slightly over their
-              original scores. This does not establish that compression improves
-              EEG analysis. It can change which examples are right or wrong, and
-              this is a small cohort. Noise reduction is another possible
-              explanation, but we have not tested it separately.
-            </p>
+            <p id="mulaw-story"></p>
 
-            <h3>
-              Keeping coefficients: DCT preserves P300 particularly well here.
-            </h3>
+            <h3>Keeping slower variations: DCT-based compression</h3>
             <figure class="article-figure">
               <a href="results/benchmark/story_dct.png"
                 ><img
                   src="results/benchmark/story_dct.png"
                   width="1440"
-                  height="848"
+                  height="896"
                   loading="lazy"
-                  alt="DCT compression: P300 stays close to its original score even at the smallest budget; SSVEP and motor imagery show larger losses"
+                  alt="DCT compression: task-score losses and participant-bootstrap uncertainty"
               /></a>
               <figcaption>
-                DCT-based compression + ZIP. The near-flat P300 line means its
-                average score changes very little.
+                DCT prefix retention, coefficient quantization and ZIP. This is
+                a simple transform compressor, not an optimized EEG codec.
               </figcaption>
             </figure>
             <div id="dct-story-table"></div>
+            <p id="dct-story"></p>
             <p>
-              This is the clearest contrast. At the 32-byte allowance, P300
-              loses just 0.10 pp with DCT, compared with 8.92 pp for uniform
-              quantization and 9.18 pp for μ-law. SSVEP now has the largest mean
-              loss, at 4.57 pp.
+              Tables report mean loss in percentage points, with a 95%
+              uncertainty interval in brackets. The intervals are estimates from
+              this cohort, not guarantees about everyone who might use an EEG
+              system.
             </p>
-            <p>
-              A possible explanation is that retaining slower DCT components
-              fits well with our P300 decoder, which also focuses on
-              low-frequency response information. That is an interpretation of
-              this particular pipeline, not proof that P300 is always easy to
-              compress.
-            </p>
-          </section>
 
-          <section id="compressor-experiment" class="story-experiment">
-            <p class="eyebrow">EXPERIMENT 2</p>
-            <h2>So, is there one hardest task?</h2>
+            <h3>Is there one hardest task?</h3>
             <p>
-              We now look across the compression methods at a fixed allowance.
-              This is a second view of the same measurements, not a new
-              collection of recordings. If one task were consistently hardest to
-              preserve, we would expect it to show the largest losses across
-              methods.
-            </p>
-            <p>
-              Start with 32 bytes/s/channel below. Motor imagery has the largest
-              mean loss under uniform quantization, P300 under μ-law, and SSVEP
-              under DCT.
-              <strong
-                >There is no single hardest task in this comparison.</strong
-              >
-              Change the allowance to see how the order changes.
+              Choose an allowance to compare all three methods. A larger loss
+              means more points lost from that task's own original score. Tiny
+              differences around zero should not be turned into a meaningful
+              ranking.
             </p>
             <div class="controls">
               <label for="benchmark-budget"
@@ -1621,71 +1582,160 @@
               <a href="results/benchmark/ranking.png"
                 ><img
                   src="results/benchmark/ranking.png"
-                  width="2040"
-                  height="620"
                   loading="lazy"
-                  alt="Four comparison grids showing mean task-score loss across the three compression methods at each storage allowance"
+                  width="2400"
+                  height="640"
+                  alt="Mean losses for the three tasks and three methods at all four storage allowances"
               /></a>
               <figcaption>
-                All four allowances together. Red means a score decrease; blue
-                means an increase. Numbers are percentage-point losses. Open the
-                image to read the full-size matrix. Tiny differences at generous
-                allowances should not be treated as a meaningful task ranking.
+                Red means a score decrease; blue means an increase. Numbers are
+                percentage-point losses for the 20-person extension.
               </figcaption>
             </figure>
+            <details>
+              <summary>Compare task differences directly</summary>
+              <p>
+                These intervals compare tasks within the same people. For
+                example, “SSVEP minus motor imagery” is positive when SSVEP
+                loses more points. If its interval crosses zero, this comparison
+                does not clearly separate the average losses. These are
+                pointwise intervals across many comparisons, without a
+                multiple-comparison correction.
+              </p>
+              <div id="paired-results"></div>
+            </details>
+          </section>
+
+          <h2>Does the average describe every person?</h2>
+          <p>
+            A group average can hide large differences. In the plot below, every
+            colored dot represents one person at the tightest allowance. Black
+            diamonds show the averages. A task can have the largest average loss
+            without being the most affected task for every participant.
+          </p>
+          <figure class="article-figure">
+            <a href="results/benchmark/participants.png"
+              ><img
+                src="results/benchmark/participants.png"
+                loading="lazy"
+                width="2400"
+                height="864"
+                alt="Individual participant score losses at 32 bytes per second per channel, with group means"
+            /></a>
+            <figcaption>
+              Horizontal offsets separate overlapping dots. They have no
+              numerical meaning. A negative loss is an improvement over that
+              person's original score.
+            </figcaption>
+          </figure>
+          <p>
+            The table follows the allowance selected above. It counts how often
+            each task had the largest loss for a person. Exact ties split the
+            credit equally; when all tasks have zero loss, none is meaningfully
+            hardest.
+          </p>
+          <div id="winner-results"></div>
+
+          <h2>Did the four-person pilot repeat?</h2>
+          <p>
+            We had already seen the pilot before planning the extension. That
+            makes it a useful source of questions, but not independent
+            confirmation of its own findings. This table keeps it separate from
+            the new people. Both columns use the primary decoders and the
+            tightest allowance.
+          </p>
+          <div id="replication-results"></div>
+          <p id="replication-story"></p>
+
+          <section id="compressor-experiment" class="story-experiment">
+            <p class="eyebrow">EXPERIMENT 2</p>
+            <h2>Would another decision system tell a different story?</h2>
+            <p>
+              So far, each task has had one decoder. We now change that decoder
+              while keeping the people and the exact saved compressed recordings
+              fixed. This asks whether our conclusions depend on how we read the
+              signal.
+            </p>
+            <p>
+              For SSVEP, the alternative looks for spectral peaks at the flicker
+              frequencies instead of using CCA. For motor imagery, it uses
+              channel power in two frequency bands instead of learning CSP
+              spatial filters. For P300, it keeps the same response features but
+              replaces LDA with logistic regression. These are fixed lightweight
+              alternatives, not a search for the best-performing model.
+            </p>
+            <p>
+              Each decoder is calibrated on original early data and stays fixed
+              during compression. Its loss is measured against
+              <em>its own</em> original score. Different starting scores still
+              matter.
+            </p>
+            <figure class="article-figure">
+              <a href="results/benchmark/decoder_check.png"
+                ><img
+                  src="results/benchmark/decoder_check.png"
+                  loading="lazy"
+                  width="2400"
+                  height="864"
+                  alt="Primary and alternative decoder losses at the tightest allowance, with uncertainty intervals"
+              /></a>
+              <figcaption>
+                The same 20 people and compressed files, two decoders per task.
+                Bars show mean loss at 32 bytes/s/channel; error bars are
+                pointwise 95% participant-bootstrap intervals.
+              </figcaption>
+            </figure>
+            <div class="controls">
+              <label for="robustness-budget"
+                >Decoder-check allowance, bytes/s/channel</label
+              >
+              <select id="robustness-budget">
+                <option>32</option>
+                <option>64</option>
+                <option>128</option>
+                <option>256</option>
+              </select>
+            </div>
+            <div id="robustness-results"></div>
+            <p id="robustness-story"></p>
           </section>
 
           <h2>A similar score can hide different answers.</h2>
+          <p id="prediction-story"></p>
           <p>
-            With DCT at the tightest allowance, P300 loses only 0.10 pp overall.
-            Yet about 4.9% of its individual predictions change. Some changes
-            correct earlier mistakes; others create new ones. The effects mostly
-            cancel in the average. “Almost the same score” does not mean “the
-            same decision on every flash.”
-          </p>
-          <p>
-            Waveform similarity tells a different story too. At the tightest
-            allowance, μ-law changes the SSVEP waveform more than uniform
-            quantization under our normalized-error measure, yet loses fewer
-            recognition points: 5.17 pp rather than 8.48 pp. The decoder needs
-            particular patterns, not a perfect copy of every sample.
+            The score is a summary of decisions, not a measure of waveform
+            similarity. A small waveform error can affect a crucial pattern; a
+            larger error can leave that pattern usable. We therefore keep
+            waveform error and the fraction of changed decisions alongside
+            recognition scores.
           </p>
 
-          <h2>What we learned—and where the evidence stops.</h2>
+          <h2>What can we conclude now?</h2>
+          <p id="extension-findings"></p>
           <p>
-            Our result is not a league table of brain tasks. It is evidence that
-            <strong
-              >preservation depends on the combination of task, decoder,
-              compressor and storage allowance</strong
-            >. P300 looks fragile under one method and remarkably well preserved
-            under another. Whether the same ordering holds with other people or
-            analysis systems remains an open question.
+            Twenty new participants give a firmer view than the pilot, but this
+            is still one acquisition study, one shared montage, one recording
+            day and two particular decoders per task. Starting performance and
+            class counts differ. A weak original score leaves little useful
+            performance to lose. We retain those participants and show their
+            baselines.
           </p>
           <p>
-            Four evaluation participants and one recording session are a small
-            test. Starting performance varies: one participant's motor-imagery
-            score is below chance before compression. We retain that participant
-            and flag the weak baseline, rather than selecting only favorable
-            recordings. A task that starts near chance has little useful
-            performance left to lose.
-          </p>
-          <p>
-            The useful next step would be to repeat the comparison with more
-            participants and more than one decoder per task. For now, our claim
-            stays local: under these methods, budgets and recordings, the
-            application with the largest performance loss changes with the
-            method.
+            All uncertainty intervals resample people, carrying their tasks and
+            compression conditions together. We use 10,000 resamples with a
+            fixed seed. Thousands of correlated flashes are not treated as
+            thousands of independent participants. The intervals describe
+            individual comparisons; they do not establish a universal ordering
+            of EEG tasks.
           </p>
 
           <details>
-            <summary>
-              Explore the interactive curves and full measurements
-            </summary>
+            <summary>Explore the full primary-decoder measurements</summary>
             <p>
-              The compact tables above show average score losses. Here you can
-              also inspect actual file rates, waveform error and participant
-              ranges. NRMSE measures normalized waveform error; lower is closer
-              to the original. A participant range is not a confidence interval.
+              Actual file rates, waveform error and participant ranges are
+              available here. NRMSE is normalized waveform error; lower means
+              closer to the original. A participant range is different from an
+              uncertainty interval.
             </p>
             <div class="controls">
               <label for="benchmark-method">Compression method</label>
@@ -1697,67 +1747,81 @@
             </div>
             <div id="task-results"></div>
             <p>
-              Above-chance retention is (compressed balanced accuracy − chance)
-              divided by (original balanced accuracy − chance), using
-              participant means. 100% means the original advantage over chance
-              remains; 0% means chance performance. It can be negative or exceed
-              100%. We withhold it when the original mean is within five
-              percentage points of chance. It does not remove task or decoder
-              differences.
+              Above-chance retention divides the compressed score's advantage
+              over chance by the original advantage, using participant means. It
+              can be below zero or above 100%. We withhold it when the original
+              mean is within five percentage points of chance. It does not
+              remove task differences.
             </p>
+            <figure class="article-figure">
+              <a href="results/benchmark/actual_rates.png"
+                ><img
+                  src="results/benchmark/actual_rates.png"
+                  loading="lazy"
+                  width="2560"
+                  height="864"
+                  alt="Score losses plotted against achieved mean file rates instead of maximum allowances"
+              /></a>
+              <figcaption>
+                The horizontal position now uses actual achieved mean file
+                sizes. Equal maximum allowances need not produce equal sizes.
+                Lines connect the same measured settings; no interpolation is
+                used to claim exact equal-rate performance.
+              </figcaption>
+            </figure>
           </details>
           <details>
-            <summary>
-              Inspect individual results at the selected allowance
-            </summary>
-            <p>This table follows the allowance selected in Experiment 2.</p>
+            <summary>Inspect individual primary-decoder results</summary>
+            <p>This table follows the allowance selected in Experiment 1.</p>
             <div id="participant-results"></div>
           </details>
           <details>
             <summary>Technical setup and checks</summary>
             <p>
-              We use session 1 labeled offline blocks from S01–S06. S01–S02 are
-              development participants; S03–S06 are evaluated. The split is at
-              60% of events with a two-second guard. SSVEP and motor-imagery
-              epochs last four seconds; ERP epochs last one second. Overlapping
-              ERP test epochs share one encoded continuous recording, so their
-              samples are not repeatedly charged to the storage count.
+              Session 1 labeled offline blocks only. S01–S02 are development;
+              S03–S06 are the archived pilot; S07–S26 are the new evaluation
+              cohort. The chronological split is at 60% of events with a
+              two-second guard. SSVEP and motor-imagery epochs last four
+              seconds; ERP epochs last one. Overlapping ERP test epochs share
+              one encoded continuous recording.
             </p>
             <p>
-              The shared montage has 12 channels, resampled to 128 Hz and
-              filtered from 0.5 to 40 Hz. SSVEP uses CCA with three harmonics;
-              motor imagery uses 8–30 Hz filtering, CSP and shrinkage LDA; ERP
-              uses 0.5–12 Hz filtering, 100 ms time averages and shrinkage LDA.
-              Filtering is offline and noncausal, not a real-time deployment.
+              The 12 stored channels are resampled to 128 Hz and filtered from
+              0.5 to 40 Hz. Primary decoders use CCA with three harmonics for
+              SSVEP; 8–30 Hz filtering, regularized CSP and shrinkage LDA for
+              motor imagery; and 0.5–12 Hz filtering, 100 ms time averages and
+              equal-prior shrinkage LDA for P300. Filtering is offline and
+              noncausal. The epoch gap does not remove every dependency
+              introduced by continuous filtering.
             </p>
             <p>
-              Each one-second encoded frame includes packed codes, scales,
-              dimensions and its ZIP overhead. Length prefixes and the corpus
-              header count too. Decoder models and task annotations are agreed
-              separately for all methods. μ-law uses μ = 255 and is not a
-              bit-exact G.711 implementation.
+              Every stored byte counts: independent one-second frame ZIPs,
+              packed codes, scales, dimensions, length prefixes and the global
+              header. Decoder models and event annotations are outside the EEG
+              payload for all methods. μ = 255; this is not bit-exact G.711.
+              Search minimizes waveform MSE over the fixed grid without labels
+              or task scores.
             </p>
-            <p>
-              All 216 conditions, including development runs, fit their byte
-              caps. The lossless control reproduces the selected float32 samples
-              exactly. Metrics were checked against exported predictions, and
-              all 144 evaluation reconstructions were independently replayed
-              through their original-data decoders. We make no clinical,
-              battery-life or real-time performance claim.
-            </p>
+            <p id="verification-story"></p>
           </details>
           <div class="inline-links experiment-downloads">
-            <a href="benchmark/config.json">Experiment settings</a>
-            <a href="results/benchmark/summary.json"
-              >Complete measured results</a
+            <a href="benchmark/extension_protocol.md">Extension protocol</a>
+            <a href="benchmark/config.json">Settings</a>
+            <a href="results/benchmark/summary.json">Primary results</a>
+            <a href="results/benchmark/statistics.json"
+              >Uncertainty and paired comparisons</a
+            >
+            <a href="results/robustness/summary.json"
+              >Alternative-decoder results</a
             >
             <a href="results/benchmark/predictions.csv"
-              >Individual predictions (CSV)</a
+              >Primary predictions (CSV)</a
             >
-            <a href="results/benchmark/task_curves.pdf"
-              >Comparison plots (PDF)</a
+            <a href="results/robustness/predictions.csv"
+              >Alternative predictions (CSV)</a
             >
-            <a href="results/benchmark/ranking.png">Comparison matrix (PNG)</a>
+            <a href="results/benchmark/task_curves.pdf">Plots (PDF)</a>
+            <a href="results/pilot/summary.json">Original pilot</a>
             <a href="research/benchmark_audit.md">Verification notes</a>
           </div>
         </div>

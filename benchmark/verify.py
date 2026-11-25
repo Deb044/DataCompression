@@ -98,6 +98,15 @@ def main():
                 print(f'Replayed S{subject:02d} {task}', flush=True)
     print(f'Checked {len(result["points"])} measured points, {len(result["groups"])} aggregates, '
           f'{sum(map(len,predictions.values()))} trial predictions and all byte caps.', flush=True)
+    verification = dict(
+        summary_sha256=digest(output/'summary.json'),
+        predictions_sha256=digest(output/'predictions.csv'),
+        measured_points=len(result['points']),
+        evaluation_reconstructions=sum(p['split']=='evaluation' and p['feasible'] for p in result['points']),
+        prediction_rows=sum(map(len, predictions.values())),
+        byte_caps_checked=True, replayed=args.replay,
+    )
+    (output/'verification.json').write_text(json.dumps(verification, indent=2)+'\n')
 
 
 if __name__ == '__main__':

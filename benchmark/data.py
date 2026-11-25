@@ -184,10 +184,14 @@ def load_recording(subject, task, config, cache=CACHE):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--subjects', nargs='+', type=int, default=[1, 2, 3, 4, 5, 6])
+    parser.add_argument('--subjects', nargs='+', type=int)
+    parser.add_argument('--workers', type=int, choices=range(1, 7), default=3,
+                        help='Parallel downloads only; preprocessing stays sequential')
     args = parser.parse_args()
-    jobs = [(subject, task) for subject in args.subjects for task in ['SSVEP', 'MI', 'ERP']]
-    with ThreadPoolExecutor(max_workers=3) as pool:
+    config = json.loads(Path(__file__).with_name('config.json').read_text())
+    subjects = args.subjects or config['development_subjects'] + config['evaluation_subjects']
+    jobs = [(subject, task) for subject in subjects for task in config['tasks']]
+    with ThreadPoolExecutor(max_workers=args.workers) as pool:
         list(pool.map(lambda job: fetch_offline(*job), jobs))
 
 

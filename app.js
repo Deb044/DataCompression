@@ -2,7 +2,7 @@ import { makeHuffmanCodes, makeSamples } from "./samples.js";
 import { makeZip, supportsZipLab } from "./zip.js";
 import { quantize, signalPath, syntheticSignal } from "./signal.js";
 import { makeTable } from "./table.js";
-import { loadExperimentResults } from "./experiment-view.js?v=openbmi-story-1";
+import { loadExperimentResults } from "./experiment-view.js?v=openbmi-extension-1";
 import { setUpImageCompression } from "./image-demo.js";
 import { setUpHalftone } from "./halftone.js";
 
