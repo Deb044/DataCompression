@@ -226,9 +226,10 @@ function plot(s, type, config) {
   const s = slide('Why EEG especially needs compression');
   heading(s,'Continuous recording');
   bullets(s,[
-    'Many channels and long recordings make storage accumulate.',
+    'More channels need more storage.',
+    'Detecting conditions such as epilepsy can require EEG monitoring over hours or days.',
     'Wireless links have limited bandwidth.',
-    'Wearable devices also have limited energy.',
+    'Wearables have limited energy.',
   ],222,255);
   heading(s,'An illustrative recording',505);
   body(s,'64 channels × 256 samples/s\n× 16 bits per sample',562,77);
@@ -302,7 +303,7 @@ function plot(s, type, config) {
     ['Motor imagery','Left or right hand?','Spatial power patterns'],
     ['P300','Target or non-target?','A brief event response'],
   ],253,[175,236,235],23,300);
-  text(s,'Sustained visual responses, imagined actions,\nand detection of discrete target events.',584,578,632,65,23);
+  text(s,'SSVEP = steady-state visual evoked potential.\nVisual stimulation, imagined movement, target detection.',584,578,632,65,23);
   caption(s,'The eventual conclusion must stay local to the recordings, methods, budgets and decoders tested.');
 }
 
