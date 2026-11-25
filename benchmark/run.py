@@ -205,11 +205,14 @@ def main():
     args = parser.parse_args()
     config = json.loads(CONFIG_PATH.read_text())
     args.output.mkdir(parents=True, exist_ok=True)
+    protocol_hash = hashlib.sha256(CONFIG_PATH.read_bytes()).hexdigest()
+    engine_hash = implementation_hash()
+    cache_directory = CACHE / 'measured' / protocol_hash[:16] / engine_hash[:16]
+    cache_directory.mkdir(parents=True, exist_ok=True)
     runs = []
     for subject in args.subjects or config['development_subjects']+config['evaluation_subjects']:
         for task in args.tasks or config['tasks']:
-            cache = CACHE / f'S{subject:02d}_{task}_measured.json'
-            protocol_hash = hashlib.sha256(CONFIG_PATH.read_bytes()).hexdigest()
+            cache = cache_directory / f'S{subject:02d}_{task}.json'
             if not args.baseline_only and cache.exists():
                 result = json.loads(cache.read_text())
                 if result.get('protocol_hash') != protocol_hash or result.get('implementation_hash') != implementation_hash():

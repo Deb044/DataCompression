@@ -1,7 +1,8 @@
 {
   "dataset": "Lee et al. OpenBMI (2019), session 1, labeled offline blocks only",
   "development_subjects": [1, 2],
-  "evaluation_subjects": [3, 4, 5, 6],
+  "evaluation_subjects": [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26],
+  "pilot_subjects": [3, 4, 5, 6],
   "tasks": ["SSVEP", "MI", "ERP"],
   "channels": ["C3", "Cz", "C4", "FC1", "FC2", "CP1", "CP2", "Pz", "POz", "O1", "Oz", "O2"],
   "sample_rate_hz": 128,

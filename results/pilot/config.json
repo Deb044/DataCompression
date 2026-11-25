@@ -1,0 +1,21 @@
+{
+  "dataset": "Lee et al. OpenBMI (2019), session 1, labeled offline blocks only",
+  "development_subjects": [1, 2],
+  "evaluation_subjects": [3, 4, 5, 6],
+  "tasks": ["SSVEP", "MI", "ERP"],
+  "channels": ["C3", "Cz", "C4", "FC1", "FC2", "CP1", "CP2", "Pz", "POz", "O1", "Oz", "O2"],
+  "sample_rate_hz": 128,
+  "common_bandpass_hz": [0.5, 40],
+  "training_fraction": 0.6,
+  "boundary_guard_seconds": 2,
+  "epoch_seconds": {"SSVEP": 4, "MI": 4, "ERP": 1},
+  "methods": ["uniform", "mulaw", "dct"],
+  "budgets_bytes_per_second_channel": [32, 64, 128, 256],
+  "frame_seconds": 1,
+  "amplitude_bits": [1, 2, 3, 4, 5, 6, 8, 10, 12, 16],
+  "dct_bits": [2, 4, 6, 8, 12],
+  "dct_coefficients": [4, 8, 16, 24, 32, 48, 64, 96, 128],
+  "mu": 255,
+  "seed": 321,
+  "protocol_note": "Specified before inspecting waveforms or classifier outcomes. One-second frames, each charged complete ZIP bytes and reconstruction metadata. Encoder selects minimum sample MSE among the declared candidates satisfying each per-frame byte cap, without labels or classifier scores. Original-data per-subject classifiers fitted on early offline events; late events evaluated with two-second boundary guard. No classifier retraining after compression. Every eligible subject and task reported, including weak baselines. Development subjects excluded from final averages. No universal task ranking or clinical claim."
+}
