@@ -2,7 +2,7 @@ import { makeHuffmanCodes, makeSamples } from "./samples.js";
 import { makeZip, supportsZipLab } from "./zip.js";
 import { quantize, signalPath, syntheticSignal } from "./signal.js";
 import { makeTable } from "./table.js";
-import { loadExperimentResults } from "./experiment-view.js";
+import { loadExperimentResults } from "./experiment-view.js?v=openbmi-1";
 import { setUpImageCompression } from "./image-demo.js";
 import { setUpHalftone } from "./halftone.js";
 
@@ -200,7 +200,7 @@ function setUpLiterature() {
     })
     .catch((error) => {
       byId("reference-list").textContent =
-        `${error.message} The complete list is also in the review PDF.`;
+        `${error.message} The complete list is available in content/references.json.`;
     });
 }
 const pages = [

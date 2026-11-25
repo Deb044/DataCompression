@@ -9,8 +9,8 @@
       content="EEG compression: interactive foundations, a literature review and controlled experiments."
     />
     <title>EEG Compresion</title>
-    <link rel="stylesheet" href="styles.css" />
-    <script type="module" src="app.js"></script>
+    <link rel="stylesheet" href="styles.css?v=openbmi-1" />
+    <script type="module" src="app.js?v=openbmi-1"></script>
   </head>
   <body>
     <a class="skip" href="#main">Skip to content</a>
@@ -1391,6 +1391,15 @@
           </div>
           <div id="task-results"></div>
           <p class="small">
+            Above-chance retention uses the task's participant-mean scores:
+            (compressed balanced accuracy − chance) ÷ (original balanced
+            accuracy − chance). A value of 100% means the original advantage
+            over chance remains; 0% means chance performance. It can exceed 100%
+            or become negative. It is withheld when the original mean is within
+            five percentage points of chance. This supplementary normalization
+            does not remove differences in the tasks or their decoders.
+          </p>
+          <p class="small">
             Evaluation means weight participants equally. Negative drops mean
             performance improved. Lines join tested budgets as a visual guide;
             they are not additional measurements. Actual achieved rates are
@@ -1451,6 +1460,8 @@
             <a href="results/benchmark/predictions.csv"
               >Trial predictions (CSV)</a
             >
+            <a href="results/benchmark/task_curves.pdf">Download comparison plot (PDF)</a>
+            <a href="results/benchmark/ranking.png">Download task–codec matrix</a>
             <a href="https://doi.org/10.1093/gigascience/giz002"
               >OpenBMI dataset paper</a
             >

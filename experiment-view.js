@@ -12,6 +12,15 @@ const percent = (n) => `${(100 * n).toFixed(1)}%`;
 const loss = (n) => `${(100 * n).toFixed(2)} pp`;
 const mean = (xs) => xs.reduce((a, b) => a + b, 0) / xs.length;
 
+function retainedAboveChance(group) {
+  if (!group.complete) return "Unavailable";
+  const chance = group.task === "SSVEP" ? 0.25 : 0.5;
+  const original = group.original_balanced_accuracy - chance;
+  return original > 0.05
+    ? percent((group.balanced_accuracy - chance) / original)
+    : "Original baseline too weak";
+}
+
 function svg(tag, attributes, text) {
   const node = document.createElementNS("http://www.w3.org/2000/svg", tag);
   for (const [key, value] of Object.entries(attributes))
@@ -159,6 +168,7 @@ function renderTask(data) {
     g.complete ? g.rate.toFixed(1) : "Unavailable",
     g.complete ? percent(g.balanced_accuracy) : "Unavailable",
     g.complete ? loss(g.balanced_accuracy_drop) : "Unavailable",
+    retainedAboveChance(g),
     g.complete
       ? g.balanced_accuracy_drop_range.map(loss).join(" to ")
       : "Unavailable",
@@ -174,6 +184,7 @@ function renderTask(data) {
         "Actual mean B/s/ch",
         "Balanced accuracy",
         "Mean loss",
+        "Above-chance performance retained",
         "Participant loss range",
         "NRMSE",
       ],

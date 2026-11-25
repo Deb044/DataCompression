@@ -43,9 +43,10 @@ def main():
     fig.savefig(output/'task_curves.pdf')
     plt.close(fig)
     fig, axes = plt.subplots(1, 4, figsize=(15, 4), sharey=True)
+    color_limit = max(1, max(abs(100*g['balanced_accuracy_drop']) for g in data['groups'] if g['complete']))
     for ax, budget in zip(axes, data['config']['budgets_bytes_per_second_channel']):
         matrix = np.array([[100*next(g['balanced_accuracy_drop'] for g in data['groups'] if g['task']==task and g['method']==method and g['budget']==budget and g['complete']) for method in methods] for task in tasks])
-        image = ax.imshow(matrix, cmap='RdBu_r', vmin=-10, vmax=40)
+        image = ax.imshow(matrix, cmap='RdBu_r', vmin=-color_limit, vmax=color_limit)
         for i in range(3):
             for j in range(3):
                 ax.text(j, i, f'{matrix[i,j]:.1f}', ha='center', va='center')

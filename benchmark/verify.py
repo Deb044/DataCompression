@@ -10,7 +10,7 @@ import numpy as np
 from sklearn.metrics import balanced_accuracy_score, accuracy_score
 
 from .codec import decode, read_corpus
-from .data import CACHE, ROOT, load_recording
+from .data import CACHE, ROOT, digest, load_recording
 from .decoders import epochs, make_decoder
 from .run import implementation_hash, split_recording
 
@@ -23,6 +23,7 @@ def main():
     result = json.loads((output/'summary.json').read_text())
     config = result['config']
     assert result['complete']
+    assert config == json.loads((ROOT/'benchmark'/'config.json').read_text())
     assert result['implementation_sha256'] == implementation_hash()
     predictions = defaultdict(list)
     with (output/'predictions.csv').open(newline='') as stream:
@@ -50,6 +51,8 @@ def main():
         assert point['archive_bytes'] <= cap
         corpus = CACHE/'encoded'/f'S{point["subject"]:02d}_{point["task"]}'/f'{point["method"]}_{point["budget"]}.eegpack'
         assert corpus.stat().st_size == point['archive_bytes']
+        assert digest(corpus) == point['encoded_sha256']
+        np.testing.assert_allclose(point['rate'], point['archive_bytes']/(point['channels']*point['duration_seconds']))
     for group in result['groups']:
         points = [p for p in result['points'] if p['task']==group['task'] and p['method']==group['method'] and p['budget']==group['budget'] and p['split']=='evaluation' and p['feasible']]
         assert group['complete'] == (len(points)==len(config['evaluation_subjects']))
@@ -64,6 +67,7 @@ def main():
                 signal, events, labels, _ = load_recording(subject, task, config)
                 training, y_train, testing, truth, offsets, original, _ = split_recording(signal, events, labels, task, config)
                 decoder = make_decoder(task, config).fit(training, y_train)
+                np.testing.assert_array_equal(original, read_corpus(CACHE/'encoded'/f'S{subject:02d}_{task}'/'lossless.eegpack'))
                 for point in result['points']:
                     if point['subject']!=subject or point['task']!=task or not point['feasible']:
                         continue
