@@ -103,5 +103,19 @@
     "venue": "2015 International Conference on Advanced Technologies for Communications (ATC), 154-159",
     "url": "https://doi.org/10.1109/ATC.2015.7388309",
     "note": "Supplied six-page full text read; metadata verified against the AUT institutional repository. Added as a contextual survey after the initial review PDF. See supplementary reading notes."
+  },
+  {
+    "authors": "American Epilepsy Society",
+    "title": "The Normal EEG",
+    "venue": "Electroencephalography (EEG): An Introductory Text and Atlas, American Epilepsy Society (2016)",
+    "url": "https://www.ncbi.nlm.nih.gov/books/NBK390343/",
+    "note": "Background on normal waking and sleep rhythms; frequency ranges and interpretations depend on context."
+  },
+  {
+    "authors": "E. M. Whitham et al.",
+    "title": "Scalp electrical recording during paralysis: quantitative evidence that EEG frequencies above 20 Hz are contaminated by EMG",
+    "venue": "Clinical Neurophysiology 118(8), 1877–1888 (2007)",
+    "url": "https://pubmed.ncbi.nlm.nih.gov/17574912/",
+    "note": "Primary study supporting caution when interpreting high-frequency scalp activity; DOI 10.1016/j.clinph.2007.04.027."
   }
 ]

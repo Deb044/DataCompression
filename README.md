@@ -1,6 +1,6 @@
 # EEG Compresion
 
-A DA3021 course project: compression foundations, an introduction to EEG based on the course slides, a rapid structured literature review, and two controlled experiments on public SSVEP recordings. The title preserves the requested spelling.
+An interactive exploration of compression foundations, EEG signals, a rapid structured literature review, and two controlled experiments on public SSVEP recordings. The title preserves the requested spelling.
 
 ## View the site
 
@@ -102,7 +102,7 @@ The static page reads these files. Its selectors inspect saved results; it does 
 
 ## Sources and disclosure
 
-The site's EEG introduction follows the supplied course slides, _Neural Signal Capture_, particularly multichannel EEG (p. 172), cortical activity (p. 175), the alpha demonstration (pp. 180–183), bands (p. 184) and artifacts (pp. 186–187). The original course PDF is not redistributed.
+The EEG introduction is self-contained. Its frequency-band explanations link to the American Epilepsy Society EEG atlas, and its discussion of muscle contamination links to Whitham et al. (2007). Band boundaries and associations are presented as approximate and context-dependent.
 
 The review is a **rapid structured review**, not an exhaustive systematic review. It marks preprints, abstract-level access and uncertain publication metadata. We do not claim a globally new compression method, clinical suitability, hardware energy savings or superiority over learned codecs. See `content/references.json`, the PDF and `research/search_log.json` for source details and coverage limits.
 

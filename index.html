@@ -29,13 +29,13 @@
           ><a href="#literature" data-nav="literature">Literature</a
           ><a href="#experiments" data-nav="experiments">Experiments</a>
         </nav>
-        <span class="course-tag">DA3021 · IIT GUWAHATI</span>
+        <span class="site-tag">SIGNALS · STORAGE · MEANING</span>
       </div>
     </header>
     <main id="main" class="shell" tabindex="-1">
       <article id="contents" data-page>
         <section class="page-intro contents-intro">
-          <p class="eyebrow">EEG COMPRESION · DA3021</p>
+          <p class="eyebrow">EEG COMPRESION · AN INTERACTIVE EXPLORATION</p>
           <h1 id="contents-title" tabindex="-1">Contents</h1>
           <p class="intro">
             From the basics of smaller files to the question of what a
@@ -113,7 +113,7 @@
       <article id="overview" data-page hidden>
         <section class="hero">
           <div>
-            <p class="eyebrow">MULTIMODAL DATA PROCESSING &amp; LEARNING</p>
+            <p class="eyebrow">COMPRESSION ACROSS MODALITIES</p>
             <h1 id="overview-title" tabindex="-1">
               EEG<br /><em>Compresion</em>
             </h1>
@@ -293,7 +293,7 @@
 
       <article id="techniques" data-page hidden>
         <section class="page-intro">
-          <p class="eyebrow">FOUNDATIONS / FROM THE COURSE</p>
+          <p class="eyebrow">FOUNDATIONS / COMPRESSION ACROSS MODALITIES</p>
           <h1 id="techniques-title" tabindex="-1">
             A small toolkit<br />for <em>fewer bits.</em>
           </h1>
@@ -586,7 +586,7 @@
               </p>
             </div>
             <div>
-              <span class="step-label">The course connection</span>
+              <span class="step-label">The shared idea</span>
               <h3>Transform, quantize, encode.</h3>
               <p>
                 Spatial frequency describes how pixel values change across an
@@ -743,9 +743,8 @@
             </p>
           </div>
           <p class="source-note">
-            Course connection: the image lectures introduce Floyd–Steinberg
-            dithering. The default cutoff of 128 gives the usual midpoint binary
-            quantizer; moving the control explores a different cutoff.
+            The default cutoff of 128 gives the usual midpoint binary quantizer;
+            moving the control explores a different cutoff.
           </p>
         </section>
         <div class="chapter-end">
@@ -766,8 +765,8 @@
             view of population-level neural activity.
           </p>
           <p class="source-note">
-            Course basis: <cite>Neural Signal Capture</cite>, supplied lecture
-            slides, pp. 162–188.
+            New to EEG? Start with the electrodes, then follow the samples into
+            the time and frequency views below.
           </p>
         </section>
         <section class="lesson split">
@@ -818,8 +817,8 @@
               </li>
             </ol>
             <figcaption class="small">
-              Course slides: electrode placement pp. 171–173; multichannel EEG
-              p. 172; cortical activity p. 175.
+              Each channel measures a voltage difference, not an isolated brain
+              region. Electrode location and the reference influence the trace.
             </figcaption>
           </figure>
         </section>
@@ -839,48 +838,76 @@
               <thead>
                 <tr>
                   <th>Band</th>
-                  <th>Course range</th>
-                  <th>How we use this idea</th>
+                  <th>Approximate frequency range</th>
+                  <th>What it commonly represents</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <th>Delta</th>
                   <td>0.5–4 Hz</td>
-                  <td>Slow components in the spectrum.</td>
+                  <td>
+                    Slow activity that is especially prominent during deep,
+                    slow-wave sleep. Delta activity is also common in young
+                    children; its interpretation depends on age, wakefulness and
+                    where it appears.
+                  </td>
                 </tr>
                 <tr>
                   <th>Theta</th>
                   <td>4–8 Hz</td>
-                  <td>A different part of the same multichannel signal.</td>
+                  <td>
+                    Often becomes more prominent during drowsiness and early
+                    sleep as the waking background slows. Theta is also common
+                    in children, so its presence alone does not identify a
+                    particular thought or task.
+                  </td>
                 </tr>
                 <tr>
                   <th>Alpha</th>
                   <td>8–13 Hz</td>
                   <td>
-                    The course's eyes-open/closed example highlights occipital
-                    alpha activity.
+                    The posterior alpha rhythm is often strongest over the back
+                    of the head during relaxed wakefulness with eyes closed. It
+                    usually weakens when the eyes open, illustrating how rhythms
+                    can change with sensory input.
                   </td>
                 </tr>
                 <tr>
                   <th>Beta</th>
                   <td>13–30 Hz</td>
-                  <td>Faster rhythmic content.</td>
+                  <td>
+                    Faster, usually lower-amplitude activity seen during normal
+                    wakefulness, often more evident toward the front of the
+                    scalp. Its strength can also be affected by medication and
+                    muscle activity, so more beta does not simply mean more
+                    thinking.
+                  </td>
                 </tr>
                 <tr>
                   <th>Gamma</th>
                   <td>Above 30 Hz</td>
                   <td>
-                    Higher-frequency activity; particularly careful artifact
-                    interpretation is needed.
+                    Fast activity studied in relation to sensory and cognitive
+                    processing. Scalp gamma measurements are particularly
+                    vulnerable to muscle contamination, so high-frequency power
+                    is not automatically evidence of neural activity.
                   </td>
                 </tr>
               </tbody>
             </table>
           </div>
           <p class="source-note">
-            Course slides: alpha demonstration pp. 180–183; band table p. 184.
-            These bands do not uniquely identify a stimulus or mental state.
+            Frequency means cycles per second: 10 Hz is ten cycles per second.
+            These are conventional, approximate band boundaries, not separate
+            signals or unique labels for a stimulus or mental state. Sources:
+            <a href="https://www.ncbi.nlm.nih.gov/books/NBK390343/"
+              >American Epilepsy Society: The Normal EEG</a
+            >
+            and
+            <a href="https://pubmed.ncbi.nlm.nih.gov/17574912/"
+              >Whitham et al.: muscle contamination of scalp EEG</a
+            >.
           </p>
         </section>
         <section class="lesson split">
@@ -895,7 +922,12 @@
               smoother” does not automatically mean “contains better neural
               information.”
             </p>
-            <p class="source-note">Course slides: artifacts pp. 186–187.</p>
+            <p class="source-note">
+              <a href="https://pubmed.ncbi.nlm.nih.gov/17574912/"
+                >Muscle activity can contaminate even apparently relaxed scalp
+                recordings.</a
+              >
+            </p>
             <div class="note">
               <strong>Our task: SSVEP.</strong> When a person attends to a
               flickering target, a steady-state visual evoked response can
@@ -1177,7 +1209,7 @@
             automatically give us a safe setting for another.
           </p>
           <p>
-            Audio offers an interesting connection to our course.
+            Audio compression offers a useful comparison with EEG.
             <a href="https://arxiv.org/abs/2511.23142"
               >Kastrati and colleagues' 2025 preprint</a
             >
@@ -1363,8 +1395,7 @@
       </article>
     </main>
     <footer class="shell site-footer">
-      <span>EEG COMPRESION · DA3021 · IIT GUWAHATI</span
-      ><span>Literature + controlled exploration</span
+      <span>EEG COMPRESION</span><span>Literature + controlled exploration</span
       ><a href="https://github.com/Deb044/DataCompression"
         >Code &amp; reproducibility</a
       >
