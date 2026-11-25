@@ -16,7 +16,7 @@ For local use, run `python -m http.server 8000` and open http://localhost:8000. 
 
 ## Presentation
 
-The thirteen-slide presentation uses a plain white, widescreen layout with minimal text. Download the [editable PowerPoint](output/presentation/eeg-compression.pptx) or [PDF](output/presentation/eeg-compression.pdf). Presenter notes, measured chart inputs and the slide builder are in [presentation/](presentation/README.md).
+The fifteen-slide presentation, **Every Bit of the Brain: How much EEG data can we afford to lose?**, uses a plain white layout with text on the left and visuals on the right. Download the [editable PowerPoint](output/presentation/every-bit-of-the-brain.pptx) or [PDF](output/presentation/every-bit-of-the-brain.pdf). Presenter notes, measured chart inputs and the slide builder are in [presentation/](presentation/README.md).
 
 ## Reproduce
 

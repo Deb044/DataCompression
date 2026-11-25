@@ -1,0 +1,5 @@
+{
+  "raw_bytes": 65536,
+  "zip_bytes": 370,
+  "description": "A repeated sentence, UTF-8 bytes; one ZIP entry, DEFLATE level 6."
+}

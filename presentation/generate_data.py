@@ -2,7 +2,9 @@
 
 import csv
 import hashlib
+import io
 import json
+import zipfile
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -36,6 +38,21 @@ def main():
     deck_data = {family: statistics[family] for family in ['primary', 'alternative']}
     (HERE / 'data' / 'study.json').write_text(
         json.dumps(deck_data, indent=2) + '\n', encoding='utf-8')
+
+    # Separate teaching example, not an EEG experiment. Include ZIP overhead and
+    # verify exact recovery before displaying its measured sizes on the slides.
+    payload = (b'Data compression preserves useful information.\n' * 1600)[:65536]
+    archive = io.BytesIO()
+    with zipfile.ZipFile(archive, 'w', zipfile.ZIP_DEFLATED, compresslevel=6) as stream:
+        entry = zipfile.ZipInfo('sample.txt', date_time=(2026, 11, 25, 0, 0, 0))
+        entry.compress_type = zipfile.ZIP_DEFLATED
+        stream.writestr(entry, payload, compresslevel=6)
+    with zipfile.ZipFile(io.BytesIO(archive.getvalue())) as stream:
+        assert stream.read('sample.txt') == payload
+    example = dict(raw_bytes=len(payload), zip_bytes=len(archive.getvalue()),
+                   description='A repeated sentence, UTF-8 bytes; one ZIP entry, DEFLATE level 6.')
+    (HERE / 'data' / 'zip-example.json').write_text(
+        json.dumps(example, indent=2) + '\n', encoding='utf-8')
 
     def estimate(family, task, method, budget):
         return next(g for g in statistics[family]['groups']
