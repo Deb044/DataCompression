@@ -117,5 +117,12 @@
     "venue": "Clinical Neurophysiology 118(8), 1877–1888 (2007)",
     "url": "https://pubmed.ncbi.nlm.nih.gov/17574912/",
     "note": "Primary study supporting caution when interpreting high-frequency scalp activity; DOI 10.1016/j.clinph.2007.04.027."
+  },
+  {
+    "authors": "M.-H. Lee et al.",
+    "title": "EEG dataset and OpenBMI toolbox for three BCI paradigms: an investigation into BCI illiteracy",
+    "venue": "GigaScience 8(5), giz002 (2019)",
+    "url": "https://doi.org/10.1093/gigascience/giz002",
+    "note": "Dataset for the current three-task benchmark. Same participants and acquisition study; source data DOI 10.5524/100542. Offline recordings only; this study uses a small session-1 subset, not the published full-cohort results."
   }
 ]

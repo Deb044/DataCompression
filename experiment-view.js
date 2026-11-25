@@ -1,393 +1,273 @@
-// Render only recorded experiment exports. No research metrics are invented here.
+// Display recorded exports only. No simulated research metrics.
 import { makeTable } from "./table.js";
-
 const byId = (id) => document.getElementById(id);
-const percent = (value) =>
-  value === null ? "Undefined" : `${(100 * value).toFixed(2)}%`;
-const fixed = (value, digits = 3) =>
-  value === null ? "Undefined" : value.toFixed(digits);
-const methodName = (method) =>
-  method === "mulaw"
-    ? "μ-law"
-    : method === "float32"
-      ? "Float32 + ZIP"
-      : "Uniform";
-
-function figure(path, alt) {
-  const link = document.createElement("a");
-  link.className = "figure-download";
-  link.href = path;
-  const image = document.createElement("img");
-  image.src = path;
-  image.alt = alt;
-  image.loading = "lazy";
-  link.append(image);
-  return link;
-}
-
-function metrics(values) {
-  const element = document.createElement("div");
-  element.className = "metric-grid";
-  for (const [value, label] of values) {
-    const box = document.createElement("div");
-    box.className = "metric";
-    const number = document.createElement("strong");
-    number.textContent = value;
-    const caption = document.createElement("span");
-    caption.textContent = label;
-    box.append(number, caption);
-    element.append(box);
-  }
-  return element;
-}
+const tasks = { SSVEP: "SSVEP", MI: "Motor imagery", ERP: "P300 detection" };
+const methods = {
+  uniform: "Uniform + ZIP",
+  mulaw: "μ-law + ZIP",
+  dct: "DCT + ZIP",
+};
+const colors = { SSVEP: "#86dbce", MI: "#ffac8f", ERP: "#9ebbf9" };
+const percent = (n) => `${(100 * n).toFixed(1)}%`;
+const loss = (n) => `${(100 * n).toFixed(2)} pp`;
+const mean = (xs) => xs.reduce((a, b) => a + b, 0) / xs.length;
 
 function svg(tag, attributes, text) {
-  const element = document.createElementNS("http://www.w3.org/2000/svg", tag);
+  const node = document.createElementNS("http://www.w3.org/2000/svg", tag);
   for (const [key, value] of Object.entries(attributes))
-    element.setAttribute(key, value);
-  if (text !== undefined) element.textContent = text;
-  return element;
+    node.setAttribute(key, value);
+  if (text !== undefined) node.textContent = text;
+  return node;
 }
 
-function drawWaveform(target, original, reconstruction, sampleRate) {
-  const width = 1000,
-    height = 290,
-    left = 62,
-    right = 18,
-    top = 24,
-    bottom = 44;
-  const limit =
-    Math.max(...original.map(Math.abs), ...reconstruction.map(Math.abs), 1e-9) *
-    1.08;
-  const yPosition = (value) =>
-    top + ((1 - value / limit) / 2) * (height - top - bottom);
-  target.replaceChildren();
-  for (const value of [-limit, 0, limit]) {
-    const y = yPosition(value);
-    target.append(
-      svg("line", { x1: left, x2: width - right, y1: y, y2: y, class: "grid" }),
+function curves(groups, config) {
+  const chart = svg("svg", {
+    viewBox: "0 0 1000 400",
+    role: "img",
+    class: "plot benchmark-plot",
+    "aria-label":
+      "Mean balanced-accuracy loss at tested byte caps for three EEG applications",
+  });
+  const values = groups
+    .filter((g) => g.complete)
+    .map((g) => g.balanced_accuracy_drop * 100);
+  const low = Math.min(-2, Math.floor(Math.min(...values) / 5) * 5);
+  const high = Math.max(5, Math.ceil(Math.max(...values) / 5) * 5);
+  const budgets = config.budgets_bytes_per_second_channel;
+  const x = (b) =>
+    90 +
+    (870 * Math.log2(b / budgets[0])) / Math.log2(budgets.at(-1) / budgets[0]);
+  const y = (v) => 36 + (282 * (high - v)) / (high - low);
+  for (let i = 0; i <= 5; i++) {
+    const v = low + (i * (high - low)) / 5;
+    chart.append(
+      svg("line", { x1: 90, x2: 960, y1: y(v), y2: y(v), class: "grid" }),
     );
-    target.append(
-      svg(
-        "text",
-        { x: left - 10, y: y + 4, "text-anchor": "end" },
-        value.toFixed(1),
-      ),
-    );
-  }
-  for (let second = 0; second <= 4; second++) {
-    const x = left + (second / 4) * (width - left - right);
-    target.append(
-      svg("text", { x, y: height - 23, "text-anchor": "middle" }, second),
+    chart.append(
+      svg("text", { x: 78, y: y(v) + 4, "text-anchor": "end" }, v.toFixed(1)),
     );
   }
-  for (const [values, name] of [
-    [original, "original"],
-    [reconstruction, "reconstructed"],
-  ]) {
-    const path = values
-      .map(
-        (value, i) =>
-          `${i ? "L" : "M"}${(left + (i / sampleRate / 4) * (width - left - right)).toFixed(2)},${yPosition(value).toFixed(2)}`,
-      )
-      .join(" ");
-    target.append(svg("path", { d: path, class: name }));
+  chart.append(
+    svg("line", {
+      x1: 90,
+      x2: 960,
+      y1: y(0),
+      y2: y(0),
+      stroke: "#b1c0ca",
+      "stroke-dasharray": "5 5",
+    }),
+  );
+  for (const budget of budgets)
+    chart.append(
+      svg("text", { x: x(budget), y: 346, "text-anchor": "middle" }, budget),
+    );
+  for (const task of config.tasks) {
+    const selected = groups
+      .filter((g) => g.task === task && g.complete)
+      .sort((a, b) => a.budget - b.budget);
+    if (selected.length === budgets.length)
+      chart.append(
+        svg("polyline", {
+          points: selected
+            .map((g) => `${x(g.budget)},${y(100 * g.balanced_accuracy_drop)}`)
+            .join(" "),
+          fill: "none",
+          stroke: colors[task],
+          "stroke-width": 2,
+        }),
+      );
+    for (const g of selected) {
+      const point = svg("circle", {
+        cx: x(g.budget),
+        cy: y(100 * g.balanced_accuracy_drop),
+        r: 5,
+        fill: colors[task],
+      });
+      point.append(
+        svg(
+          "title",
+          {},
+          `${tasks[task]}: cap ${g.budget}, loss ${loss(g.balanced_accuracy_drop)}, actual ${g.rate.toFixed(1)} B/s/ch`,
+        ),
+      );
+      chart.append(point);
+    }
   }
-  target.append(
+  chart.append(
     svg(
       "text",
-      { x: width / 2, y: height - 2, "text-anchor": "middle" },
-      "Time within stored segment (seconds) · amplitude in dataset units",
+      { x: 520, y: 380, "text-anchor": "middle" },
+      "Assigned cap (bytes/s/channel, logarithmic spacing)",
     ),
   );
-}
-
-function setUpExample(examples) {
-  const target = byId("example-view");
-  target.innerHTML = `<div class="controls"><label for="example-trial">Recorded example</label><select id="example-trial"></select><label for="example-method">Quantizer</label><select id="example-method"><option value="uniform">Uniform</option><option value="mulaw">μ-law</option></select><label for="example-bits">Precision</label><select id="example-bits"></select></div><svg id="recorded-waveform" class="plot" viewBox="0 0 1000 290" role="img" aria-label="Recorded Oz waveform and archived reconstruction"></svg><div class="legend"><span><i class="key"></i>Original Oz</span><span><i class="key coral"></i>Reconstructed Oz</span></div><p id="example-decision" class="result-callout" aria-live="polite"></p><div id="example-scores"></div><p class="small">Four predetermined examples: all targets from the first evaluation participant's first block. They were not selected for a striking effect. Waveforms are rounded for display; metrics use full arrays.</p><a id="example-archive" class="source-note">Download this trial's actual ZIP archive</a>`;
-  for (const trial of examples.trials)
-    byId("example-trial").add(
-      new Option(`${trial.id} · target ${trial.target_hz} Hz`, trial.id),
-    );
-  for (const bits of [16, 12, 8, 6, 4, 2])
-    byId("example-bits").add(new Option(`${bits} bits`, bits));
-  byId("example-bits").value = "2";
-  function update() {
-    const trial = examples.trials.find(
-      (row) => row.id === byId("example-trial").value,
-    );
-    const condition = trial.conditions.find(
-      (row) =>
-        row.method === byId("example-method").value &&
-        row.bits === Number(byId("example-bits").value),
-    );
-    drawWaveform(
-      byId("recorded-waveform"),
-      trial.original,
-      condition.reconstruction,
-      examples.sample_rate_hz,
-    );
-    byId("example-decision").textContent =
-      `Target: ${trial.target_hz} Hz. Original decision: ${trial.original_prediction_hz} Hz. Reconstructed decision: ${condition.prediction_hz} Hz. Archive: ${condition.archive_bytes} B. NRMSE: ${fixed(condition.nrmse)}.`;
-    byId("example-scores").replaceChildren(
-      makeTable(
-        ["Candidate target", "Original FFT score", "Reconstructed FFT score"],
-        examples.target_frequencies_hz.map((f, i) => [
-          `${f} Hz`,
-          trial.original_scores[i].toExponential(3),
-          condition.scores[i].toExponential(3),
-        ]),
-      ),
-    );
-    const archive = byId("example-archive");
-    archive.hidden = trial !== examples.trials[0];
-    archive.href = `results/archives/${trial.id}-${condition.method}-${condition.bits}.zip`;
-    archive.download = "";
-  }
-  for (const id of ["example-trial", "example-method", "example-bits"])
-    byId(id).addEventListener("change", update);
-  update();
-}
-
-function renderPrecision(summary) {
-  const conditions = summary.conditions.filter(
-    (row) => row.split === "evaluation",
-  );
-  const baseline = conditions.find((row) => row.method === "float32");
-  const target = byId("precision-results");
-  target.innerHTML = `<div class="controls"><label for="result-method">Quantizer</label><select id="result-method"><option value="uniform">Uniform</option><option value="mulaw">μ-law</option></select><label for="result-bits">Precision</label><select id="result-bits"></select></div><div id="condition-metrics" aria-live="polite"></div><p id="transition-summary" class="takeaway"></p><details><summary>Participant-level results for this condition</summary><div id="participant-results"></div></details>`;
-  for (const bits of summary.provenance.configuration.bit_depths)
-    byId("result-bits").add(new Option(`${bits} bits`, bits));
-  byId("result-bits").value = String(
-    summary.provenance.configuration.primary_bit_depth,
-  );
-  function update() {
-    const row = conditions.find(
-      (row) =>
-        row.method === byId("result-method").value &&
-        row.bits === Number(byId("result-bits").value),
-    );
-    const delta = 100 * (row.accuracy - baseline.accuracy);
-    byId("condition-metrics").replaceChildren(
-      metrics([
-        [
-          `${fixed(row.archive_bytes_per_second_channel, 2)} B/s/ch`,
-          "Actual ZIP storage, including reconstruction metadata",
-        ],
-        [
-          percent(row.accuracy),
-          `Recognition accuracy; original ${percent(baseline.accuracy)}`,
-        ],
-        [
-          `${delta >= 0 ? "+" : ""}${fixed(delta, 2)} pp`,
-          `Accuracy change; mean NRMSE ${fixed(row.mean_nrmse)}`,
-        ],
-      ]),
-    );
-    const t = row.transitions;
-    const flips = Math.round(row.flip_rate * row.n);
-    byId("transition-summary").textContent =
-      `${flips}/${row.n} predictions changed. ${t.correct_to_wrong} originally correct decisions became wrong; ${t.wrong_to_correct} wrong decisions became correct. Accuracy alone does not describe all these transitions. The archive is ${percent(row.archive_fraction_of_float32)} of the centered float32 payload.`;
-    byId("participant-results").replaceChildren(
-      makeTable(
-        [
-          "Participant",
-          "Trials",
-          "Original accuracy",
-          "Reconstructed accuracy",
-          "Prediction flips",
-        ],
-        row.participants.map((p) => [
-          `S${String(p.subject).padStart(2, "0")}`,
-          p.n,
-          percent(p.original_accuracy),
-          percent(p.accuracy),
-          `${Math.round(p.flip_rate * p.n)}/${p.n}`,
-        ]),
-      ),
-    );
-  }
-  for (const id of ["result-method", "result-bits"])
-    byId(id).addEventListener("change", update);
-  update();
-  target.append(
-    figure(
-      "results/precision.png",
-      "Measured recognition accuracy and normalized waveform error versus actual ZIP bytes per second per channel",
+  chart.append(
+    svg(
+      "text",
+      { x: 90, y: 20 },
+      "Balanced-accuracy loss (percentage points); lower is better",
     ),
   );
-  const notes = document.createElement("p");
-  notes.className = "small";
-  notes.textContent = `Lossless float32 + ZIP: ${fixed(baseline.archive_bytes_per_second_channel, 2)} B/s/channel, with byte-for-byte recovery. The uncompressed float32 payload is 1,000 B/s/channel. Each trial is archived separately; totals sum independent archives. The four-class chance level is 25%. No clinical safety is implied.`;
-  target.append(notes);
-  const companderNote = document.createElement("p");
-  companderNote.className = "small";
-  companderNote.textContent =
-    "EEG μ-law variant: companding follows per-channel min–max normalization. Its fine-resolution region is therefore around the range midpoint, which need not equal the mean-centered signal's zero. These results do not establish how a zero-centered, symmetrically scaled compander would behave.";
-  target.append(companderNote);
-  const details = document.createElement("details");
-  details.innerHTML = "<summary>All measured evaluation conditions</summary>";
-  details.append(
+  return chart;
+}
+
+function baselines(data) {
+  const rows = data.config.tasks.map((task) => {
+    const subjects = data.baselines.filter(
+      (b) => b.task === task && b.split === "evaluation",
+    );
+    const chance = task === "SSVEP" ? 0.25 : 0.5;
+    return [
+      tasks[task],
+      percent(mean(subjects.map((b) => b.balanced_accuracy))),
+      percent(chance),
+      subjects
+        .map(
+          (b) =>
+            `S${String(b.subject).padStart(2, "0")}: ${percent(b.balanced_accuracy)}${b.balanced_accuracy <= chance + 0.05 ? " (weak baseline)" : ""}`,
+        )
+        .join(" · "),
+    ];
+  });
+  byId("baseline-results").replaceChildren(
     makeTable(
       [
-        "Method",
-        "Bits",
-        "ZIP B/s/ch",
-        "Payload B",
-        "Archive B",
-        "Accuracy",
-        "NRMSE",
-        "Flips",
+        "Application",
+        "Original balanced accuracy",
+        "Chance",
+        "Participant baselines",
       ],
-      conditions.map((row) => [
-        methodName(row.method),
-        row.bits,
-        fixed(row.archive_bytes_per_second_channel, 2),
-        row.payload_bytes_total,
-        row.archive_bytes_total,
-        percent(row.accuracy),
-        fixed(row.mean_nrmse),
-        Math.round(row.flip_rate * row.n),
-      ]),
+      rows,
     ),
   );
-  target.append(details);
-  const heading = document.createElement("h3");
-  heading.textContent = "Inspect a real reconstructed trial";
-  heading.style.marginTop = "32px";
-  const example = document.createElement("div");
-  example.id = "example-view";
-  example.className = "lab-panel";
-  target.append(heading, example);
 }
 
-function renderGap(summary) {
-  const target = byId("gap-results");
-  target.innerHTML = `<div class="controls"><label for="gap-bits">Uniform quantization</label><select id="gap-bits"></select></div><p id="gap-status" class="result-callout" aria-live="polite"></p><div id="gap-groups"></div><p id="gap-thresholds" class="small"></p><div id="gap-predictors"></div><p id="gap-control" class="small"></p>`;
-  for (const bits of summary.provenance.configuration.bit_depths)
-    byId("gap-bits").add(new Option(`${bits} bits`, bits));
-  byId("gap-bits").value = String(
-    summary.provenance.configuration.primary_bit_depth,
+function renderTask(data) {
+  const groups = data.groups.filter(
+    (g) => g.method === byId("benchmark-method").value,
   );
-  function update() {
-    const row = summary.gap_analysis.find(
-      (row) => row.bits === Number(byId("gap-bits").value),
-    );
-    const primary =
-      row.bits === summary.provenance.configuration.primary_bit_depth;
-    byId("gap-status").textContent =
-      `${row.failures}/${row.n} predictions changed. ${primary ? "Prespecified primary condition." : "Exploratory precision; primary condition is 2 bits."}`;
-    byId("gap-groups").replaceChildren(
-      makeTable(
-        [
-          "Original score gap",
-          "Trials",
-          "Prediction flip rate",
-          "Correct → wrong / originally correct",
-        ],
-        ["low", "middle", "high"].map((group) => {
-          const g = row.groups[group];
-          return [
-            group,
-            g.n,
-            percent(g.flip_rate),
-            `${g.transitions?.correct_to_wrong ?? 0}/${g.original_correct_count ?? 0} (${percent(g.correct_to_wrong_rate)})`,
-          ];
-        }),
-      ),
-    );
-    const [low, high] = summary.gap_thresholds;
-    byId("gap-thresholds").textContent =
-      `Development thresholds: ${fixed(low, 4)} and ${fixed(high, 4)}. These were fixed using 48 trials from S1–S2. Evaluation groups need not have equal sizes. Gap = (best score − runner-up score) / (best score + runner-up score + ε).`;
-    byId("gap-predictors").replaceChildren(
-      makeTable(
-        ["Prediction-flip predictor", "ROC AUC"],
-        [
-          ["Low original score gap", fixed(row.predictor_auc.low_gap)],
-          ["Amplitude range / RMS", fixed(row.predictor_auc.range_over_rms)],
-          [
-            "Low spectral concentration",
-            fixed(row.predictor_auc.low_spectral_concentration),
-          ],
-          ["Shuffled gap: null mean", fixed(row.shuffled_auc_mean)],
-        ],
-      ),
-    );
-    byId("gap-control").textContent =
-      row.predictor_auc.low_gap === null
-        ? "AUC and the permutation test are undefined because this condition has only one outcome class. Zero observed flips does not establish universal safety."
-        : `500 shuffles within participant and true-target groups: null AUC range ${row.shuffled_auc_95_range.map((v) => fixed(v)).join("–")} (central 95%); one-sided permutation p = ${fixed(row.permutation_p_one_sided, 4)}. The null mean need not be 0.5 because between-participant and target differences remain. This is a null range, not a confidence interval. Other precisions are exploratory; p values are not multiplicity-corrected.`;
+  const legend = document.createElement("p");
+  legend.className = "benchmark-legend";
+  for (const task of data.config.tasks) {
+    const label = document.createElement("span");
+    label.textContent = tasks[task];
+    label.style.color = colors[task];
+    legend.append(label);
   }
-  byId("gap-bits").addEventListener("change", update);
-  update();
-  target.append(
-    figure(
-      "results/gap.png",
-      "Measured prediction flip rates by original score gap and bit depth",
+  const rows = groups.map((g) => [
+    tasks[g.task],
+    g.budget,
+    g.complete ? g.rate.toFixed(1) : "Unavailable",
+    g.complete ? percent(g.balanced_accuracy) : "Unavailable",
+    g.complete ? loss(g.balanced_accuracy_drop) : "Unavailable",
+    g.complete
+      ? g.balanced_accuracy_drop_range.map(loss).join(" to ")
+      : "Unavailable",
+    g.complete ? g.nrmse.toFixed(3) : "Unavailable",
+  ]);
+  byId("task-results").replaceChildren(
+    legend,
+    curves(groups, data.config),
+    makeTable(
+      [
+        "Application",
+        "Cap B/s/ch",
+        "Actual mean B/s/ch",
+        "Balanced accuracy",
+        "Mean loss",
+        "Participant loss range",
+        "NRMSE",
+      ],
+      rows,
     ),
   );
-  target.append(
-    figure(
-      "results/predictors.png",
-      "Primary two-bit predictor comparison with a stratified shuffled-gap null control",
+}
+
+function renderRanking(data) {
+  const budget = Number(byId("benchmark-budget").value);
+  const groups = data.groups.filter((g) => g.budget === budget);
+  const rows = data.config.tasks.map((task) => [
+    tasks[task],
+    ...data.config.methods.map((method) => {
+      const g = groups.find((g) => g.task === task && g.method === method);
+      return g?.complete ? loss(g.balanced_accuracy_drop) : "Unavailable";
+    }),
+  ]);
+  const findings = document.createElement("p");
+  findings.className = "note";
+  findings.textContent =
+    data.config.methods
+      .map((method) => {
+        const selected = groups
+          .filter((g) => g.method === method && g.complete)
+          .sort((a, b) => b.balanced_accuracy_drop - a.balanced_accuracy_drop);
+        if (selected.length !== 3)
+          return `${methods[method]}: incomplete comparison`;
+        const max = selected[0].balanced_accuracy_drop;
+        const tied = selected.filter(
+          (g) => Math.abs(g.balanced_accuracy_drop - max) < 1e-10,
+        );
+        return `${methods[method]}: ${tied.map((g) => tasks[g.task]).join(" / ")}${tied.length > 1 ? " tied" : " had the largest mean loss"} (${loss(max)})`;
+      })
+      .join(". ") +
+    ". These are descriptive orders in four evaluation participants, not a statistically established general ranking.";
+  byId("ranking-results").replaceChildren(
+    makeTable(
+      [
+        "Mean balanced-accuracy loss",
+        ...data.config.methods.map((m) => methods[m]),
+      ],
+      rows,
+    ),
+    findings,
+  );
+  const individual = data.points
+    .filter((p) => p.split === "evaluation" && p.budget === budget)
+    .map((p) => [
+      `S${String(p.subject).padStart(2, "0")}`,
+      tasks[p.task],
+      methods[p.method],
+      p.feasible ? percent(p.balanced_accuracy) : "Unavailable",
+      p.feasible ? loss(p.balanced_accuracy_drop) : "Unavailable",
+      p.feasible ? p.rate.toFixed(1) : "Unavailable",
+      p.feasible ? percent(p.flip_rate) : "Unavailable",
+    ]);
+  byId("participant-results").replaceChildren(
+    makeTable(
+      [
+        "Participant",
+        "Application",
+        "Codec",
+        "Balanced accuracy",
+        "Loss",
+        "Actual B/s/ch",
+        "Prediction changes",
+      ],
+      individual,
     ),
   );
-  const limitation = document.createElement("p");
-  limitation.className = "takeaway";
-  limitation.textContent =
-    "The relationship is descriptive for this cohort, quantizer and frozen decoder. A prediction flip can correct an error or create one. Six evaluation participants are too limited to establish a general rule for EEG compression.";
-  target.append(limitation);
 }
 
 export async function loadExperimentResults() {
   try {
-    const response = await fetch("results/summary.json");
-    if (!response.ok) throw new Error("No recorded run is available.");
-    const summary = await response.json();
-    if (summary.status !== "measured" || summary.schema_version !== 1)
-      throw new Error("Unsupported result format.");
-    const config = summary.provenance.configuration;
-    const status = byId("experiment-status");
-    status.replaceChildren();
-    const text = document.createElement("p");
-    text.textContent = `Measured public EEG: ${summary.development_trials} development trials (S1–S2), ${summary.evaluation_trials} evaluation trials (S3–S8). All eight participants are experienced SSVEP users. Four targets (9, 11, 13, 15 Hz), three occipital channels, four seconds per trial at 250 Hz. No artifact rejection; no classifier training or evaluation-set tuning.`;
-    const links = document.createElement("p");
-    links.className = "inline-links";
-    for (const [href, label] of [
-      ["results/trials.csv", "Trial-level CSV"],
-      ["results/provenance.json", "Run settings & provenance"],
-      ["results/original_trials.csv", "Original decisions CSV"],
-    ]) {
-      const a = document.createElement("a");
-      a.href = href;
-      a.textContent = label;
-      links.append(a);
-    }
-    status.append(text, links);
-    const details = document.createElement("details");
-    details.innerHTML =
-      "<summary>Representation, timing and reproducibility</summary>";
-    for (const note of summary.provenance.notes) {
-      const p = document.createElement("p");
-      p.className = "small";
-      p.textContent = note;
-      details.append(p);
-    }
-    const p = document.createElement("p");
-    p.className = "small";
-    p.textContent = `Stored window: samples ${config.start_sample}:${config.stop_sample}; 0.14–4.14 s after stimulus onset. Channels: ${config.channels.join(", ")}. Run generated ${summary.provenance.generated_at_utc}. Source commit: ${summary.provenance.code_commit}.`;
-    details.append(p);
-    status.append(details);
-    renderPrecision(summary);
-    renderGap(summary);
-    const examplesResponse = await fetch("results/examples.json");
-    if (!examplesResponse.ok)
+    const response = await fetch("results/benchmark/summary.json");
+    if (!response.ok)
+      throw new Error("The benchmark exports are not available yet.");
+    const data = await response.json();
+    if (!data.complete)
       throw new Error(
-        "The result summary loaded but example waveforms could not load.",
+        "The benchmark is still incomplete. No final cross-task ranking is shown.",
       );
-    setUpExample(await examplesResponse.json());
+    baselines(data);
+    renderTask(data);
+    renderRanking(data);
+    byId("benchmark-method").addEventListener("change", () => renderTask(data));
+    byId("benchmark-budget").addEventListener("change", () =>
+      renderRanking(data),
+    );
+    byId("experiment-status").textContent =
+      `Measured OpenBMI benchmark: ${data.config.evaluation_subjects.length} evaluation participants, three applications, three compression pipelines and four storage caps. Exact float32 recovery was verified with the lossless control. Development participants are excluded from these means.`;
   } catch (error) {
     byId("experiment-status").textContent =
-      `${error.message} Run the experiment command in the repository to generate the exports; no placeholder numbers are shown.`;
+      `${error.message} The protocol and implementation are available in the repository; no placeholder results are displayed.`;
   }
 }

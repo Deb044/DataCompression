@@ -680,6 +680,17 @@ td:last-child {
   margin: 0;
   padding: 0;
 }
+.benchmark-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-block: 16px;
+  font-weight: 650;
+}
+.benchmark-plot {
+  width: 100%;
+  margin-bottom: 24px;
+}
 .process-list li {
   padding: 16px 0;
   border-top: 1px solid var(--line);

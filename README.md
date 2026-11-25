@@ -1,113 +1,91 @@
 # EEG Compresion
 
-An interactive exploration of compression foundations, EEG signals, a rapid structured literature review, and two controlled experiments on public SSVEP recordings. The title preserves the requested spelling.
+An interactive, self-contained introduction to data compression and a measured benchmark of three EEG applications: SSVEP recognition, motor imagery and single-flash P300 detection.
 
-## View the site
+## The question
 
-Serve the repository as static files:
+At the same storage allowance, which application-and-decoder combinations lose performance fastest, and does their ordering depend on the compressor?
 
-```sh
-python -m http.server 8000
-```
+This is a small paired benchmark. It cannot establish a universal ranking of EEG tasks. Same participants and acquisition setup reduce confounding, but decoders, class counts and baseline difficulty still differ.
 
-Open http://localhost:8000. The site has no framework, external scripts, package installation or build step. The default Contents page links to five numbered modules: Overview, Techniques, EEG, Literature and Experiments. The site title and Contents navigation link return to this index; existing module links still work directly. Browser demonstrations are clearly marked as synthetic or illustrative; the EEG results are loaded from recorded Python exports.
+## Website
 
-The hosted site is publicly visible to anyone with its URL. The public repository contains the site and result exports; it does not contain the original participant files.
+Public site: https://da3021-compression-lab-deb044.solidflask.chatgpt.site/
 
-## Reproduce the experiments
+For local use, run `python -m http.server 8000` and open http://localhost:8000. The default Contents page links to Overview, Techniques, EEG, Literature and Experiments. There is no frontend build or runtime package dependency. Synthetic demonstrations are labeled separately from measured EEG results.
 
-Python 3.11+ and a CPU are sufficient. From the repository root, on Windows:
+## Reproduce
+
+Python, a CPU and 16 GB RAM are sufficient for the implemented sequential loader. Downloads and the full run can take substantial time depending on the connection and CPU; there is no GPU requirement.
 
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
-.\.venv\Scripts\python.exe -m unittest experiments.test_experiments -v
-.\.venv\Scripts\python.exe -m experiments.run
-.\.venv\Scripts\python.exe -m experiments.verify
+.\.venv\Scripts\python.exe -m unittest benchmark.test_benchmark -v
+.\.venv\Scripts\python.exe -m benchmark.data
+.\.venv\Scripts\python.exe -m benchmark.run
+.\.venv\Scripts\python.exe -m benchmark.verify --replay
+.\.venv\Scripts\python.exe -m benchmark.report
 ```
 
-On macOS/Linux, replace `.\.venv\Scripts\python.exe` with `.venv/bin/python`. The first run downloads approximately 844 MB of original archives/metadata from the official Tsinghua server. Extraction needs roughly another 1.5 GB of disk space. Files are cached in ignored `.data/benchmark/`; participants are loaded one at a time. To download without analysis, add `--download-only`. Use `--cache PATH` and `--output PATH` to change the locations.
+On other systems use the corresponding virtual-environment Python path. `benchmark.run --subjects 1 --tasks SSVEP --baseline-only --output tmp/baseline-check` is a small original-data check. Subset runs are marked incomplete and must not be presented as the final benchmark.
 
-The source manifest pins sizes and SHA256 values computed from official HTTPS downloads. These are local reproducibility pins, not publisher-authenticated checksums. Cached extracted files are tied to their source archive and checked before reuse. A changed source fails verification instead of silently changing the experiment.
+Data and encoded reconstruction corpora are cached in ignored `.data/openbmi/`. The initial download is several GB: six participants, three tasks, session 1 offline blocks. Process one MATLAB recording at a time. The loader then caches the common-preprocessed arrays, avoiding repeated decompression of large MATLAB variables. Measured caches are tied to protocol and implementation hashes. Delete only stale `*_measured.json` files if intentionally changing the implementation; the original source cache can be retained.
 
-### Fixed task and split
+## Fixed protocol
 
-- Dataset: [Wang et al., SSVEP benchmark](https://doi.org/10.1109/TNSRE.2016.2627556), [official downloads](https://bci.med.tsinghua.edu.cn/download.html).
-- Development: S1–S2, 48 trials. Evaluation: S3–S8, 144 trials. These are all **experienced participants**, not a representative sample of all 35 participants.
-- Targets: 9, 11, 13 and 15 Hz, six trials each per participant. This is a simplified four-class task with 25% chance accuracy, not the full 40-target benchmark.
-- Channels: O1, Oz and O2, selected by channel names in the official metadata. Frequency indices are also resolved from metadata, whose order is not sorted.
-- Released sampling rate: 250 Hz. Window: samples `160:1160`, corresponding to 0.14–4.14 seconds after stimulus onset. The epoch begins 0.5 seconds before onset.
-- Preprocessing: subtract each channel's window mean and convert to float32. No artifact rejection or additional filtering.
-- Decoder: demean, apply one Hann window, FFT, then sum power at the nearest bins to each candidate's fundamental and second harmonic across all three channels. Equal weights, no classifier training or evaluation-set tuning.
+The initial protocol was committed before inspecting waveforms or classification outcomes. See `benchmark/config.json` and the recorded implementation/protocol hashes. No evaluation participant was selected or excluded based on results.
 
-The protocol is in `experiments/config.json`, committed before reading the waveforms. The original downloaded MATLAB arrays are float64; the float32 storage denominator is a declared representation change, **not** a claim about the acquisition resolution. The maximum float32 casting discrepancy is exported per trial. Amplitude units were not explicit in the official readme, so plots use “dataset amplitude units.”
+- Data: [Lee et al., OpenBMI (2019)](https://doi.org/10.1093/gigascience/giz002), dataset DOI [10.5524/100542](https://doi.org/10.5524/100542). Official GigaDB object-storage URLs follow the current MOABB loader.
+- Development participants S01–S02; evaluation participants S03–S06. Session 1, labeled offline (`*_train`) variables only. Online and resting-state blocks are not used.
+- The MATLAB files have compressed top-level variables. The downloader identifies the offline variable by name, fetches its entire byte range and prepends the original MATLAB header. ERP puts the online variable first, unlike MI and SSVEP. Every source URL, range, total source length and locally computed SHA256 is exported. These hashes pin downloaded ranges; they are not publisher-authenticated checksums of the full files.
+- Event indices are converted from MATLAB one-based indices. ERP source events can be stored out of order; onset-label pairs are stably sorted together. No labels are inferred or repaired. Source label mappings are checked explicitly.
+- Shared stored montage: C3, Cz, C4, FC1, FC2, CP1, CP2, Pz, POz, O1, Oz, O2. Source channels are selected by name, not guessed index. Auxiliary EMG is excluded.
+- Shared representation: resample 1000 Hz source recordings to 128 Hz with anti-alias filtering, then fourth-order 0.5–40 Hz Butterworth forward/backward filtering and float32 conversion. This is offline/noncausal filtering on the continuous offline recording, not a streaming system. Its temporal filtering dependencies are not eliminated by the epoch guard.
+- Chronological split at 60% of source events. Training epochs must finish at least two seconds before the boundary; test epochs begin at least two seconds after. No overlapping train/test epochs. Classifiers for evaluation subjects are calibrated using their own early block; evaluation subjects are not unseen to their own classifier.
+- SSVEP and MI use 4-second epochs; ERP uses 1-second epochs. ERP epochs can overlap within a block, but compression is applied once to the continuous test interval, not independently to overlapping epochs. The actual unique test-interval duration defines storage rate, including intervening gaps.
 
-### Experiment 1: how many bits are enough?
+## Frozen decoders
 
-Quantize at 16, 12, 8, 6, 4 and 2 bits using uniform quantization and the optional continuous μ-law baseline (μ = 255). Each trial/channel uses stored float32 minimum/maximum endpoints. Codes are packed into actual b-bit fields with zero tail padding. A versioned binary header stores method and dimensions; μ = 255 is fixed by format version EEG1.
+- SSVEP: CCA on O1/Oz/O2 against sine/cosine references at 12, 8.57, 6.67 and 5.45 Hz with three harmonics. Rank-deficient compressed input is handled by an SVD signal subspace. No label-fitted classifier.
+- MI: 8–30 Hz filtering on seven motor-region channels, trace-normalized covariance, 5% identity regularization, four CSP filters (two from each eigenvalue extreme), log normalized variance, shrinkage LDA.
+- ERP: 0.5–12 Hz filtering, six 100 ms averages from 0.1 to 0.7 seconds on all twelve channels, standardization and equal-prior shrinkage LDA. This measures target/non-target detection per flash, not 36-character spelling accuracy.
 
-Store the payload in a one-member DEFLATE ZIP archive with a fixed filename/date and level 9 compression. Reconstruct using only that archive, then run the same decoder. The lossless float32 control is checked byte-for-byte. Archives do not contain target labels or original decoder scores.
+Each fitted decoder is reused unchanged for every reconstruction. No retraining or codec selection based on test accuracy occurs.
 
-Measure payload bytes before ZIP, complete archive bytes, NRMSE, true-label accuracy, prediction flips and all correct/wrong transitions. Each trial is archived independently; corpus sizes sum independent archives. Ratios use the selected centered float32 payload. Different Python/zlib versions may produce different archive sizes; the measured environment is recorded.
+## Matched storage allowances
 
-NRMSE is `||x - reconstructed_x|| / ||x - per_channel_mean(x)||`, pooling channels and samples. Constant signals have undefined NRMSE. The continuous μ-law baseline is not a bit-exact G.711 implementation. Equal bit depths do not imply equal ZIP sizes.
+Three pipelines: symmetric uniform amplitude quantization, symmetric mu-law companding (mu=255) followed by uniform quantization, and orthonormal type-II DCT prefix retention followed by symmetric coefficient quantization. All use integer bit packing and DEFLATE ZIP level 6. Mu-law here is a continuous teaching compander, not G.711.
 
-In this EEG variant, μ-law follows min–max normalization to [−1, 1], so its fine-resolution region is centered on the channel's range midpoint, not necessarily zero in the mean-centered recording. The results apply to this declared variant. Symmetric scaling around physical zero would be a separate controlled comparison, not a conclusion from this run.
+One-second frames receive caps of 32, 64, 128 and 256 bytes/second/channel. With twelve channels these mean total caps of 384, 768, 1536 and 3072 bytes/second. Raw selected float32 requires 512 bytes/second/channel. Each codec sees every stored channel, even when its task decoder uses a subset.
 
-### Experiment 2: which predictions change?
+A self-contained `.eegpack` contains a JSON header with channel order, sampling rate and dimensions, followed by length-prefixed independent frame ZIPs. Each frame stores the format version, method, precision, shape, retained-coefficient count and float32 per-channel scale. Mu=255 and the DCT convention are fixed by version EEG2. All these bytes count. Global-header overhead is conservatively reserved across frames, so the complete corpus cannot exceed its cap.
 
-Compute the original normalized score gap `(best - runner_up) / (best + runner_up + 1e-12)`. Development-participant tertiles define low/middle/high groups; the thresholds are frozen before evaluating S3–S8. Evaluation group sizes need not be equal.
+For each input frame the encoder searches the finite candidate grid in config and chooses the feasible candidate with lowest sample-domain MSE. This uses original waveform values available at encoding, but no labels, classifier outputs or downstream accuracy. DCT search considers the declared prefix lengths and coefficient precisions. Infeasible conditions are explicitly reported, never silently replaced. Equal caps do not imply exactly equal achieved sizes; actual rates are exported. Encoder search costs and decoder model weights are outside the storage measurement. Task event annotations are agreed separately for all codecs and are not encoded as EEG payload.
 
-The prespecified primary condition is **uniform, 2 bits**. Report prediction flips separately from originally correct decisions becoming wrong. Compare low-gap failure-ranking ROC AUC with amplitude range/RMS and low spectral concentration. Spectral concentration is the candidate-bin power divided by total FFT power in 6–40 Hz. These predictors are fixed; none is fitted on evaluation labels.
+A float32+ZIP control must reconstruct byte-exact input samples and preserve all decisions. Every lossy score is computed after decoding its saved corpus, not an unarchived approximation.
 
-Use 500 seeded gap shuffles within participant and true-target strata. The central 95% shuffled range is a null range, not a confidence interval. The shuffled mean need not be 0.5, because between-participant and target differences remain. AUC/permutation tests are undefined if all predictions have the same flip outcome. Other precision conditions are exploratory and their p values are not multiplicity-corrected. Participant-level results are shown instead of treating all repeated reconstructions as independent participants.
+## Measurements and interpretation
 
-Adaptive bit allocation and a second EEG task are not implemented: they remain extensions beyond the two core experiments. This keeps the completed comparison small and interpretable.
+Primary score: balanced accuracy; primary comparison: its absolute drop from the original baseline, in percentage points. Negative drops are improvements. Report original baselines and chance (25% SSVEP, 50% MI/ERP), ordinary accuracy, binary ROC-AUC, prediction-change rates, full confusion matrices, NRMSE and actual bytes. NRMSE is the error norm divided by the norm of channel-mean-removed original samples. Participant means have equal weight, rather than allowing ERP's larger trial count to dominate.
 
-## Measured findings and their limits
+The interface flags baselines within five percentage points of chance as weak; this is a descriptive warning and does not exclude participants. Participants, especially low-baseline MI users, remain visible individually. Four evaluation participants do not support a universal or clinically validated task ranking. Plotted participant ranges are not confidence intervals. Lines between tested budgets are guides only. Method-specific ranks are descriptive, including ties, not significance tests. No superiority over optimized codecs is claimed.
 
-The checked-in run contains 2,496 condition-level rows across 192 original trials. On the 144 evaluation trials, original accuracy was **87.50%**. Uniform 2-bit accuracy was **86.81%**, but **12 predictions changed**: five correct answers became wrong, four wrong answers became correct, and three wrong answers changed to other wrong answers. This illustrates why aggregate accuracy alone is incomplete.
+## Files
 
-Uniform 2-bit storage was **47.38 actual ZIP bytes/second/channel**, against 1,000 bytes/second/channel for the selected uncompressed float32 representation. Mean NRMSE was approximately **0.599**: preserving many decisions did not mean faithful waveform recovery. These are observations for this small, simplified task, not a generally safe EEG compression setting.
+- `benchmark/config.json`: frozen protocol and finite codec grids.
+- `benchmark/data.py`: verified range downloads, source mappings and common preprocessing.
+- `benchmark/codec.py`: self-contained ZIP frame encoders and corpus reader.
+- `benchmark/decoders.py`: the three original-data decoders.
+- `benchmark/run.py`: chronological evaluation and recorded exports.
+- `benchmark/test_benchmark.py`: codec, cap, leakage and decoding edge-case checks.
+- `benchmark/verify.py`: independent metric/byte checks and optional complete evaluation replay.
+- `benchmark/report.py`: standalone plots from measured data.
+- `results/benchmark/summary.json`: configuration, measured points, participant aggregates, environment and source hashes.
+- `results/benchmark/predictions.csv`: original and reconstructed predictions for every tested condition.
+- `results/benchmark/archives/`: first-frame examples for S03; full encoded test corpora remain in the ignored local cache and can be regenerated.
+- `experiment-view.js`: interactive results display; it refuses incomplete exports.
 
-The primary score-gap AUC was approximately **0.963**, compared with approximately **0.872** for the stratified shuffled null mean. Only 12 flips were observed; the strong-looking pooled ranking must be interpreted with the cohort and decoder restrictions. See the complete rows, group counts, participant results and null controls on the site.
+The earlier single-task precision/score-gap experiments are superseded and removed from the active site and code. Their history remains in Git. Literature references are contextual evidence, not reproduced performance results. The original literature search log is historical and does not document this new experimental protocol.
 
-Results and data needed to inspect them:
-
-- `results/summary.json`: all conditions, participant summaries and gap controls.
-- `results/trials.csv`: every paired reconstruction, including actual byte counts and archive hashes.
-- `results/original_trials.csv`: original decisions and signal features.
-- `results/provenance.json`: exact code commit, configuration, source pins, environment and timing.
-- `results/examples.json`: four predeclared examples from S3 block 1, all selected targets, with original and reconstructed Oz traces. Display arrays are rounded; metrics use full precision.
-- `results/archives/`: all 13 conditions for the first predeclared example, including the byte-exact float32 control.
-- `results/*.png`: standalone scientific figures generated from the measured exports.
-
-The static page reads these files. Its selectors inspect saved results; it does not rerun the Python experiment or download the original corpus in a visitor's browser. Regenerate the exports with the run command after changing the protocol.
-
-## Source layout
-
-| File                                                       | Responsibility                                                                  |
-| ---------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| `index.html`, `styles.css`                                 | Lesson content and responsive layout                                            |
-| `app.js`, `signal.js`, `samples.js`, `zip.js`              | Navigation and clearly labelled foundation demonstrations                       |
-| `content/references.json`                                  | Verified references; the literature narrative is in index.html                  |
-| `experiment-view.js`, `table.js`                           | Render saved experiment exports and interactive recorded examples               |
-| `experiments/dataset.py`                                   | Verified downloads, cache and trial extraction                                  |
-| `experiments/codec.py`                                     | Bit packing, self-contained payload and ZIP reconstruction                      |
-| `experiments/decoder.py`                                   | Fixed FFT scores, waveform error and signal features                            |
-| `experiments/analysis.py`                                  | Paired summaries, AUC and stratified permutation controls                       |
-| `experiments/run.py`, `experiments/plots.py`               | Reproducible run and figure exports                                             |
-| `experiments/test_experiments.py`, `experiments/verify.py` | Meaningful algorithm checks and independent result audit                        |
-| `research/`, `output/pdf/`                                 | Search log and original literature-review/protocol PDF, prepared before the run |
-
-## Sources and disclosure
-
-The EEG introduction is self-contained. Its frequency-band explanations link to the American Epilepsy Society EEG atlas, and its discussion of muscle contamination links to Whitham et al. (2007). Band boundaries and associations are presented as approximate and context-dependent.
-
-The review is a **rapid structured review**, not an exhaustive systematic review. It marks preprints, abstract-level access and uncertain publication metadata. We do not claim a globally new compression method, clinical suitability, hardware energy savings or superiority over learned codecs. See `content/references.json`, the PDF and `research/search_log.json` for source details and coverage limits.
-
-AI assistance was used for literature discovery, drafting, code and protocol development. Measured outputs are generated by the supplied code, not fabricated by the language model. Read and verify the central sources before presenting the work.
-
-The Techniques chapter also covers PNG and common lossy JPEG coding. `image-demo.js` encodes opaque synthetic images with the browser PNG/JPEG encoders, reporting actual file bytes and decoded RGB RMSE. Quality settings are encoder parameters, not percentages of retained information.
-
-The image lesson also compares thresholding and Floyd–Steinberg dithering with actual one-bit packing and ZIP measurements (`halftone.js`). The literature chapter is a linked narrative with a conceptual SVG and a measured waveform illustration.
+AI assistance was used for source discovery, writing and implementation. All research numbers shown on the site come from recorded runs and are independently checked; no participant recordings are redistributed in the public repository.

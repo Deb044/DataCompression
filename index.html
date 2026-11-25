@@ -99,10 +99,11 @@
               <a href="#experiments" class="module-link">
                 <span class="module-number">05</span>
                 <div>
-                  <h3>Experiments: how many bits does a decision need?</h3>
+                  <h3>Experiments: which task loses performance first?</h3>
                   <p>
-                    Measure the storage–precision trade-off, then examine which
-                    trials are most vulnerable to prediction changes.
+                    Compare SSVEP, motor imagery and P300 at matched storage
+                    budgets, then test whether the ranking changes across
+                    codecs.
                   </p>
                 </div>
               </a>
@@ -929,16 +930,16 @@
               >
             </p>
             <div class="note">
-              <strong>Our task: SSVEP.</strong> When a person attends to a
-              flickering target, a steady-state visual evoked response can
-              appear at the stimulus frequency and harmonics. We use an
-              FFT-based score to identify one of four candidate targets in
-              recorded public EEG. We do not flash stimuli or collect new
-              recordings.
+              <strong>Three tasks, three feature types.</strong> SSVEP
+              recognition uses a sustained response at a flicker frequency;
+              motor imagery uses changes in rhythmic power across motor-related
+              channels; P300 detection uses a brief response following an
+              attended event. We compare how compression affects these different
+              applications using recorded EEG.
             </div>
             <p class="source-note">
-              <a href="https://doi.org/10.1109/TNSRE.2016.2627556"
-                >Source: SSVEP benchmark dataset</a
+              <a href="https://doi.org/10.1093/gigascience/giz002"
+                >Source: OpenBMI three-paradigm dataset</a
               >
             </p>
           </div>
@@ -974,11 +975,11 @@
           <p class="takeaway">
             Our pipeline:
             <strong
-              >EEG segment · quantize · pack + ZIP · reconstruct · FFT +
-              decision.</strong
+              >EEG segment · encode under a byte cap · reconstruct · frozen task
+              decoder.</strong
             >
-            Quantization introduces loss. ZIP preserves the quantized
-            representation exactly.
+            Quantization and coefficient selection introduce loss. ZIP preserves
+            the resulting coded representation exactly.
           </p>
         </section>
         <div class="chapter-end">
@@ -1099,7 +1100,8 @@
               explanation. DFT, DCT and wavelets are transforms, not quantizers.
               Loss enters through discarding or approximating values; the final
               entropy coder need not introduce further loss. Our experiments
-              quantize samples directly and do not implement a wavelet codec.
+              compare sample quantization with DCT-based coding; they do not
+              implement a wavelet codec.
             </figcaption>
           </figure>
           <h2>Smaller by how much? Different by how much?</h2>
@@ -1141,9 +1143,9 @@
             that is not a universal clinical safety threshold. Its discussion
             also describes studies testing seizure detection after
             reconstruction: the task outcome adds evidence that a waveform error
-            alone cannot provide. Here we use an SSVEP target-recognition task.
-            Preserving that decision does not establish suitability for seizure
-            detection or clinical interpretation.
+            alone cannot provide. Here we compare SSVEP, motor imagery and P300
+            decoding. Preserving these decisions does not establish suitability
+            for seizure detection or clinical interpretation.
           </p>
           <figure class="article-figure">
             <img
@@ -1223,75 +1225,49 @@
             selection of replay examples for continual learning. Both are recent
             directions; we treat their findings as provisional.
           </p>
-          <figure class="article-figure">
-            <a href="results/example.png"
-              ><img
-                src="results/example.png"
-                width="1800"
-                height="1000"
-                loading="lazy"
-                alt="Our measured original and two-bit reconstructed Oz waveform, with their FFT spectra"
-            /></a>
-            <figcaption>
-              A concrete example from our own run: S03, block 1, target 9 Hz,
-              uniform 2-bit reconstruction. The example was chosen by trial
-              order before the results, not for a striking effect. The waveform
-              changes substantially while the target decision remains 9 Hz. This
-              illustrates our experiment, not a result reproduced from the
-              papers above.
-            </figcaption>
-          </figure>
-          <h2>From the literature to two experiments</h2>
+          <h2>One storage budget. Three different kinds of information.</h2>
           <p>
-            The literature leaves us with two connected lessons. A smaller EEG
-            file should be judged by what it preserves for an intended use, and
-            an average result can hide differences between individual
-            recordings. We turn those lessons into two manageable questions,
-            using public SSVEP recordings: can we still identify which
-            flickering target a participant attended to after reducing the
-            signal's precision?
-          </p>
-          <h3>Experiment 1: How many bits are enough?</h3>
-          <p>
-            First, we make the trade-off visible. We reduce the number of bits
-            used to represent each sample, compare uniform and μ-law
-            quantization, and pack the results into real ZIP archives. After
-            reconstruction, we measure three things together: file size,
-            waveform error and target-recognition performance. The same
-            FFT-based decoder is used at every precision, so it does not learn
-            to compensate for the compression. This lets us ask whether a signal
-            can change numerically while still supporting the same decision, and
-            where further storage savings begin to disrupt that decision.
-          </p>
-          <h3>Experiment 2: Which trials fail first?</h3>
-          <p>
-            The first experiment describes the overall trade-off. The second
-            asks whether some individual trials are more vulnerable than others.
-            Before compression, the decoder assigns a score to each candidate
-            target. A small gap between the strongest and second-strongest
-            scores means the choice is close; it is plausible that a small
-            signal change could then change the winner.
-            <a href="https://eprints.whiterose.ac.uk/id/eprint/199879/"
-              >SSVEP confidence research by Zhang and colleagues (2023)</a
-            >
-            already uses separation among recognition scores to assess
-            reliability. We test the narrower hypothesis that a small original
-            gap is associated with prediction changes under compression, with
-            uniform 2-bit quantization as our primary test. Shuffled controls
-            and simple signal statistics help us assess whether the gap offers
-            useful information in this dataset. A changed prediction can be a
-            correction as well as an error, so we examine those separately.
+            EEG tasks use different features. Compression changes those features
+            differently. We therefore give several compressors the same storage
+            allowance and test which task-and-decoder combinations retain useful
+            performance. A frequency-based decision, a spatial pattern and a
+            brief event-related response need not react to the same distortion
+            in the same way.
           </p>
           <p>
-            Together, the experiments move from
-            <em>how much precision can we remove?</em> to
-            <em>which decisions are most sensitive to that removal?</em> This is
-            a small controlled exploration of established ideas, with settings
-            chosen on development participants and checked on separate
-            evaluation participants. It does not establish a universal safe
-            bitrate or clinical suitability. The next tab follows this pipeline
-            through the measurements, including the cases where an unchanged
-            average accuracy hides individual prediction changes.
+            Our benchmark uses
+            <a href="https://doi.org/10.1093/gigascience/giz002"
+              >Lee and colleagues' OpenBMI dataset</a
+            >, which records SSVEP, motor imagery and ERP responses from the
+            same participants using the same acquisition setup. This reduces a
+            major confound in cross-task comparisons, although each task still
+            needs its own decoder and has a different original difficulty.
+          </p>
+          <h3>Experiment 1: Which application loses performance fastest?</h3>
+          <p>
+            We compare uniform quantization, μ-law quantization and a DCT-based
+            pipeline. Each must fit the same allowance in actual bytes per
+            second per channel, including the information needed to reconstruct
+            its signal. For each task we train or calibrate a lightweight
+            decoder on original data, freeze it, and measure how its performance
+            changes on reconstructed test recordings. Balanced accuracy and its
+            change from the original baseline let us inspect the
+            storage–performance trade-off.
+          </p>
+          <h3>Experiment 2: Does the ranking depend on the compressor?</h3>
+          <p>
+            At a fixed budget, we compare the performance loss across all three
+            applications and compression pipelines. If the order changes, a task
+            cannot simply be called compression-resistant or
+            compression-sensitive: the method matters too. Participant-level
+            results reveal whether an average ordering is consistent or driven
+            by one recording.
+          </p>
+          <p>
+            This is a small controlled benchmark, not an established universal
+            ranking. Our conclusion stays local: under these budgets, methods,
+            decoders and recordings, which application lost performance fastest?
+            A weak original baseline or a tie is reported rather than hidden.
           </p>
           <details>
             <summary>References and access notes</summary>
@@ -1299,7 +1275,10 @@
           </details>
         </div>
         <div class="chapter-end">
-          <p>First measure the trade-off. Then examine individual trials.</p>
+          <p>
+            Follow the same storage allowance through three different EEG
+            applications.
+          </p>
           <a class="button primary" href="#experiments"
             >Explore the measured results</a
           >
@@ -1308,89 +1287,174 @@
 
       <article id="experiments" data-page hidden>
         <section class="page-intro">
-          <p class="eyebrow">CONTROLLED EXPLORATION / PUBLIC EEG</p>
+          <p class="eyebrow">THREE TASKS / ONE STORAGE ALLOWANCE</p>
           <h1 id="experiments-title" tabindex="-1">
-            How many bits<br />does a <em>decision need?</em>
+            Which task loses<br /><em>performance first?</em>
           </h1>
           <p class="intro">
-            Two experiments, one fixed pipeline. Every displayed research result
-            must come from a recorded run, with its data subset and settings
-            attached.
+            A sustained frequency, an imagined movement, a brief response. EEG
+            applications rely on different features. We test what survives when
+            three compressors receive the same storage budget.
           </p>
         </section>
-        <div id="experiment-status" class="note" role="status">
-          Loading the measured experiment exports. The trial-level data and
-          settings are available in the repository.
-        </div>
-        <section class="lesson" id="precision-experiment">
-          <p class="eyebrow">EXPERIMENT 1 / PRECISION</p>
-          <h2>How many bits are enough?</h2>
-          <p class="section-intro">
-            Reduce precision, store the actual archive, reconstruct the waveform
-            and run the same target decoder. Compare storage, waveform error and
-            decision changes.
-          </p>
-          <div class="pipeline">
-            <span>Original EEG</span><span>Quantize</span><span>Pack + ZIP</span
-            ><span>Reconstruct</span><span>Fixed FFT decoder</span>
-          </div>
-          <div id="precision-results">
-            <p class="empty-state">
-              The measured precision sweep loads here. See results/trials.csv
-              for the complete recorded data.
-            </p>
-          </div>
-        </section>
-        <section class="lesson" id="gap-experiment">
-          <p class="eyebrow">EXPERIMENT 2 / VULNERABILITY</p>
-          <h2>Which trials fail first?</h2>
-          <p class="section-intro">
-            Does the original strongest-versus-runner-up score gap predict later
-            compression failures? Compare gap groups with a shuffled control and
-            simple signal statistics.
-          </p>
-          <div class="note">
-            A large score gap is not a calibrated probability. Keeping an
-            originally wrong prediction unchanged is decision stability, not
-            preserved accuracy.
-          </div>
-          <div id="gap-results">
-            <p class="empty-state">
-              The recorded gap comparisons load here. Undefined metrics are
-              explicitly marked.
-            </p>
+        <section class="lesson">
+          <h2>What does each application need?</h2>
+          <div class="story-steps">
+            <div>
+              <span class="pill">SSVEP</span>
+              <h3>Which target was attended to?</h3>
+              <p>
+                CCA compares occipital EEG with sine/cosine references at four
+                flicker frequencies and their harmonics. The useful pattern is
+                sustained and frequency-specific.
+              </p>
+            </div>
+            <div>
+              <span class="pill">Motor imagery</span>
+              <h3>Imagine the left or right hand.</h3>
+              <p>
+                CSP spatial filters and shrinkage LDA distinguish changes in
+                8–30 Hz motor-channel activity. The useful differences involve
+                channels and rhythmic power.
+              </p>
+            </div>
+            <div>
+              <span class="pill">ERP / P300</span>
+              <h3>Was this flash a target?</h3>
+              <p>
+                Time-window averages and shrinkage LDA distinguish target and
+                non-target responses. We measure single-flash detection, not
+                complete spelling accuracy.
+              </p>
+            </div>
           </div>
         </section>
         <section class="lesson">
-          <h2>The controls matter.</h2>
-          <div class="story-steps">
-            <div>
-              <h3>One fixed decoder</h3>
-              <p>
-                Freeze settings on development participants. Use the same trials
-                and processing at every precision.
-              </p>
-            </div>
-            <div>
-              <h3>Separate evaluation data</h3>
-              <p>
-                Evaluate on different participants. Declare the simplified task,
-                cohort and final sample size.
-              </p>
-            </div>
-            <div>
-              <h3>Actual archive sizes</h3>
-              <p>
-                Include reconstruction metadata. Compare against the declared
-                float32 representation, not an invented acquisition bit depth.
-              </p>
-            </div>
-          </div>
-          <p class="takeaway">
-            An exploratory storage-and-analysis study. It does not measure
-            clinical suitability, battery life or whether every future analysis
-            survives.
+          <h2>Make the comparison count.</h2>
+          <p class="prose wide">
+            We use session 1 labeled offline recordings from the same six
+            OpenBMI participants. S01–S02 are development participants; S03–S06
+            form the evaluation cohort. Each decoder is fitted to early
+            original-data events and tested on later events, with a two-second
+            guard around the split. Compression never retrains the decoder.
           </p>
+          <div class="pipeline">
+            <span>Original EEG</span><span>One-second frames</span>
+            <span>Encode under byte cap</span><span>Reconstruct</span
+            ><span>Frozen task decoder</span>
+          </div>
+          <p class="prose wide">
+            All tasks store the same 12 channels at 128 samples/s after a common
+            0.5–40 Hz filter. The codecs use symmetric uniform quantization,
+            symmetric μ-law companding (μ = 255), or retained DCT coefficients
+            with uniform quantization, followed by DEFLATE ZIP. These are simple
+            teaching codecs, not optimized clinical or neural compressors.
+          </p>
+          <p class="prose wide">
+            A budget is
+            <strong
+              >32, 64, 128 or 256 actual bytes per second per channel</strong
+            >. With the shared 12-channel montage these also specify equal total
+            storage rates: 384, 768, 1,536 or 3,072 bytes/s. Each frame pays for
+            its ZIP archive, scales and shape metadata, length prefix and a
+            share of the corpus header. The original float32 samples require 512
+            bytes/s/channel before compression.
+          </p>
+          <p class="prose wide">
+            The encoder chooses the lowest waveform-error candidate in a
+            declared finite grid that fits its cap. It sees the input waveform,
+            but no target labels or classifier scores. We compare equal upper
+            limits, not pretend that discrete codecs always fill exactly the
+            same number of bytes.
+          </p>
+        </section>
+        <div id="experiment-status" class="note" role="status">
+          Loading recorded benchmark results…
+        </div>
+        <section class="lesson" id="task-experiment">
+          <p class="eyebrow">EXPERIMENT 1 / PERFORMANCE VERSUS STORAGE</p>
+          <h2>Which task loses performance fastest?</h2>
+          <p class="section-intro">
+            First check the original baselines. Then compare the drop in
+            balanced accuracy at each budget. Balanced accuracy gives each class
+            equal weight; this matters for the unequal target/non-target counts
+            in P300.
+          </p>
+          <div id="baseline-results"></div>
+          <div class="controls">
+            <label for="benchmark-method">Compression pipeline</label>
+            <select id="benchmark-method">
+              <option value="uniform">Uniform + ZIP</option>
+              <option value="mulaw">μ-law + ZIP</option>
+              <option value="dct">DCT + ZIP</option>
+            </select>
+          </div>
+          <div id="task-results"></div>
+          <p class="small">
+            Evaluation means weight participants equally. Negative drops mean
+            performance improved. Lines join tested budgets as a visual guide;
+            they are not additional measurements. Actual achieved rates are
+            reported alongside the assigned caps.
+          </p>
+        </section>
+        <section class="lesson" id="compressor-experiment">
+          <p class="eyebrow">EXPERIMENT 2 / DOES THE ORDER CHANGE?</p>
+          <h2>Is there one hardest application?</h2>
+          <p class="section-intro">
+            Compare task losses across compressors at the same budget. A
+            consistent order would be evidence within this benchmark; changing
+            orders or ties would be a useful result too.
+          </p>
+          <div class="controls">
+            <label for="benchmark-budget">Budget, bytes/s/channel</label>
+            <select id="benchmark-budget">
+              <option>32</option>
+              <option>64</option>
+              <option>128</option>
+              <option>256</option>
+            </select>
+          </div>
+          <div id="ranking-results"></div>
+          <details>
+            <summary>Inspect individual participants</summary>
+            <div id="participant-results"></div>
+          </details>
+        </section>
+        <section class="lesson">
+          <h2>What this can—and cannot—tell us.</h2>
+          <p class="prose wide">
+            These are distinct paradigms from the same acquisition study, not
+            minor variations of a single task. But each has its own decoder,
+            class structure and baseline difficulty. This is therefore a
+            comparison of application-and-decoder combinations. Four evaluation
+            participants and one recording session cannot establish which EEG
+            task is generally hardest across all populations or algorithms.
+          </p>
+          <p class="prose wide">
+            A near-chance baseline can appear resistant simply because there is
+            little useful performance to lose. Every participant is retained,
+            and weak baselines are flagged. Preserved aggregate accuracy also
+            need not mean preserved individual decisions; prediction changes and
+            waveform error are included in the recorded exports.
+          </p>
+          <p class="prose wide">
+            The common filtering is offline and noncausal. The byte counts cover
+            EEG reconstruction, not decoder model weights or experiment
+            annotations, which are agreed separately for every method. We do not
+            measure real-time latency, battery use or clinical suitability.
+          </p>
+          <div class="inline-links">
+            <a href="benchmark/config.json">Frozen protocol</a>
+            <a href="results/benchmark/summary.json"
+              >Measured results and source hashes</a
+            >
+            <a href="results/benchmark/predictions.csv"
+              >Trial predictions (CSV)</a
+            >
+            <a href="https://doi.org/10.1093/gigascience/giz002"
+              >OpenBMI dataset paper</a
+            >
+          </div>
         </section>
       </article>
     </main>
