@@ -1,15 +1,41 @@
 """Tests that target paired inference and the new spectral decoder."""
 
 import unittest
+from unittest.mock import patch
+from io import BytesIO
+from pathlib import Path
+import tempfile
 
 import numpy as np
 
 from .alternative_decoders import SpectralDecoder
+from .data import download_range
 from .statistics import analyze
 from .test_benchmark import CONFIG
 
 
 class ExtensionTests(unittest.TestCase):
+    def test_short_download_resumes_and_wrong_range_is_rejected(self):
+        class Response(BytesIO):
+            status = 206
+
+            def __init__(self, data, content_range):
+                super().__init__(data)
+                self.headers = {'Content-Range': content_range}
+
+        with tempfile.TemporaryDirectory() as folder:
+            partial = Path(folder) / 'source.part'
+            responses = [Response(b'ab', 'bytes 0-4/5'), Response(b'cde', 'bytes 2-4/5')]
+            with patch('urllib.request.urlopen', side_effect=responses) as request:
+                download_range('https://example.com/source', partial, b'h' * 128, 0, 4, 5)
+            self.assertEqual(partial.read_bytes(), b'h' * 128 + b'abcde')
+            self.assertEqual(request.call_args_list[1].args[0].get_header('Range'), 'bytes=2-4')
+            invalid = Path(folder) / 'invalid.part'
+            with patch('urllib.request.urlopen', return_value=Response(b'abcde', 'bytes 1-5/6')):
+                with self.assertRaises(ValueError):
+                    download_range('https://example.com/source', invalid, b'h' * 128, 0, 4, 5)
+            self.assertEqual(invalid.stat().st_size, 128)
+
     def test_spectral_decoder_and_constant_input(self):
         time = np.arange(512) / 128
         x = np.array([np.tile(np.sin(2 * np.pi * f * time), (12, 1))

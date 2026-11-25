@@ -9,8 +9,10 @@ from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 import argparse
 import hashlib
+import http.client
 import json
 import struct
+import time
 import urllib.request
 import zlib
 
@@ -29,6 +31,44 @@ def digest(path):
         for block in iter(lambda: stream.read(1024 * 1024), b''):
             h.update(block)
     return h.hexdigest()
+
+
+def download_range(url, partial, header, start, end, total):
+    """Resume bounded HTTP ranges; never accept a mismatched range response."""
+    if partial.exists():
+        with partial.open('rb') as stream:
+            if stream.read(128) != header or partial.stat().st_size > 128 + end - start + 1:
+                raise ValueError('Partial file does not match the requested source')
+    else:
+        partial.write_bytes(header)
+    failures = 0
+    while (received := partial.stat().st_size - 128) < end - start + 1:
+        position = start + received
+        stop = min(end, position + 32 * 1024 * 1024 - 1)
+        request = urllib.request.Request(url, headers={'Range': f'bytes={position}-{stop}'})
+        try:
+            with urllib.request.urlopen(request, timeout=120) as response:
+                expected = f'bytes {position}-{stop}/{total}'
+                if response.status != 206 or response.headers['Content-Range'] != expected:
+                    raise ValueError('Unexpected source range')
+                remaining = stop - position + 1
+                with partial.open('ab') as output:
+                    while remaining:
+                        block = response.read(min(1024 * 1024, remaining))
+                        if not block:
+                            break
+                        output.write(block)
+                        remaining -= len(block)
+        except (OSError, http.client.HTTPException):
+            # Completed bytes remain usable; resume at the actual file length.
+            pass
+        if partial.stat().st_size - 128 > received:
+            failures = 0
+        else:
+            failures += 1
+            if failures >= 5:
+                raise OSError(f'No download progress after five attempts: {url}')
+            time.sleep(2)
 
 
 def fetch_offline(subject, task, cache=CACHE):
@@ -76,13 +116,7 @@ def fetch_offline(subject, task, cache=CACHE):
     length = 136 + count
     source_end = offset + 8 + count - 1
     partial = path.with_suffix('.part')
-    request = urllib.request.Request(url, headers={'Range': f'bytes={offset}-{source_end}'})
-    with urllib.request.urlopen(request, timeout=180) as response, partial.open('wb') as output:
-        if response.status != 206 or response.headers['Content-Range'] != f'bytes {offset}-{source_end}/{total}':
-            raise ValueError('Unexpected source range')
-        output.write(head[:128])
-        for block in iter(lambda: response.read(1024 * 1024), b''):
-            output.write(block)
+    download_range(url, partial, head[:128], offset, source_end, total)
     if partial.stat().st_size != length:
         raise ValueError('Incomplete source range')
     partial.replace(path)
