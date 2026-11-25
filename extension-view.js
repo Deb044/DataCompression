@@ -73,7 +73,7 @@ export function renderPairedTables(data, statistics) {
   );
 }
 
-function renderRobustness(primary, alternative, statistics) {
+function renderRobustness(primary, statistics) {
   const budget = Number(byId("robustness-budget").value);
   const rows = primary.config.tasks.flatMap((task) =>
     [
@@ -203,9 +203,9 @@ export function renderExtension(
   byId("verification-story").textContent =
     `All ${verification.measured_points} primary conditions, including development runs, and ${alternateVerification.measured_points} alternative-decoder conditions fit their byte caps. The lossless control recovers the selected float32 samples exactly. Independent checks recomputed metrics from exported predictions and replayed ${verification.evaluation_reconstructions + alternateVerification.evaluation_reconstructions} evaluation reconstructions through their frozen decoders. No clinical, real-time or battery-life claim is made.`;
   renderPairedTables(primary, statistics);
-  renderRobustness(primary, alternative, statistics);
+  renderRobustness(primary, statistics);
   byId("robustness-budget").addEventListener("change", () =>
-    renderRobustness(primary, alternative, statistics),
+    renderRobustness(primary, statistics),
   );
 }
 

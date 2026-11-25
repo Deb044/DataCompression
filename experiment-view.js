@@ -135,12 +135,6 @@ function baselines(data, statistics) {
       tasks[task],
       percent(mean(subjects.map((b) => b.balanced_accuracy))),
       percent(chance),
-      subjects
-        .map(
-          (b) =>
-            `S${String(b.subject).padStart(2, "0")}: ${percent(b.balanced_accuracy)}${b.balanced_accuracy <= chance + 0.05 ? " (weak baseline)" : ""}`,
-        )
-        .join(" · "),
     ];
   });
   byId("baseline-results").replaceChildren(

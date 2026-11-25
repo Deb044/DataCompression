@@ -147,7 +147,7 @@ def main():
             ax.grid(alpha=0.2)
         axes[0].set_ylabel('Score lost (percentage points)')
         axes[-1].legend(fontsize=9)
-        fig.text(0.5, 0.015, 'Each point is a participant mean at one tested allowance. Actual sizes can differ under the same cap.',
+        fig.text(0.5, 0.015, f'Each point averages {count} participants at one tested allowance. Actual sizes can differ under the same cap.',
                  ha='center', fontsize=10)
         fig.tight_layout(rect=[0, 0.06, 1, 1])
         fig.savefig(output / 'actual_rates.png', dpi=160)

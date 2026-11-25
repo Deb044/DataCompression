@@ -15,6 +15,41 @@ from .decoders import epochs, make_decoder
 from .run import implementation_hash, split_recording
 
 
+def verify_intervals(result, statistics, family):
+    """Rebuild paired interval inputs directly from the verified point export."""
+    subjects = result['config']['evaluation_subjects']
+    assert subjects == statistics['participants']
+    draws = np.random.default_rng(statistics['seed']).integers(
+        len(subjects), size=(statistics['resamples'], len(subjects)))
+    values = {}
+    for task in result['config']['tasks']:
+        for method in result['config']['methods']:
+            for budget in result['config']['budgets_bytes_per_second_channel']:
+                values[task, method, budget] = np.array([
+                    next(p['balanced_accuracy_drop'] for p in result['points']
+                         if p['subject']==subject and p['task']==task
+                         and p['method']==method and p['budget']==budget)
+                    for subject in subjects])
+
+    def check(vector, recorded):
+        np.testing.assert_allclose(recorded['mean'], np.mean(vector))
+        np.testing.assert_allclose(recorded['median'], np.median(vector))
+        np.testing.assert_allclose(recorded['ci95'],
+                                   np.percentile(vector[draws].mean(axis=1), [2.5, 97.5]))
+
+    selected = statistics[family]
+    for group in selected['groups']:
+        check(values[group['task'], group['method'], group['budget']], group)
+    for difference in selected['task_differences']:
+        first = values[difference['first'], difference['method'], difference['budget']]
+        second = values[difference['second'], difference['method'], difference['budget']]
+        check(first-second, difference)
+    for difference in selected['method_differences']:
+        first = values[difference['task'], difference['first'], difference['budget']]
+        second = values[difference['task'], difference['second'], difference['budget']]
+        check(first-second, difference)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--replay', action='store_true', help='Refit originals and decode every stored evaluation corpus')
@@ -106,6 +141,14 @@ def main():
         prediction_rows=sum(map(len, predictions.values())),
         byte_caps_checked=True, replayed=args.replay,
     )
+    statistics_path = ROOT/'results'/'benchmark'/'statistics.json'
+    if statistics_path.exists():
+        statistics = json.loads(statistics_path.read_text())
+        family = 'alternative' if args.alternative else 'primary'
+        assert statistics[f'{family}_summary_sha256'] == digest(output/'summary.json')
+        verify_intervals(result, statistics, family)
+        verification['bootstrap_intervals_checked'] = True
+        print('Checked participant means and all paired bootstrap intervals.', flush=True)
     (output/'verification.json').write_text(json.dumps(verification, indent=2)+'\n')
 
 
