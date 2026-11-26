@@ -1,4 +1,6 @@
-# EEG Compresion
+# Every Bit of the Brain
+
+**How much EEG data can be lost?**
 
 An interactive, self-contained introduction to data compression and a measured benchmark of three EEG applications: SSVEP recognition, motor imagery and single-flash P300 detection.
 
@@ -10,13 +12,49 @@ The main extension is a paired benchmark of 20 new evaluation participants, with
 
 ## Website
 
-Public site: https://da3021-compression-lab-deb044.solidflask.chatgpt.site/
+[Open the project website](https://da3021-compression-lab-deb044.solidflask.chatgpt.site/).
 
 For local use, run `python -m http.server 8000` and open http://localhost:8000. The default Contents page links to Overview, Techniques, EEG, Literature and Experiments. There is no frontend build or runtime package dependency. Synthetic demonstrations are labeled separately from measured EEG results.
 
 ## Presentation
 
 The sixteen-slide presentation, **Every Bit of the Brain: How much EEG data can be lost?**, uses a plain white layout with text on the left and visuals on the right. Download the [editable PowerPoint](output/presentation/every-bit-of-the-brain.pptx) or [PDF](output/presentation/every-bit-of-the-brain.pdf). Presenter notes, measured chart inputs and the slide builder are in [presentation/](presentation/README.md).
+
+The current deck covers compression across modalities, EEG, predictive and transform coding, task preservation, the experimental setup, measured results, reflections and limitations. It includes the OpenBMI dataset citation and a closing slide with project links. Older files named `eeg-compression.*` are previous editions; use the downloads above for the latest presentation.
+
+## Experimental pipeline
+
+The same people perform three different EEG tasks: identifying a flickering target (SSVEP), imagining left- or right-hand movement, and detecting a target flash (P300). For each person and task, two decoders turn EEG into task decisions. Each decoder is fitted or configured using the early part of the recording, then kept unchanged while the later part is tested before and after compression.
+
+```mermaid
+flowchart TD
+    A["OpenBMI: first recording day, offline blocks<br/>S01-S02 development; S07-S26 evaluation<br/>SSVEP, motor imagery and P300"]
+    B["Common preprocessing<br/>12 channels; resample to 128 Hz<br/>0.5-40 Hz filtering; float32 samples"]
+    C["Chronological event split at 60%<br/>2-second guard on each side"]
+    D["Early epochs<br/>Fit or configure Decoder 1 and Decoder 2<br/>Freeze both decoders"]
+    E["Later continuous EEG<br/>Same input for every compressor"]
+    F["Original test epochs<br/>Baseline predictions with each frozen decoder"]
+    G["One-second frames<br/>Uniform quantization, mu-law or DCT<br/>Integer bit packing and DEFLATE ZIP"]
+    H["Search settings within each storage cap<br/>32, 64, 128 or 256 bytes/s/channel<br/>Choose lowest waveform MSE; no task labels"]
+    I["Save self-contained EEG corpus<br/>Count all headers and reconstruction metadata"]
+    J["Decode the saved corpus<br/>Extract the same test epochs"]
+    K["Task predictions<br/>Use the same two frozen decoders"]
+    L["Compare with each decoder's own baseline<br/>Balanced-accuracy loss in percentage points<br/>Also report actual bytes and waveform error"]
+    M["Paired analysis across 20 evaluation participants<br/>Participant means and bootstrap intervals<br/>Compare tasks, compressors and decoder choices"]
+    A --> B --> C
+    C --> D
+    C --> E
+    E --> F
+    E --> G --> H --> I --> J --> K
+    D -.-> F
+    D -.-> K
+    F --> L
+    K --> L --> M
+```
+
+All three compression pipelines receive the same byte caps, including metadata; their achieved file sizes can differ. Codec settings minimize waveform error without seeing task labels or decoder scores. A separate float32 + ZIP control verifies exact reconstruction and unchanged decisions. Both decoder sets use the same saved compressed corpora, so their comparison changes the readout rather than the compressed input.
+
+The guard prevents overlapping training and test epochs. Common preprocessing uses offline forward/backward filtering before the split, so it does not remove every temporal dependency or represent a streaming system. The resulting comparisons describe these recordings, decoders and compressors; they do not establish an intrinsic ranking of all EEG tasks.
 
 ## Reproduce
 
@@ -82,7 +120,7 @@ The interface flags baselines within five percentage points of chance as weak; t
 
 ## First-day extension observations
 
-At 32 bytes/s/channel, SSVEP has the largest mean primary-decoder loss under all three methods, but its paired differences from motor imagery remain uncertain. The alternative decoders put P300 highest under uniform and mu-law, showing that the readout matters. DCT's smaller P300 loss repeats for all twenty people with both P300 classifiers: 0.61 versus 9.47 pp for the primary reader, and 2.25 versus 12.30 pp for the alternative. Both P300 classifiers share the same low-frequency features. See `results/benchmark/statistics.json` for intervals and `research/benchmark_audit.md` for interpretation and checks.
+At 32 bytes/s/channel, SSVEP has the largest mean primary-decoder loss under all three methods, but its paired differences from motor imagery remain uncertain. The alternative decoders put P300 highest under uniform and mu-law, showing that the readout matters. DCT's smaller P300 loss repeats for all twenty people with both P300 decoders: 0.61 versus 9.47 pp for the primary decoder, and 2.25 versus 12.30 pp for the alternative. Both P300 decoders share the same low-frequency features. See `results/benchmark/statistics.json` for intervals and `research/benchmark_audit.md` for interpretation and checks.
 
 ## Files
 

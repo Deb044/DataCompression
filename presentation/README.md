@@ -84,6 +84,12 @@ decoder **Decoder 2**, explain score loss in percentage points, and retain the
 original measurements. Exact algorithm names and protocol details remain in
 the presenter notes.
 
+The current edition labels the summary discussion **Reflections** and emphasizes
+variation across decoder and compressor choices. The limitations begin with the
+exploratory nature of the study and its opportunities for scaling up. Results and
+research tables sit directly below their headings, with explanations immediately
+below them. The numerical results are unchanged.
+
 The lossless/lossy research slide contrasts LPC and AR prediction with
 transform coding using DCT and DWT. It explains exact residual coding and
 coefficient quantization without claiming that a predictor alone is lossless

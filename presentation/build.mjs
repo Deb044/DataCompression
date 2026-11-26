@@ -282,7 +282,7 @@ function plot(s, type, config) {
     ['Zhang et al. (2022)','Personalized SSVEP compression and recognition'],
     ['Strypsteen & Bertrand (2023)','Jointly learned source coding and inference'],
     ['Carzaniga et al. (2025)','BrainCodec: reconstruction and downstream evaluations'],
-  ],249,[253,393],23,310);
+  ],201,[253,393],23,310);
   caption(s,'Task preservation is established research. This project compares simple compressors with each decoder kept fixed.');
 }
 
@@ -302,8 +302,8 @@ function plot(s, type, config) {
     ['SSVEP','Which flickering target?','A sustained rhythm'],
     ['Motor imagery','Left or right hand?','Spatial power patterns'],
     ['P300','Target or non-target?','A brief event response'],
-  ],253,[175,236,235],23,300);
-  text(s,'SSVEP = steady-state visual evoked potential.\nVisual stimulation, imagined movement, target detection.',584,578,632,65,23);
+  ],201,[175,236,235],23,300);
+  text(s,'SSVEP = steady-state visual evoked potential.\nVisual stimulation, imagined movement, target detection.',584,519,632,65,23);
   caption(s,'The eventual conclusion must stay local to the recordings, methods, budgets and decoders tested.');
 }
 
@@ -324,8 +324,8 @@ function plot(s, type, config) {
     ['SSVEP','Match flicker frequencies / find spectral peaks',baseline('SSVEP')],
     ['Motor imagery','Spatial patterns / power in frequency bands',baseline('MI')],
     ['P300','Two classifiers using timed response averages',baseline('ERP')],
-  ],248,[152,357,137],22,280);
-  text(s,'Same byte limits for every compressor:\n32, 64, 128 or 256 bytes/s/channel',584,563,625,73,24);
+  ],201,[152,357,137],22,280);
+  text(s,'Same byte limits for every compressor:\n32, 64, 128 or 256 bytes/s/channel',584,499,625,73,24);
   caption(s,'OpenBMI, first day. Score = balanced accuracy: each class counts equally. Original float32 EEG needs 512 bytes/s/channel.');
 }
 
@@ -339,7 +339,7 @@ function plot(s, type, config) {
     'For example, a drop from 80% to 70% is a loss of 10 percentage points.',
     'At larger budgets, scores stay closer to their original values.',
   ],216,355);
-  text(s,'Lines: SSVEP (turquoise),\nmotor imagery (orange), P300 (blue)',64,579,465,63,20);
+  text(s,'Lines: SSVEP (turquoise),\nmotor imagery (orange), P300 (blue)',870,116,346,59,19);
   methods.forEach(([method,label],i)=>{
     const y=134+i*164;
     heading(s,label,y,style.visualX,style.visualWidth);
@@ -370,26 +370,25 @@ function plot(s, type, config) {
   const values=[['Task','Uniform','μ-law','DCT']];
   for(const [task,label] of tasks) values.push([label,...methods.map(([method])=>
     ['primary','alternative'].map(f=>(100*estimate(f,task,method,32).mean).toFixed(2)).join(' / '))]);
-  table(s,values,253,[182,155,155,154],22,260);
-  text(s,'Decoder 1 loss / Decoder 2 loss\nSmaller numbers mean less performance lost.',585,557,615,77,24);
+  table(s,values,201,[182,155,155,154],22,260);
+  text(s,'Decoder 1 loss / Decoder 2 loss\nSmaller numbers mean less performance lost.',585,479,615,77,24);
   caption(s,'Each loss is measured against that decoder’s own score before compression. A different decoder can change which task looks most affected.');
 }
 
 // 13. Paired intervals preserve the strongest repeated finding and its limits.
 {
   const s=slide('Summary and findings');
-  heading(s,'What was learned');
+  heading(s,'Reflections');
   bullets(s,[
     'Which task looks most affected changes with the decoder.',
-    'With Decoder 1, the SSVEP–motor imagery difference is too uncertain to call at the smallest budget.',
-    'For P300, DCT beats uniform quantization for all 20 people with both decoders.',
-  ],216,345);
-  body(s,'These findings apply to the recordings\nand methods tested.',570,69);
+    'No single EEG task is intrinsically the hardest across all decoders and compressors. There is large variation across different design choices.',
+    'With Decoder 1, SSVEP and motor imagery are not clearly separated at the smallest budget. P300 favours DCT over uniform for all 20 people with both decoders.',
+  ],210,425);
   heading(s,'P300: DCT keeps more of the score',147,style.visualX,style.visualWidth);
   const advantages=['primary','alternative'].map(f=>data[f].method_differences.find(
     g=>g.task==='ERP'&&g.budget===32&&g.first==='uniform'&&g.second==='dct'));
   plot(s,'scatter',{
-    position:{left:750,top:259,width:450,height:261},categories:[],
+    position:{left:750,top:201,width:450,height:261},categories:[],
     series:[...advantages.map((v,i)=>({name:['Primary interval','Alternative interval'][i],
       xValues:v.ci95.map(x=>chartNumber(x*100)),values:[1-i,1-i],line:{fill:style.turquoise,width:2},marker:{symbol:'none'}})),
       {name:'Paired mean',xValues:advantages.map(v=>chartNumber(v.mean*100)),values:[1,0],line:{fill:'none',width:0},marker:{symbol:'circle',size:8,fill:style.turquoise}}],
@@ -397,10 +396,10 @@ function plot(s, type, config) {
     xAxis:{min:0,max:12.5,majorUnit:5,textStyle:axisText(20),majorGridlines:{fill:'#DDDDDD',width:1},line:{fill:'#AAAAAA',width:1}},
     yAxis:{visible:false,min:-0.5,max:1.5,majorGridlines:null},
   });
-  text(s,'Decoder 1',584,321,150,40,25);
-  text(s,'Decoder 2',584,416,160,40,25);
-  text(s,'DCT loses 8.87 / 10.05 fewer points\nthan uniform, on average.',584,557,630,80,25);
-  caption(s,'32 bytes/s/channel. Both P300 decoders use the same features. Dots show means. Bars show 95% uncertainty intervals.');
+  text(s,'Decoder 1',584,250,150,40,25);
+  text(s,'Decoder 2',584,374,160,40,25);
+  text(s,'DCT loses 8.87 / 10.05 fewer points\nthan uniform, on average.',584,480,630,80,25);
+  caption(s,'Findings apply to the tested recordings and methods at 32 bytes/s/channel. P300 decoders share features. Dots: means. Bars: 95% intervals.');
 }
 
 // 14. Body text remains neutral on both sides. The right table is a visual map
@@ -409,11 +408,12 @@ function plot(s, type, config) {
   const s=slide('Limitations and future work');
   heading(s,'Limits of this study');
   bullets(s,[
+    'This work is exploratory, with many avenues for scaling up.',
     '20 people from one acquisition study do not represent every EEG setting.',
     'Two decoders per task leave many feature choices unexplored.',
     'Equal maximum caps do not give exactly equal achieved file sizes.',
     'Not tested with state of the art codecs and compressors.',
-  ],216,385);
+  ],216,420);
   heading(s,'The next checks',147,style.visualX,style.visualWidth);
   table(s,[
     ['Current limit','Next step'],
@@ -421,7 +421,7 @@ function plot(s, type, config) {
     ['Few decoders and features','More decoders and feature extractors'],
     ['Equal maximum caps','Match achieved storage rates more closely'],
     ['Simple compressors','Compare state of the art EEG codecs and compressors'],
-  ],238,[230,416],22,365);
+  ],201,[230,416],22,365);
   caption(s,'The goal is to preserve information needed for the intended use. Offline filtering and shared P300 features remain important limitations.');
 }
 
