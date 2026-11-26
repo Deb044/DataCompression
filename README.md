@@ -28,28 +28,16 @@ The same people perform three different EEG tasks: identifying a flickering targ
 
 ```mermaid
 flowchart TD
-    A["OpenBMI: first recording day, offline blocks<br/>S01-S02 development; S07-S26 evaluation<br/>SSVEP, motor imagery and P300"]
-    B["Common preprocessing<br/>12 channels; resample to 128 Hz<br/>0.5-40 Hz filtering; float32 samples"]
-    C["Chronological event split at 60%<br/>2-second guard on each side"]
-    D["Early epochs<br/>Fit or configure Decoder 1 and Decoder 2<br/>Freeze both decoders"]
-    E["Later continuous EEG<br/>Same input for every compressor"]
-    F["Original test epochs<br/>Baseline predictions with each frozen decoder"]
-    G["One-second frames<br/>Uniform quantization, mu-law or DCT<br/>Integer bit packing and DEFLATE ZIP"]
-    H["Search settings within each storage cap<br/>32, 64, 128 or 256 bytes/s/channel<br/>Choose lowest waveform MSE; no task labels"]
-    I["Save self-contained EEG corpus<br/>Count all headers and reconstruction metadata"]
-    J["Decode the saved corpus<br/>Extract the same test epochs"]
-    K["Task predictions<br/>Use the same two frozen decoders"]
-    L["Compare with each decoder's own baseline<br/>Balanced-accuracy loss in percentage points<br/>Also report actual bytes and waveform error"]
-    M["Paired analysis across 20 evaluation participants<br/>Participant means and bootstrap intervals<br/>Compare tasks, compressors and decoder choices"]
-    A --> B --> C
-    C --> D
-    C --> E
-    E --> F
-    E --> G --> H --> I --> J --> K
-    D -.-> F
-    D -.-> K
-    F --> L
-    K --> L --> M
+    A["OpenBMI EEG<br/>Preprocess and split chronologically"]
+    B["Early EEG<br/>Prepare and freeze two decoders"]
+    C["Later EEG<br/>Original test signal"]
+    D["Compress and reconstruct<br/>Uniform / mu-law / DCT<br/>Each followed by ZIP"]
+    E["Evaluate with the same decoders<br/>Compare score loss across tasks"]
+    A --> B
+    A --> C
+    C --> D --> E
+    C -->|Original baseline| E
+    B -.-> E
 ```
 
 All three compression pipelines receive the same byte caps, including metadata; their achieved file sizes can differ. Codec settings minimize waveform error without seeing task labels or decoder scores. A separate float32 + ZIP control verifies exact reconstruction and unchanged decisions. Both decoder sets use the same saved compressed corpora, so their comparison changes the readout rather than the compressed input.
